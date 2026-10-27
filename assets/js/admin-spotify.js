@@ -1,0 +1,8 @@
+(() => {
+ const state=document.querySelector('#spotify-admin-status'),connect=document.querySelector('#spotify-connect'),disconnect=document.querySelector('#spotify-disconnect'),form=document.querySelector('#spotify-config-form');
+ window.loadAdminSpotify=async()=>{try{const value=await api('/api/spotify/status');document.querySelector('#spotify-redirect').textContent=value.redirectUri;connect.disabled=!value.configured;disconnect.disabled=!value.connected;state.textContent=(value.connected?'Konto połączone.':value.configured?'Client ID zapisany. Możesz połączyć konto.':'Najpierw utwórz aplikację i zapisz Client ID.')+(value.lastError?' '+value.lastError:'');}catch(error){state.textContent=error.message;}};
+ form.onsubmit=async event=>{event.preventDefault();const button=form.querySelector('button');button.disabled=true;try{await api('/api/spotify/config',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({clientId:form.elements.clientId.value.trim()})});form.reset();await window.loadAdminSpotify();}catch(error){state.textContent=error.message;}finally{button.disabled=false;}};
+ connect.onclick=async()=>{connect.disabled=true;try{const value=await api('/api/spotify/connect',{method:'POST'});location.assign(value.url);}catch(error){state.textContent=error.message;connect.disabled=false;}};
+ disconnect.onclick=async()=>{if(!confirm('Odłączyć Spotify? Lista utworów przestanie być pokazywana.'))return;disconnect.disabled=true;try{await api('/api/spotify/disconnect',{method:'POST'});await window.loadAdminSpotify();}catch(error){state.textContent=error.message;disconnect.disabled=false;}};
+ document.querySelector('#spotify-refresh').onclick=()=>window.loadAdminSpotify();
+})();

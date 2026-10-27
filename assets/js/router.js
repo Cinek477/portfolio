@@ -21,16 +21,46 @@
   let updating = false;
   let pending;
   let scrollFrame;
+  const savedScroll = history.state?.portfolioScroll;
+  let restoring = Number.isFinite(savedScroll) && savedScroll > 0;
+  let stopRestore = () => { restoring = false; };
   history.scrollRestoration = 'manual';
-  history.replaceState({ ...history.state, portfolioScroll: scrollY }, '', location.href);
+  const saveScroll = () => {
+    if (!request && !restoring)
+      history.replaceState({ ...history.state, portfolioScroll: scrollY }, '', location.href);
+  };
+  if (!restoring) saveScroll();
+  if (restoring) {
+    const restore = () => {
+      if (!restoring) return;
+      scrollTo({ top: savedScroll, behavior: 'instant' });
+    };
+    const observer = new ResizeObserver(restore);
+    const inputs = ['wheel', 'touchstart', 'pointerdown', 'keydown'];
+    let timer;
+    stopRestore = () => {
+      if (!restoring) return;
+      restoring = false;
+      observer.disconnect();
+      clearTimeout(timer);
+      inputs.forEach(type => removeEventListener(type, stopRestore));
+      saveScroll();
+    };
+    observer.observe(document.querySelector('main'));
+    inputs.forEach(type => addEventListener(type, stopRestore, { passive: true }));
+    addEventListener('load', restore, { once: true });
+    requestAnimationFrame(restore);
+    timer = setTimeout(stopRestore, 3000);
+  }
+  addEventListener('pagehide', saveScroll);
+  addEventListener('beforeunload', saveScroll);
   addEventListener(
     'scroll',
     () => {
       if (scrollFrame) return;
       scrollFrame = requestAnimationFrame(() => {
         scrollFrame = 0;
-        if (!request)
-          history.replaceState({ ...history.state, portfolioScroll: scrollY }, '', location.href);
+        saveScroll();
       });
     },
     { passive: true },
@@ -38,7 +68,7 @@
   function publicPage(url) {
     return (
       url.origin === location.origin &&
-      /\/(?:index|about|hobby|contact|knowledge)\.html$|\/$/.test(url.pathname)
+      /^(?:\/(?:index|projects|project|about|hobby|contact|knowledge)\.html|\/|\/(?:o-mnie|projekty|korepetycje|po-godzinach|kontakt)|\/(?:projekty|album)\/[^/]+)$/.test(url.pathname)
     );
   }
   async function loadScript(source) {
@@ -53,6 +83,7 @@
     loaded.add(source);
   }
   async function navigate(url, pop = false, scroll = 0) {
+    stopRestore();
     if (updating) {
       pending = { url, pop, scroll };
       return;
@@ -68,6 +99,7 @@
       });
       if (!response.ok || !response.headers.get('content-type')?.includes('text/html'))
         throw new Error('Nie udało się pobrać strony.');
+      if (response.url) url = new URL(response.url);
       const next = new DOMParser().parseFromString(await response.text(), 'text/html');
       const main = next.querySelector('main');
       if (!main || !next.querySelector('.navbar')) throw new Error('Brak zawartości strony.');
@@ -85,6 +117,16 @@
       }
       if (controller.signal.aborted) return;
       updating = true;
+      // Load modules while the current page is still live, before taking transition snapshots.
+      window.portfolioRouting = true;
+      try {
+        for (const script of next.querySelectorAll('script[src]')) {
+          const source = new URL(script.getAttribute('src'), url).href;
+          if (/\/(?:router|theme|portfolio)\.js$/.test(source)) continue;
+          await loadScript(source);
+        }
+      } finally { window.portfolioRouting = false; }
+      if (controller.signal.aborted) return;
       const update = async () => {
         if (controller.signal.aborted) return;
         resetScope();
@@ -105,11 +147,6 @@
         current = new URL(url);
         window.portfolioRouting = true;
         try {
-          for (const script of next.querySelectorAll('script[src]')) {
-            const source = new URL(script.getAttribute('src'), url).href;
-            if (/\/(?:router|theme|portfolio)\.js$/.test(source)) continue;
-            await loadScript(source);
-          }
           for (const script of next.querySelectorAll('script[src]')) {
             const name = script.getAttribute('src').split('/').at(-1);
             if (initializers[name]) await initializers[name]();

@@ -21,3 +21,13 @@ Wiadomość zapisuje się także wtedy, gdy powiadomienie pocztowe się nie powi
 ## Zakres lokalny
 
 Wysyłanie działa przez lokalny serwer, np. `http://localhost:3000/contact.html`. GitHub Pages nie uruchamia tego API. Publiczne przyjmowanie wiadomości wymaga osobnego wdrożenia backendu. Formularz ogranicza rozmiar danych i liczbę nowych zgłoszeń do 5 na 15 minut z jednego adresu; ponowienie identycznego żądania z tym samym identyfikatorem nie tworzy duplikatu.
+
+## Foldery wiadomości w panelu
+
+Zakładka Wiadomości ma foldery Odebrane, Spam i Kosz wiadomości. Oznaczenie jako spam jest ręczne i przenosi konkretne zgłoszenie; nie blokuje przyszłych zgłoszeń nadawcy. Licznik nowych wiadomości obejmuje tylko nieprzeczytane w Odebranych. Spam i kosz można przywrócić do Odebranych bez utraty treści i danych nadawcy.
+
+„Do kosza” wymaga potwierdzenia. Trwałe usunięcie jest dostępne tylko w koszu, po dodatkowym wpisaniu `USUŃ`. Kosz nie opróżnia się automatycznie. Foldery i usuwanie dotyczą lokalnej/online bazy panelu — nie przenoszą ani nie usuwają powiadomień, które dotarły już do Gmaila. Dostęp do wszystkich folderów i zmian wymaga administratora. Dane nie są eksportowane do publicznych plików.
+
+Lokalnie istniejące wiadomości otrzymują folder Odebrane przy uruchomieniu serwera. Sites wymaga migracji `0002_message_folders.sql` przed wdrożeniem backendu.
+
+Przenoszenie do kosza używa okna w panelu zamiast okna przeglądarki. „Nie pytaj ponownie” dotyczy wyłącznie przenoszenia pojedynczych wiadomości do kosza, w tej przeglądarce i pod tym adresem strony. „Przywróć potwierdzenia” włącza je ponownie. Trwałe usuwanie i przycisk „Opróżnij kosz” zawsze wymagają potwierdzenia przez wpisanie `USUŃ`. Opróżnienie obejmuje cały kosz, również wiadomości spoza listy ostatnich 100; zmiana zawartości od momentu wyświetlenia powoduje konieczność ponownego sprawdzenia i potwierdzenia. Odebrane i Spam pozostają bez zmian.

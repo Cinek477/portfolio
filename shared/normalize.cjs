@@ -13,6 +13,15 @@ function normalize(input, old = {}) {
   photo.category = string(input.category, 'kategoria');
   if (!CATEGORIES.has(photo.category))
     throw Object.assign(new Error('Nieznana kategoria.'), { status: 400 });
+  if (input.visible !== undefined && typeof input.visible !== 'boolean') throw Object.assign(new Error('Niepoprawna widoczność zdjęcia.'), { status:400 });
+  photo.visible = input.visible ?? old.visible ?? true;
+  photo.album = string(input.album ?? old.album ?? '', 'album', 160).normalize('NFC');
+  if (input.galleryVisible !== undefined && typeof input.galleryVisible !== 'boolean') throw Object.assign(new Error('Niepoprawna widoczność w galerii.'), { status:400 });
+  photo.galleryVisible = photo.album ? (input.galleryVisible ?? old.galleryVisible ?? true) : true;
+  photo.albumCover = Boolean(photo.album && photo.album === old.album && old.albumCover);
+  const crop=input.crop ?? old.crop ?? {x:50,y:50};
+  if(!crop || typeof crop!=='object' || !['x','y'].every(key=>typeof crop[key]==='number' && Number.isFinite(crop[key]) && crop[key]>=0 && crop[key]<=100)) throw Object.assign(new Error('Punkt kadrowania musi mieścić się w zakresie 0–100%.'),{status:400});
+  photo.crop={x:crop.x,y:crop.y};
   photo.shape = ['tall', 'wide', 'regular'].includes(input.shape) ? input.shape : 'regular';
   for (const field of ['title', 'artist', 'event', 'venue', 'city', 'description']) {
     const value = string(input[field] || '', field, field === 'description' ? 2000 : 500);
@@ -97,6 +106,25 @@ function normalizeProject(input, old = {}) {
     !/^(?:contact\.html|#projects)$/.test(project.link)
   )
     throw Object.assign(new Error('Podaj link HTTP/HTTPS.'), { status: 400 });
+  if (input.visible !== undefined && typeof input.visible !== 'boolean')
+    throw Object.assign(new Error('Niepoprawna widoczność wpisu.'), { status: 400 });
+  project.visible = input.visible ?? old.visible ?? true;
+  if (input.caseStudy !== undefined) {
+    const value = input.caseStudy;
+    if (!value || typeof value !== 'object' || Array.isArray(value) || typeof value.enabled !== 'boolean')
+      throw Object.assign(new Error('Niepoprawna podstrona projektu.'), { status: 400 });
+    project.caseStudy = { enabled: value.enabled };
+    for (const key of ['title', 'problem', 'solution', 'contribution', 'result']) {
+      const text = value[key];
+      if (text !== undefined && (!text || typeof text !== 'object' || Array.isArray(text)))
+        throw Object.assign(new Error('Niepoprawna treść podstrony projektu.'), { status: 400 });
+      const limit = key === 'title' ? 500 : 5000;
+      const pl = string(text?.pl ?? '', key, limit);
+      project.caseStudy[key] = { pl, en: string(text?.en || pl, key + ' EN', limit) };
+    }
+    if (value.enabled && !project.caseStudy.title.pl)
+      throw Object.assign(new Error('Podaj tytuł podstrony projektu.'), { status: 400 });
+  }
   project.src = input.removeImage ? '' : old.src || '';
   project.thumbUrl = input.removeImage ? '' : old.thumbUrl || '';
   return project;

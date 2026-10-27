@@ -1,11 +1,12 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const vm = require('node:vm');
+const { renderPage } = require('../shared/render-page.cjs');
 
 const root = path.resolve(__dirname, '..');
 const sites = path.join(root, 'sites');
 const output = path.join(sites, 'public');
-const pages = ['index.html', 'about.html', 'knowledge.html', 'hobby.html', 'contact.html', 'admin.html', '404.html'];
+const pages = ['index.html', 'projects.html', 'project.html', 'about.html', 'knowledge.html', 'hobby.html', 'contact.html', 'admin.html', '404.html'];
 
 function replaceRequired(source, pattern, replacement, label) {
   if (!source.match(pattern)) throw new Error(`Nie znaleziono miejsca adaptacji Sites: ${label}`);
@@ -19,7 +20,8 @@ function prepareSites() {
   }
   fs.rmSync(output, { recursive: true, force: true });
   fs.mkdirSync(output, { recursive: true });
-  for (const page of pages) fs.copyFileSync(path.join(root, page), path.join(output, page));
+  for (const page of pages)
+    fs.writeFileSync(path.join(output, page), renderPage(fs.readFileSync(path.join(root, 'pages', page), 'utf8'), page));
   fs.cpSync(path.join(root, 'assets'), path.join(output, 'assets'), { recursive: true });
 
   const edit = (relative, transform) => {
@@ -34,9 +36,9 @@ function prepareSites() {
         'Najnowsze 100 wiadomości. Prywatne dane są przechowywane w bazie online i dostępne wyłącznie właścicielowi portfolio.');
   });
   edit('assets/js/admin.js', (js) => {
-    js = replaceRequired(js, /  document.querySelector\('#auth-title'\).textContent = requiresSetup[\s\S]*?(?=\n}\nloginForm.addEventListener)/,
+    js = replaceRequired(js, /  document.querySelector\('#auth-title'\).textContent = requiresSetup[\s\S]*?(?=\r?\n}\r?\nloginForm.addEventListener)/,
       "  document.querySelector('#auth-title').textContent = 'Panel właściciela';\n  document.querySelector('#auth-description').textContent = 'Zaloguj się kontem ChatGPT właściciela portfolio.';", 'opis logowania');
-    js = replaceRequired(js, /document.querySelector\('#logout'\).addEventListener\('click', async \(\) => \{[\s\S]*?\n}\);/,
+    js = replaceRequired(js, /document.querySelector\('#logout'\).addEventListener\('click', async \(\) => \{[\s\S]*?\r?\n}\);/,
       "document.querySelector('#logout').addEventListener('click', () => { window.top.location.href = '/signout-with-chatgpt?return_to=%2Fadmin.html'; });", 'wylogowanie');
     return js.replaceAll('Plik zdjęcia pozostanie na dysku.', 'Plik zdjęcia pozostanie w magazynie online.')
       .replace('Zapisano w galerii i plikach do Git. Aby wysłać na GitHub, wykonaj commit i push.', 'Zapisano w galerii online. Zmiana jest już widoczna na stronie.');
@@ -45,7 +47,7 @@ function prepareSites() {
     .replaceAll('Plik zdjęcia pozostanie na dysku.', 'Plik zdjęcia pozostanie w magazynie online.')
     .replace('Projekt zapisany na stronie i w plikach do Git.', 'Projekt zapisany online. Zmiana jest już widoczna na stronie.'));
   edit('assets/js/admin-messages.js', (js) => js.replace(
-    'Skrzynka działa. Aby uruchomić powiadomienia e-mail, uzupełnij .env według CONTACT-MESSAGES.md i zrestartuj serwer.',
+    'Skrzynka działa. Aby uruchomić powiadomienia e-mail, uzupełnij .env według docs/CONTACT-MESSAGES.md i zrestartuj serwer.',
     'Skrzynka online działa. Powiadomienia e-mail wymagają konfiguracji usługi pocztowej w Sites.'));
 
   const seed = {};
@@ -59,6 +61,15 @@ function prepareSites() {
   const normalizer = replaceRequired(shared, /module\.exports = \{ normalize, normalizeProject \};/,
     'export { normalize, normalizeProject };', 'wspólna walidacja');
   fs.writeFileSync(path.join(sites, 'lib/normalize.js'), normalizer);
+  fs.copyFileSync(path.join(root, 'shared/home-defaults.json'), path.join(sites, 'lib/home-defaults.json'));
+  fs.writeFileSync(path.join(sites, 'lib/home.js'), fs.readFileSync(path.join(root, 'shared/home.cjs'), 'utf8')
+    .replace("const { pageDefaults, normalizeContent } = require('./page-content.cjs');", "import { pageDefaults, normalizeContent } from './page-content.js';")
+    .replace("const defaults = { ...require('./home-defaults.json'), content: pageDefaults.home };", "import homeDefaults from './home-defaults.json' with {type:'json'};\nconst defaults = { ...homeDefaults, content: pageDefaults.home };")
+    .replace('module.exports = { defaults, normalizeHome, hydrateHome };', 'export { defaults, normalizeHome, hydrateHome };'));
+  fs.copyFileSync(path.join(root, 'shared/page-defaults.json'), path.join(sites, 'lib/page-defaults.json'));
+  fs.writeFileSync(path.join(sites, 'lib/page-content.js'), fs.readFileSync(path.join(root, 'shared/page-content.cjs'), 'utf8')
+    .replace("const pageDefaults = require('./page-defaults.json');", "import pageDefaults from './page-defaults.json' with {type:'json'};")
+    .replace('module.exports = { pageDefaults, normalizeContent, normalizeOffers, normalizeEditor };', 'export { pageDefaults, normalizeContent, normalizeOffers, normalizeEditor };'));
   console.log('Sites przygotowane ze wspólnych plików. Bazy i prywatne pliki nie są kopiowane.');
 }
 

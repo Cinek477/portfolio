@@ -14,7 +14,7 @@
   update();
   let running = false;
   button.addEventListener('click', async () => {
-    if (running || root.dataset.pageTransition) return;
+    if (running || root.dataset.pageTransition || root.dataset.languageTransition) return;
     const change = () => {
       root.dataset.theme = root.dataset.theme === 'dark' ? 'light' : 'dark';
       update();
@@ -33,8 +33,10 @@
       await root.animate(
         {
           clipPath: [
-            'circle(0px at 50% 0px)',
-            `circle(${Math.ceil(Math.hypot(innerWidth / 2, innerHeight))}px at 50% 0px)`,
+            'circle(0% at 50% 0%)',
+            // Percentages follow the actual transition snapshot, including mobile viewport changes.
+            // 150% of its normalized diagonal covers every corner from the top centre.
+            'circle(150% at 50% 0%)',
           ],
         },
         {

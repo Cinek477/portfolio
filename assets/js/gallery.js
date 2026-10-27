@@ -18,11 +18,19 @@ window.portfolioPages['gallery.js'] = async () => {
     }
   }
   if (pageScope.signal.aborted) return;
+  photos = (photos || []).filter(photo => photo.visible !== false);
   const track = document.querySelector('.gallery-track');
   const dialog = document.querySelector('.photo-lightbox');
+  const focusButton=document.createElement('button');focusButton.type='button';focusButton.className='lightbox-focus';focusButton.setAttribute('aria-pressed','false');
+  const updateFocusLabel=()=>{focusButton.textContent=document.documentElement.lang==='en'?(dialog.classList.contains('is-focused')?'Show information':'Photo only'):(dialog.classList.contains('is-focused')?'Pokaż informacje':'Samo zdjęcie');};
+  focusButton.addEventListener('click',()=>{dialog.classList.toggle('is-focused');focusButton.setAttribute('aria-pressed',String(dialog.classList.contains('is-focused')));updateFocusLabel();},{signal:pageScope.signal});dialog.append(focusButton);updateFocusLabel();
+  document.addEventListener('portfolio-language-change',updateFocusLabel,{signal:pageScope.signal});
+  dialog.addEventListener('close',()=>{dialog.classList.remove('is-focused');focusButton.setAttribute('aria-pressed','false');updateFocusLabel();},{signal:pageScope.signal});
   const mobileQuery = matchMedia('(max-width: 768px)');
-  let filteredPhotos = [...photos];
+  let filteredPhotos = photos.filter(photo => photo.galleryVisible !== false);
   let selectedPhoto = null;
+  let albumMode = false;
+  let albumReturnPhoto = null;
   let scrollFrame = 0;
   let returnFocus = null;
   const text = (value) =>
@@ -40,10 +48,16 @@ window.portfolioPages['gallery.js'] = async () => {
         },
         { once: true },
       );
+      image.addEventListener('load', async () => {
+        try { await image.decode(); } catch {}
+        if (!pageScope.signal.aborted) image.classList.add('is-ready');
+      }, { once: true });
+      if (image.complete && image.naturalWidth) image.classList.add('is-ready');
       image.decoding = 'async';
       image.alt = text(photo.title);
       image.loading = 'lazy';
       image.draggable = false;
+      image.style.objectPosition=(photo.crop?.x??50)+'% '+(photo.crop?.y??50)+'%';
       return image;
     }
     const placeholder = document.createElement('div');
@@ -67,15 +81,36 @@ window.portfolioPages['gallery.js'] = async () => {
     if (dialog.open) renderLightbox();
   }
 
+  function albumPhotos(photo) {
+    const album = photo?.album?.trim().normalize('NFC').toLocaleLowerCase('pl');
+    return album ? photos.filter(item => item.album?.trim().normalize('NFC').toLocaleLowerCase('pl') === album).sort((a,b)=>Number(b.albumCover===true)-Number(a.albumCover===true)) : photo ? [photo] : [];
+  }
   function renderLightbox() {
-    window.renderPortfolioLightbox(selectedPhoto, filteredPhotos, selectPhoto);
+    const collection = albumMode ? albumPhotos(selectedPhoto) : filteredPhotos;
+    const album = albumPhotos(selectedPhoto);
+    const photo = selectedPhoto;
+    dialog.querySelector('.lightbox-prev').hidden = collection.length < 2;
+    dialog.querySelector('.lightbox-next').hidden = collection.length < 2;
+    window.renderPortfolioLightbox(selectedPhoto, collection, selectPhoto, {
+      albumAction: albumMode ? translated('Wróć do wszystkich zdjęć', 'Back to all photos') : album.length > 1
+        ? photo.category === 'concerts' ? translated('Zobacz więcej zdjęć z wydarzenia', 'See more photos from this event')
+        : photo.category === 'people' ? translated('Zobacz więcej zdjęć z sesji', 'See more photos from this session')
+        : translated('Zobacz więcej zdjęć z albumu', 'See more photos from this album') : '',
+      albumShareUrl: photo.album ? (() => { const url=new URL('/po-godzinach',location.origin);url.searchParams.set('album',album[0].id);return url.href; })() : '',
+      onAlbumAction: () => { if (!albumMode) { albumReturnPhoto = selectedPhoto; albumMode = true; selectPhoto(albumPhotos(selectedPhoto)[0]); } else { albumMode = false; const target=filteredPhotos.includes(albumReturnPhoto)?albumReturnPhoto:filteredPhotos[0]; if(target)selectPhoto(target);else closePhoto(); } }
+    });
   }
 
-  function openPhoto(photo, button) {
+  function openPhoto(photo, button, asAlbum = false) {
+    albumMode = asAlbum;
+    albumReturnPhoto = filteredPhotos.includes(photo) ? photo : filteredPhotos[0];
     selectPhoto(photo);
     returnFocus = button;
-    renderLightbox();
+    if(mobileQuery.matches) dialog.style.setProperty('--mobile-photo-height', Math.round(innerHeight*.55)+'px');
+    dialog.classList.add('is-loading-first');
     dialog.showModal();
+    dialog.scrollTop = 0;
+    renderLightbox();
     document.body.style.overflow = 'hidden';
   }
 
@@ -93,7 +128,7 @@ window.portfolioPages['gallery.js'] = async () => {
       return;
     }
     // Trzy identyczne cykle pozwalają przewijać w obie strony bez końca.
-    for (let cycle = 0; cycle < 3; cycle++) {
+    for (let cycle = 0; cycle < (mobileQuery.matches ? 1 : 3); cycle++) {
       const group = document.createElement('div');
       group.className = 'gallery-cycle';
       filteredPhotos.forEach((photo) => {
@@ -103,7 +138,7 @@ window.portfolioPages['gallery.js'] = async () => {
         button.dataset.photoId = photo.id;
         button.setAttribute('aria-label', text(photo.title));
         button.setAttribute('aria-pressed', 'false');
-        button.tabIndex = cycle === 1 ? 0 : -1;
+        button.tabIndex = mobileQuery.matches || cycle === 1 ? 0 : -1;
         const caption = document.createElement('span');
         caption.className = 'photo-caption';
         caption.textContent = text(photo.title) || text(photo.place);
@@ -113,7 +148,7 @@ window.portfolioPages['gallery.js'] = async () => {
       });
       track.append(group);
     }
-    track.scrollLeft = cycleWidth();
+    track.scrollLeft = mobileQuery.matches ? 0 : cycleWidth();
     if (selectedPhoto && filteredPhotos.includes(selectedPhoto)) selectPhoto(selectedPhoto);
     else {
       selectedPhoto = null;
@@ -130,6 +165,7 @@ window.portfolioPages['gallery.js'] = async () => {
   }
 
   function selectCentralPhoto() {
+    if (dialog.open) return;
     if (dialog.open || !mobileQuery.matches || !filteredPhotos.length) return;
     const bounds = track.getBoundingClientRect();
     const center = bounds.left + bounds.width / 2;
@@ -158,6 +194,7 @@ window.portfolioPages['gallery.js'] = async () => {
       if (scrollFrame) return;
       scrollFrame = requestAnimationFrame(() => {
         scrollFrame = 0;
+        if (mobileQuery.matches) { selectCentralPhoto(); return; }
         const width = cycleWidth();
         if (!width) return;
         if (track.scrollLeft < width * 0.5) track.scrollLeft += width;
@@ -174,7 +211,7 @@ window.portfolioPages['gallery.js'] = async () => {
         .querySelectorAll('.gallery-filter')
         .forEach((filter) => filter.setAttribute('aria-pressed', String(filter === button)));
       filteredPhotos = photos.filter(
-        (photo) => button.dataset.filter === 'all' || photo.category === button.dataset.filter,
+        (photo) => photo.galleryVisible !== false && (button.dataset.filter === 'all' || photo.category === button.dataset.filter),
       );
       renderGallery();
     }),
@@ -183,22 +220,49 @@ window.portfolioPages['gallery.js'] = async () => {
   document.querySelectorAll('[data-gallery-direction]').forEach((button) =>
     button.addEventListener('click', () => {
       track.scrollBy({
-        left: Number(button.dataset.galleryDirection) * track.clientWidth * 0.65,
+        left: Number(button.dataset.galleryDirection) * (mobileQuery.matches ? (track.querySelector('.photo-card')?.offsetWidth || track.clientWidth) + 16 : track.clientWidth * 0.65),
         behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth',
       });
     }),
   );
 
+  let closingTimer = 0;
+  function finishClosing() {
+    clearTimeout(closingTimer);
+    if (dialog.open) dialog.close();
+    dialog.classList.remove('is-closing');
+  }
+  function closePhoto() {
+    if (!dialog.open || dialog.classList.contains('is-closing')) return;
+    dialog.dispatchEvent(new Event('lightbox-closing'));
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      finishClosing();
+      return;
+    }
+    dialog.classList.add('is-closing');
+    closingTimer = setTimeout(finishClosing, 280);
+  }
+  dialog.addEventListener('animationend', (event) => {
+    if (event.target === dialog && event.animationName === 'lightbox-out') finishClosing();
+  }, { signal: pageScope.signal });
+  dialog.addEventListener('cancel', (event) => {
+    event.preventDefault();
+    closePhoto();
+  }, { signal: pageScope.signal });
+  pageScope.cleanup(() => {
+    clearTimeout(closingTimer);
+    dialog.classList.remove('is-closing');
+  });
+
   function movePhoto(direction) {
-    if (!filteredPhotos.length) return;
-    const index = filteredPhotos.indexOf(selectedPhoto);
-    selectPhoto(
-      filteredPhotos[(index + direction + filteredPhotos.length) % filteredPhotos.length],
-    );
+    const collection = albumMode ? albumPhotos(selectedPhoto) : filteredPhotos;
+    if (collection.length < 2 || dialog.classList.contains('is-closing')) return;
+    const index = collection.indexOf(selectedPhoto);
+    selectPhoto(collection[(index + direction + collection.length) % collection.length]);
   }
   dialog.querySelector('.lightbox-prev').addEventListener('click', () => movePhoto(-1));
   dialog.querySelector('.lightbox-next').addEventListener('click', () => movePhoto(1));
-  dialog.querySelector('.lightbox-close').addEventListener('click', () => dialog.close());
+  dialog.querySelector('.lightbox-close').addEventListener('click', closePhoto);
   dialog.addEventListener('click', (event) => {
     if (event.target !== dialog) return;
     const bounds = dialog.getBoundingClientRect();
@@ -207,7 +271,7 @@ window.portfolioPages['gallery.js'] = async () => {
       event.clientX > bounds.right ||
       event.clientY < bounds.top ||
       event.clientY > bounds.bottom;
-    if (outside) dialog.close();
+    if (outside) closePhoto();
   });
   dialog.addEventListener('keydown', (event) => {
     if (event.key === 'ArrowLeft') {
@@ -220,25 +284,56 @@ window.portfolioPages['gallery.js'] = async () => {
     }
   });
   dialog.addEventListener('close', () => {
+    clearTimeout(closingTimer);
+    dialog.classList.remove('is-closing');
     document.body.style.overflow = '';
     const focusTarget = returnFocus?.isConnected
       ? returnFocus
       : track.querySelector(`[data-photo-id="${CSS.escape(selectedPhoto?.id || '')}"]`);
     focusTarget?.focus({ preventScroll: true });
   });
-  document.addEventListener('portfolio-language-change', renderGallery, {
+  function translateGallery() {
+    const byId = new Map(filteredPhotos.map(photo => [photo.id, photo]));
+    track.querySelectorAll('.photo-card').forEach(card => {
+      const photo = byId.get(card.dataset.photoId);
+      if (!photo) return;
+      const title = text(photo.title);
+      card.setAttribute('aria-label', title);
+      const image = card.querySelector('img');
+      if (image) image.alt = title;
+      const caption = card.querySelector('.photo-caption');
+      if (caption) caption.textContent = title || text(photo.place);
+      const placeholder = card.querySelector('.photo-placeholder span');
+      if (placeholder) placeholder.textContent = translated('Miejsce na Twoje zdjęcie', 'Your photo goes here');
+    });
+    const empty = track.querySelector('.gallery-empty');
+    if (empty) empty.textContent = translated('W tej kategorii nie ma jeszcze zdjęć.', 'No photographs in this category yet.');
+    if (dialog.open && selectedPhoto) renderLightbox();
+  }
+  document.addEventListener('portfolio-language-change', translateGallery, {
     signal: pageScope.signal,
   });
+  mobileQuery.addEventListener('change', renderGallery, { signal:pageScope.signal });
+  let previousWidth = innerWidth;
   addEventListener(
     'resize',
     () => {
+      if (innerWidth === previousWidth) return;
+      previousWidth = innerWidth;
       if (dialog.open) renderLightbox();
-      track.scrollLeft = cycleWidth();
+      if (!mobileQuery.matches) track.scrollLeft = cycleWidth();
       selectCentralPhoto();
     },
     { signal: pageScope.signal },
   );
   pageScope.cleanup(() => cancelAnimationFrame(scrollFrame));
   renderGallery();
+  const sharedAlbum=new URL(location.href).searchParams.get('album') || (location.pathname.startsWith('/album/') ? decodeURIComponent(location.pathname.slice(7)) : null);
+  if(sharedAlbum){
+    const linked=photos.find(photo=>photo.id===sharedAlbum&&photo.album);
+    const first=linked ? albumPhotos(linked)[0] : null;
+    if(first) openPhoto(first,track.querySelector('.photo-card'),true);
+    else {const note=document.createElement('p');note.className='gallery-empty';note.setAttribute('role','status');note.dataset.pl='Ten album jest obecnie niedostępny. Zobacz pozostałe zdjęcia.';note.dataset.en='This album is currently unavailable. Explore the other photographs.';note.textContent=translated(note.dataset.pl,note.dataset.en);track.before(note);}
+  }
 };
 if (!window.portfolioRouting) window.portfolioPages['gallery.js']().catch(console.error);

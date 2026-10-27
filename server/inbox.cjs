@@ -1,7 +1,15 @@
+function ensureCaseColumns(db){
+  const columns=db.prepare('PRAGMA table_info(messages)').all().map(column=>column.name);
+  if(!columns.includes('case_status'))db.exec("ALTER TABLE messages ADD COLUMN case_status TEXT NOT NULL DEFAULT 'new'");
+  if(!columns.includes('private_note'))db.exec("ALTER TABLE messages ADD COLUMN private_note TEXT NOT NULL DEFAULT ''");
+}
+const crypto = require('node:crypto');
 function createInbox({ db, json, body, authenticated, options }) {
   db.exec(
     `CREATE TABLE IF NOT EXISTS messages (id TEXT PRIMARY KEY, email TEXT NOT NULL, category TEXT NOT NULL, details TEXT NOT NULL, message TEXT NOT NULL, created TEXT NOT NULL, is_read INTEGER NOT NULL DEFAULT 0, mail_status TEXT NOT NULL DEFAULT 'pending');`,
   );
+  if (!db.prepare('PRAGMA table_info(messages)').all().some(column => column.name === 'folder')) db.exec("ALTER TABLE messages ADD COLUMN folder TEXT NOT NULL DEFAULT 'inbox' CHECK(folder IN ('inbox','spam','trash'))");
+  ensureCaseColumns(db);
   const categories = {
     it: 'Projekt IT',
     photo: 'Fotografia',
@@ -11,7 +19,7 @@ function createInbox({ db, json, body, authenticated, options }) {
   const details = {
     it: ['web', 'hackathon', 'other'],
     photo: ['concert', 'portrait', 'event'],
-    tutoring: ['programming', 'maths', 'other'],
+    tutoring: ['basic', 'advanced', 'university', 'other', 'programming', 'maths'],
     other: ['other'],
   };
   const attempts = new Map();
@@ -97,25 +105,57 @@ function createInbox({ db, json, body, authenticated, options }) {
     if (!authenticated(req))
       return (json(res, 401, { error: 'Zaloguj się do panelu administratora.' }), true);
     if (pathname === '/api/messages' && req.method === 'GET') {
+      const folder = new URL(req.url, 'http://localhost').searchParams.get('folder') || 'inbox';
+      if (!['inbox', 'spam', 'trash'].includes(folder)) return (json(res, 400, { error: 'Niepoprawny folder.' }), true);
+      const counts = Object.fromEntries(['inbox', 'spam', 'trash'].map(name => [name, db.prepare('SELECT COUNT(*) AS count FROM messages WHERE folder=?').get(name).count]));
       json(res, 200, {
-        items: db.prepare('SELECT * FROM messages ORDER BY created DESC LIMIT 100').all(),
-        unread: db.prepare('SELECT COUNT(*) AS count FROM messages WHERE is_read=0').get().count,
+        items: db.prepare('SELECT * FROM messages WHERE folder=? ORDER BY created DESC LIMIT 100').all(folder),
+        unread: db.prepare("SELECT COUNT(*) AS count FROM messages WHERE is_read=0 AND folder='inbox'").get().count,
+        counts,
+        snapshot: folder === 'trash' ? crypto.createHash('sha256').update(JSON.stringify(db.prepare("SELECT id FROM messages WHERE folder='trash' ORDER BY id").all().map(row => row.id))).digest('hex') : undefined,
         mailConfigured: configured(),
       });
       return true;
+    }
+    if (pathname === '/api/messages' && req.method === 'DELETE') {
+      const input = await body(req, 16384);
+      if (input?.folder !== 'trash' || input.confirmation !== 'EMPTY_TRASH') return (json(res, 400, { error: 'Potwierdź opróżnienie kosza wiadomości.' }), true);
+      const ids = db.prepare("SELECT id FROM messages WHERE folder='trash' ORDER BY id").all().map(row => row.id);
+      const snapshot = crypto.createHash('sha256').update(JSON.stringify(ids)).digest('hex');
+      if (input.snapshot !== snapshot) return (json(res, 409, { error: 'Zawartość kosza zmieniła się. Sprawdź ją i potwierdź ponownie.' }), true);
+      const result = db.prepare("DELETE FROM messages WHERE folder='trash'").run();
+      json(res, 200, { ok: true, deleted: result.changes }); return true;
     }
     const match = pathname.match(/^\/api\/messages\/([\da-f-]+)(\/notify)?$/i);
     const item = match && db.prepare('SELECT * FROM messages WHERE id=?').get(match[1]);
     if (!item) return (json(res, 404, { error: 'Nie znaleziono wiadomości.' }), true);
     if (req.method === 'PUT' && !match[2]) {
-      const input = await body(req, 1024);
-      if (typeof input?.read !== 'boolean')
-        return (json(res, 400, { error: 'Niepoprawny status.' }), true);
-      db.prepare('UPDATE messages SET is_read=? WHERE id=?').run(Number(input.read), item.id);
+      const input = await body(req, 16384);
+      if(input?.caseStatus!==undefined || input?.privateNote!==undefined){
+        if((input.caseStatus!==undefined&&!['new','reply','agreed','done'].includes(input.caseStatus))||(input.privateNote!==undefined&&(typeof input.privateNote!=='string'||input.privateNote.length>4000)))return (json(res,400,{error:'Sprawdź status sprawy i notatkę (maks. 4000 znaków).'}),true);
+        db.prepare('UPDATE messages SET case_status=?,private_note=? WHERE id=?').run(input.caseStatus??item.case_status,input.privateNote??item.private_note,item.id);
+        return (json(res,200,{ok:true}),true);
+      }
+
+      if (input?.folder !== undefined) {
+        if (!['inbox', 'spam', 'trash'].includes(input.folder)) return (json(res, 400, { error: 'Niepoprawny folder.' }), true);
+        db.prepare('UPDATE messages SET folder=? WHERE id=?').run(input.folder, item.id);
+      } else {
+        if (typeof input?.read !== 'boolean') return (json(res, 400, { error: 'Niepoprawny status.' }), true);
+        db.prepare('UPDATE messages SET is_read=? WHERE id=?').run(Number(input.read), item.id);
+      }
       json(res, 200, { ok: true });
       return true;
     }
+    if (req.method === 'DELETE' && !match[2]) {
+      const input = await body(req, 1024);
+      if (item.folder !== 'trash' || input?.confirmId !== item.id)
+        return (json(res, 400, { error: 'Najpierw przenieś wiadomość do kosza i potwierdź trwałe usunięcie.' }), true);
+      db.prepare('DELETE FROM messages WHERE id=?').run(item.id);
+      json(res, 200, { ok: true }); return true;
+    }
     if (req.method === 'POST' && match[2]) {
+      if (item.folder !== 'inbox') return (json(res, 409, { error: 'Przywróć wiadomość do odebranych przed ponowieniem powiadomienia.' }), true);
       if (!configured())
         return (json(res, 409, { error: 'Uzupełnij konfigurację poczty w .env.' }), true);
       if (item.mail_status !== 'sent') await notify(item);
@@ -128,4 +168,4 @@ function createInbox({ db, json, body, authenticated, options }) {
     return true;
   };
 }
-module.exports = { createInbox };
+module.exports = { createInbox, ensureCaseColumns };

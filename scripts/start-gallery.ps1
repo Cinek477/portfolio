@@ -9,6 +9,6 @@ if ($runtime) {
     if (!$nodeCommand) { throw 'Zainstaluj Node.js 24 LTS, a następnie uruchom ten skrypt ponownie.' }
     $nodePath = $nodeCommand.Source
 }
-Write-Host 'Panel: http://localhost:3000/admin.html'
+Write-Host 'Panel: http://localhost:3000/admin'
 Write-Host 'Zatrzymanie serwera: Ctrl+C'
 & $nodePath (Join-Path $projectRoot 'server.cjs')

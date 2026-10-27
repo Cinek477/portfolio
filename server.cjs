@@ -8,6 +8,9 @@ const scrypt = promisify(crypto.scrypt);
 const { DatabaseSync } = require('node:sqlite');
 
 const ROOT = __dirname;
+const { renderPage } = require('./shared/render-page.cjs');
+const { defaults: homeDefaults, normalizeHome, hydrateHome } = require('./shared/home.cjs');
+const { pageDefaults, normalizeContent, normalizeOffers, normalizeEditor } = require('./shared/page-content.cjs');
 const { normalize, normalizeProject } = require('./shared/normalize.cjs');
 const MAX_BODY = 32 * 1024 * 1024;
 const MIME = {
@@ -21,6 +24,7 @@ const MIME = {
   '.pdf': 'application/pdf',
   '.svg': 'image/svg+xml',
   '.ico': 'image/x-icon',
+  '.woff2': 'font/woff2',
 };
 
 function createGalleryServer(options = {}) {
@@ -38,7 +42,10 @@ function createGalleryServer(options = {}) {
   db.exec(`PRAGMA journal_mode=WAL;
     CREATE TABLE IF NOT EXISTS photos (id TEXT PRIMARY KEY, category TEXT NOT NULL, data TEXT NOT NULL, position INTEGER NOT NULL);
     CREATE TABLE IF NOT EXISTS projects (id TEXT PRIMARY KEY, data TEXT NOT NULL, position INTEGER NOT NULL);
-    CREATE TABLE IF NOT EXISTS settings (key TEXT PRIMARY KEY, value TEXT NOT NULL);`);
+    CREATE TABLE IF NOT EXISTS settings (key TEXT PRIMARY KEY, value TEXT NOT NULL);
+    CREATE TABLE IF NOT EXISTS page_drafts (page TEXT PRIMARY KEY, data TEXT NOT NULL, updated_at TEXT NOT NULL);
+    CREATE TABLE IF NOT EXISTS page_history (id INTEGER PRIMARY KEY AUTOINCREMENT, page TEXT NOT NULL, data TEXT NOT NULL, created_at TEXT NOT NULL);
+    CREATE TABLE IF NOT EXISTS trash (kind TEXT NOT NULL, id TEXT NOT NULL, data TEXT NOT NULL, position INTEGER NOT NULL, deleted_at TEXT NOT NULL, PRIMARY KEY(kind,id));`);
   const insert = db.prepare(
     'INSERT INTO photos (id, category, data, position) VALUES (?, ?, ?, ?)',
   );
@@ -83,11 +90,16 @@ function createGalleryServer(options = {}) {
       throw error;
     }
   }
+  function readReviews() { return JSON.parse(db.prepare("SELECT value FROM settings WHERE key='tutoring-reviews'").get()?.value || '[]'); }
   function exportGallery() {
+    const home = readHome();
+    fs.writeFileSync(options.dataDir ? path.join(dataDir, 'home-data.js') : path.join(ROOT, 'assets/js/home-data.js'), `window.portfolioHome = ${JSON.stringify(home, null, 2)};\n`);
+    const pages = { home: home.content, about: readAbout(), knowledge: { ...readOffers(), reviews: readReviews().filter(item=>item.visible && !item.archived) }, projects: readProjectPage(), contact: readContact() };
+    fs.writeFileSync(options.dataDir ? path.join(dataDir, 'pages-data.js') : path.join(ROOT, 'assets/js/pages-data.js'), `window.portfolioPageContent = ${JSON.stringify(pages, null, 2)};\n`);
     const photos = db
       .prepare('SELECT data FROM photos ORDER BY position')
       .all()
-      .map((row) => JSON.parse(row.data));
+      .map((row) => JSON.parse(row.data)).filter(photo => photo.visible !== false);
     const content =
       '// Eksport z panelu galerii. Opisy edytuj przez admin.html.\n' +
       `window.portfolioPhotos = ${JSON.stringify(photos, null, 2)};\n`;
@@ -98,7 +110,8 @@ function createGalleryServer(options = {}) {
     const projects = db
       .prepare('SELECT data FROM projects ORDER BY position')
       .all()
-      .map((row) => JSON.parse(row.data));
+      .map((row) => JSON.parse(row.data))
+      .filter(project => project.visible !== false);
     fs.mkdirSync(path.dirname(projectExportFile), { recursive: true });
     fs.writeFileSync(
       `${projectExportFile}.tmp`,
@@ -110,7 +123,13 @@ function createGalleryServer(options = {}) {
   function mutateGallery(operation) {
     db.exec('BEGIN');
     try {
+      const before = Object.fromEntries(['home','about','projects','knowledge','contact'].map(page => [page, JSON.stringify(readPublished(page))]));
       operation();
+      for (const [page, data] of Object.entries(before)) {
+        if (data === JSON.stringify(readPublished(page))) continue;
+        db.prepare('INSERT INTO page_history(page,data,created_at) VALUES (?,?,?)').run(page, data, new Date().toISOString());
+        db.prepare('DELETE FROM page_history WHERE page=? AND id NOT IN (SELECT id FROM page_history WHERE page=? ORDER BY id DESC LIMIT 10)').run(page, page);
+      }
       exportGallery();
       db.exec('COMMIT');
     } catch (error) {
@@ -119,6 +138,39 @@ function createGalleryServer(options = {}) {
       throw error;
     }
   }
+  function readPublished(page) {
+    if (page === 'home') return readHome();
+    if (page === 'about') return { content: readAbout() };
+    if (page === 'projects') return readProjectPage();
+    if (page === 'contact') return readContact();
+    return readOffers();
+  }
+  function normalizeDraft(page, input, old) {
+    if (page === 'home') {
+      const result = normalizeHome(input, old);
+      if (result.featured.some(id => !db.prepare('SELECT id FROM projects WHERE id=?').get(id)))
+        throw Object.assign(new Error('Wybrany projekt lub osiągnięcie już nie istnieje.'), { status:400 });
+      return result;
+    }
+    if (page === 'about') return { content: normalizeContent(input.content, old.content) };
+    if (page === 'projects' || page === 'contact') return { editor: normalizeEditor(input.editor, old.editor) };
+    return normalizeOffers(input, old);
+  }
+  function readHome() {
+    const saved = JSON.parse(db.prepare("SELECT value FROM settings WHERE key='home'").get()?.value || JSON.stringify(homeDefaults));
+    return hydrateHome(saved);
+  }
+  function readContact() { return { ...pageDefaults.contact, ...JSON.parse(db.prepare("SELECT value FROM settings WHERE key='page-contact'").get()?.value || '{}') }; }
+  function readProjectPage() {
+    return { ...pageDefaults.projects, ...JSON.parse(db.prepare("SELECT value FROM settings WHERE key='page-projects'").get()?.value || '{}') };
+  }
+  function readOffers() {
+    return { ...pageDefaults.knowledge, ...JSON.parse(db.prepare("SELECT value FROM settings WHERE key='page-knowledge'").get()?.value || '{}') };
+  }
+  function readAbout() {
+    return JSON.parse(db.prepare("SELECT value FROM settings WHERE key='page-about'").get()?.value || JSON.stringify(pageDefaults.about));
+  }
+  if (!db.prepare("SELECT value FROM settings WHERE key='page-contact'").get()) db.prepare('INSERT INTO settings(key,value) VALUES (?,?)').run('page-contact',JSON.stringify(pageDefaults.contact));
   exportGallery();
 
   const sessions = new Map();
@@ -230,13 +282,13 @@ function createGalleryServer(options = {}) {
       throw error;
     }
   }
-  const inbox = require('./inbox.cjs').createInbox({ db, json, body, authenticated, options });
+  const inbox = require('./server/inbox.cjs').createInbox({ db, json, body, authenticated, options });
   function notFound(req, res) {
     if (
       (req.method === 'GET' || req.method === 'HEAD') &&
       req.headers.accept?.includes('text/html')
     ) {
-      const html = fs.readFileSync(path.join(ROOT, '404.html'));
+      const html = Buffer.from(renderPage(fs.readFileSync(path.join(ROOT, 'pages', '404.html'), 'utf8'), '404.html'));
       res.writeHead(404, {
         'Content-Type': 'text/html; charset=utf-8',
         'Content-Length': html.length,
@@ -247,6 +299,9 @@ function createGalleryServer(options = {}) {
     res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' });
     return res.end(req.method === 'HEAD' ? undefined : 'Nie znaleziono pliku.');
   }
+  let backupBusy=false;
+  const spotify=require('./server/spotify.cjs').createSpotify({directory:dataDir,json,body,authenticated,fetchImpl:options.spotifyFetch||fetch});
+  const backups=require('./server/backups.cjs').createBackups({db,databaseFile:path.join(dataDir,'gallery.sqlite'),imagesDir:uploadDir,directory:options.backupDir||path.join(options.dataDir||ROOT,'backups','project-snapshots'),json,body,authenticated,exportData:()=>{require('./server/inbox.cjs').ensureCaseColumns(db);exportGallery();},clearSessions:()=>sessions.clear(),setBusy:value=>{backupBusy=value;}});
   const server = http.createServer(async (req, res) => {
     try {
       const url = new URL(req.url, 'http://localhost');
@@ -265,6 +320,23 @@ function createGalleryServer(options = {}) {
           if (!allowed.has(req.headers.origin))
             return json(res, 403, { error: 'Otwórz panel z lokalnego adresu serwera.' });
         }
+        if (await backups.handle(req,res,pathname)) return;
+        if(backupBusy && !['GET','HEAD'].includes(req.method)) return json(res,503,{error:'Trwa tworzenie lub przywracanie kopii. Spróbuj za chwilę.'});
+        if(pathname==='/api/admin/stats'&&req.method==='GET'){
+          if(!authenticated(req))return json(res,401,{error:'Zaloguj się do panelu administratora.'});
+          const photos=db.prepare('SELECT data FROM photos').all().map(row=>JSON.parse(row.data));
+          return json(res,200,{drafts:db.prepare('SELECT COUNT(*) AS n FROM page_drafts').get().n,hiddenPhotos:photos.filter(photo=>photo.visible===false).length,albumOnly:photos.filter(photo=>photo.visible!==false&&photo.galleryVisible===false).length,unread:db.prepare("SELECT COUNT(*) AS n FROM messages WHERE folder='inbox' AND is_read=0").get().n});
+        }
+        if((options.automaticBackups ?? !options.dataDir) && authenticated(req) && !['GET','HEAD'].includes(req.method) &&
+          (req.method==='DELETE'||/^\/api\/page-drafts\/[^/]+\/publish$/.test(pathname)||/^\/api\/(?:pages\/[^/]+|home|photo-management|photo-order|album-cover|photos(?:\/[^/]+)?|projects(?:\/[^/]+)?)$/.test(pathname))){
+          await backups.automatic();
+        }
+        if(pathname==='/api/preflight'&&req.method==='GET'){
+          if(!authenticated(req))return json(res,401,{error:'Zaloguj się do panelu.'});
+          const pages=Object.fromEntries(['home','about','projects','knowledge','contact'].map(page=>[page,readPublished(page)]));
+          return json(res,200,require('./server/preflight.cjs').check({root:ROOT,pages,photos:db.prepare('SELECT data FROM photos').all().map(row=>JSON.parse(row.data)).filter(item=>item.visible!==false),projects:db.prepare('SELECT data FROM projects').all().map(row=>JSON.parse(row.data)).filter(item=>item.visible!==false)}));
+        }
+        if(await spotify.handle(req,res,pathname))return;
         if (await inbox(req, res, pathname)) return;
         if (pathname === '/api/auth/status' && req.method === 'GET') {
           return json(res, 200, {
@@ -325,6 +397,130 @@ function createGalleryServer(options = {}) {
         if (req.method !== 'GET' && !authenticated(req)) {
           return json(res, 401, { error: 'Zaloguj się do panelu administratora.' });
         }
+        if (pathname === '/api/trash' || pathname.startsWith('/api/trash/')) {
+          if (!authenticated(req)) return json(res, 401, { error: 'Zaloguj się do panelu administratora.' });
+          if (pathname === '/api/trash' && req.method === 'GET')
+            return json(res, 200, db.prepare('SELECT * FROM trash ORDER BY deleted_at DESC').all().map(row => ({ ...row, data: JSON.parse(row.data) })));
+          const permanent = pathname.match(/^\/api\/trash\/(photos|projects)\/([\w-]+)$/);
+          if (permanent && req.method === 'DELETE') {
+            const input = await body(req);
+            if (input?.confirmId !== permanent[2]) return json(res, 400, { error: 'Potwierdź trwałe usunięcie wybranego wpisu.' });
+            const result = db.prepare('DELETE FROM trash WHERE kind=? AND id=?').run(permanent[1], permanent[2]);
+            return json(res, result.changes ? 200 : 404, result.changes ? { ok: true } : { error: 'Wpis nie znajduje się już w koszu.' });
+          }
+          const match = pathname.match(/^\/api\/trash\/(photos|projects)\/([\w-]+)\/restore$/);
+          if (!match || req.method !== 'POST') return json(res, 405, { error: 'Niedozwolona operacja.' });
+          const [, kind, id] = match;
+          const row = db.prepare('SELECT * FROM trash WHERE kind=? AND id=?').get(kind, id);
+          if (!row) return json(res, 404, { error: 'Wpis nie znajduje się już w koszu.' });
+          if (db.prepare(`SELECT id FROM ${kind} WHERE id=?`).get(id)) return json(res, 409, { error: 'Wpis o tym identyfikatorze już istnieje. Nie nadpisano danych.' });
+          mutateGallery(() => {
+            if (kind === 'photos') db.prepare('INSERT INTO photos VALUES (?,?,?,?)').run(id, JSON.parse(row.data).category, row.data, row.position);
+            else db.prepare('INSERT INTO projects VALUES (?,?,?)').run(id, row.data, row.position);
+            db.prepare('DELETE FROM trash WHERE kind=? AND id=?').run(kind, id);
+          });
+          return json(res, 200, { ok: true });
+        }
+        const draftRoute = pathname.match(/^\/api\/page-drafts\/(home|about|projects|knowledge|contact)(?:\/(publish|history|restore))?$/);
+        if (draftRoute) {
+          if (!authenticated(req)) return json(res,401,{error:'Zaloguj się do panelu administratora.'});
+          const [, page, action] = draftRoute;
+          const row = db.prepare('SELECT * FROM page_drafts WHERE page=?').get(page);
+          if (action === 'history' && req.method === 'GET')
+            return json(res,200,db.prepare('SELECT id,created_at FROM page_history WHERE page=? ORDER BY id DESC').all(page));
+          if (!action && req.method === 'GET') return json(res,200,row ? { data:page==='home'?hydrateHome(JSON.parse(row.data)):JSON.parse(row.data), updatedAt:row.updated_at } : {data:null});
+          if (!action && req.method === 'DELETE') {
+            db.prepare('DELETE FROM page_drafts WHERE page=?').run(page); return json(res,200,{ok:true});
+          }
+          if (action === 'restore' && req.method === 'POST') {
+            const input = await body(req);
+            const revision = db.prepare('SELECT data FROM page_history WHERE page=? AND id=?').get(page,Number(input.id));
+            if (!revision) return json(res,404,{error:'Nie znaleziono wersji.'});
+            const updatedAt = new Date().toISOString();
+            db.prepare('INSERT INTO page_drafts VALUES (?,?,?) ON CONFLICT(page) DO UPDATE SET data=excluded.data,updated_at=excluded.updated_at').run(page,revision.data,updatedAt);
+            return json(res,200,{data:JSON.parse(revision.data),updatedAt});
+          }
+          if (action === 'publish' && req.method === 'POST') {
+            if (!row) return json(res,409,{error:'Najpierw zapisz szkic.'});
+            const draft = JSON.parse(row.data), value = normalizeDraft(page,draft,draft);
+            mutateGallery(() => {
+              db.prepare('INSERT INTO settings(key,value) VALUES (?,?) ON CONFLICT(key) DO UPDATE SET value=excluded.value')
+                .run(page === 'home' ? 'home' : 'page-'+page,JSON.stringify(page === 'about' ? value.content : value));
+              db.prepare('DELETE FROM page_drafts WHERE page=?').run(page);
+            });
+            return json(res,200,value);
+          }
+          if (!action && req.method === 'PUT') {
+            const input = await body(req);
+            const value = normalizeDraft(page,input,row ? JSON.parse(row.data) : readPublished(page));
+            const upload = input.image && ['home','about'].includes(page) ? storeImages(input,'pages') : null;
+            if (upload) Object.assign(value.content.photo,{src:upload.src,thumbUrl:upload.thumbUrl});
+            const updatedAt = new Date().toISOString();
+            try { db.prepare('INSERT INTO page_drafts VALUES (?,?,?) ON CONFLICT(page) DO UPDATE SET data=excluded.data,updated_at=excluded.updated_at').run(page,JSON.stringify(value),updatedAt); }
+            catch(error) { if(upload) upload.files.forEach(file=>fs.unlinkSync(file)); throw error; }
+            return json(res,200,{data:value,updatedAt});
+          }
+          return json(res,405,{error:'Niedozwolona metoda.'});
+        }
+        if (pathname === '/api/reviews' || /^\/api\/reviews\/[a-f0-9-]{36}$/.test(pathname)) {
+          const items=readReviews(), id=pathname.split('/')[3];
+          if(req.method==='GET' && !id) return json(res,200,authenticated(req)?items:items.filter(item=>item.visible&&!item.archived));
+          if(!authenticated(req))return json(res,401,{error:'Zaloguj się do panelu.'});
+          if(!['POST','PUT'].includes(req.method) || (req.method==='POST' && id) || (req.method==='PUT' && !id))return json(res,405,{error:'Niedozwolona metoda.'});
+          const input=await body(req), old=id?items.find(item=>item.id===id):null;
+          if(id&&!old)return json(res,404,{error:'Nie znaleziono opinii.'});
+          const text=(key,max,required=false)=>{const value=input[key];if(typeof value!=='string'||value.trim().length>max||(required&&!value.trim()))throw Object.assign(Error('Sprawdź treść, podpis i długość pól.'),{status:400});return value.trim();};
+          if(typeof input.rating!=='number'||!Number.isFinite(input.rating)||input.rating<0||input.rating>5||input.rating*2%1 || typeof input.visible!=='boolean'||typeof input.archived!=='boolean') return json(res,400,{error:'Ocena musi wynosić 0–5 co 0,5. Sprawdź widoczność.'});
+          if(!old && items.length>=500)return json(res,400,{error:'Osiągnięto limit 500 opinii.'});
+          const item={id:old?.id||crypto.randomUUID(),author:text('author',100,true),text:text('text',2000,true),context:text('context',160),textEn:text('textEn',2000),contextEn:text('contextEn',160),rating:input.rating,visible:input.visible,archived:input.archived};
+          if(old)items[items.indexOf(old)]=item;else items.push(item);
+          mutateGallery(()=>db.prepare('INSERT INTO settings(key,value) VALUES (?,?) ON CONFLICT(key) DO UPDATE SET value=excluded.value').run('tutoring-reviews',JSON.stringify(items)));
+          return json(res,old?200:201,item);
+        }
+        if (pathname === '/api/pages/contact') {
+          if(req.method === 'GET') return json(res,200,readContact());
+          if(req.method !== 'PUT') return json(res,405,{error:'Niedozwolona metoda.'});
+          const input=await body(req), page={editor:normalizeEditor(input.editor,readContact().editor)};
+          mutateGallery(()=>db.prepare('INSERT INTO settings(key,value) VALUES (?,?) ON CONFLICT(key) DO UPDATE SET value=excluded.value').run('page-contact',JSON.stringify(page)));
+          return json(res,200,page);
+        }
+        if (pathname === '/api/pages/projects') {
+          if (req.method === 'GET') return json(res, 200, readProjectPage());
+          if (req.method !== 'PUT') return json(res, 405, { error: 'Niedozwolona metoda.' });
+          const input = await body(req);
+          const page = { editor: normalizeEditor(input.editor, readProjectPage().editor) };
+          mutateGallery(() => db.prepare('INSERT INTO settings(key,value) VALUES (?,?) ON CONFLICT(key) DO UPDATE SET value=excluded.value').run('page-projects', JSON.stringify(page)));
+          return json(res, 200, page);
+        }
+        if (pathname === '/api/pages/knowledge') {
+          if (req.method === 'GET') return json(res, 200, readOffers());
+          if (req.method !== 'PUT') return json(res, 405, { error: 'Niedozwolona metoda.' });
+          const offers = normalizeOffers(await body(req), readOffers());
+          mutateGallery(() => db.prepare('INSERT INTO settings(key,value) VALUES (?,?) ON CONFLICT(key) DO UPDATE SET value=excluded.value').run('page-knowledge', JSON.stringify(offers)));
+          return json(res, 200, offers);
+        }
+        if (['/api/home', '/api/pages/home', '/api/pages/about'].includes(pathname)) {
+          const homePage = pathname !== '/api/pages/about';
+          const old = homePage ? readHome() : { content: readAbout() };
+          if (req.method === 'GET') return json(res, 200, old);
+          if (req.method === 'PUT') {
+            const input = await body(req);
+            const page = homePage ? normalizeHome(input, old) : { content: normalizeContent(input.content, old.content) };
+            if (homePage && page.featured.some(id => !db.prepare('SELECT id FROM projects WHERE id=?').get(id)))
+              return json(res, 400, { error: 'Wybrany projekt lub osiągnięcie już nie istnieje.' });
+            const upload = input.image ? storeImages(input, 'pages') : null;
+            if (upload) Object.assign(page.content.photo, { src: upload.src, thumbUrl: upload.thumbUrl });
+            try {
+              mutateGallery(() => db.prepare('INSERT INTO settings (key,value) VALUES (?,?) ON CONFLICT(key) DO UPDATE SET value=excluded.value')
+                .run(homePage ? 'home' : 'page-about', JSON.stringify(homePage ? page : page.content)));
+            } catch (error) {
+              if (upload) upload.files.forEach(file => fs.unlinkSync(file));
+              throw error;
+            }
+            return json(res, 200, page);
+          }
+          return json(res, 405, { error: 'Niedozwolona metoda.' });
+        }
         if (pathname === '/api/projects' && req.method === 'GET')
           return json(
             res,
@@ -332,7 +528,8 @@ function createGalleryServer(options = {}) {
             db
               .prepare('SELECT data FROM projects ORDER BY position')
               .all()
-              .map((row) => JSON.parse(row.data)),
+              .map((row) => JSON.parse(row.data))
+              .filter(project => authenticated(req) || project.visible !== false),
           );
         const projectId = pathname.match(/^\/api\/projects\/([\w-]+)$/)?.[1];
         if (
@@ -344,7 +541,12 @@ function createGalleryServer(options = {}) {
             : null;
           if (projectId && !row) return json(res, 404, { error: 'Nie znaleziono projektu.' });
           if (req.method === 'DELETE') {
-            mutateGallery(() => db.prepare('DELETE FROM projects WHERE id=?').run(projectId));
+            const permanent = url.searchParams.get('permanent') === '1';
+            if (permanent && (await body(req))?.confirmId !== projectId) return json(res, 400, { error: 'Potwierdź trwałe usunięcie wybranego wpisu.' });
+            mutateGallery(() => {
+              if (!permanent) db.prepare('INSERT INTO trash SELECT ?,id,data,position,? FROM projects WHERE id=?').run('projects', new Date().toISOString(), projectId);
+              db.prepare('DELETE FROM projects WHERE id=?').run(projectId);
+            });
             return json(res, 200, { ok: true });
           }
           const input = await body(req);
@@ -383,8 +585,44 @@ function createGalleryServer(options = {}) {
             db
               .prepare('SELECT data FROM photos ORDER BY position')
               .all()
-              .map((row) => JSON.parse(row.data)),
+              .map((row) => JSON.parse(row.data)).filter(photo => authenticated(req) || photo.visible !== false),
           );
+        if(pathname==='/api/album-cover' && req.method==='POST'){
+          const input=await body(req),row=typeof input.id==='string'?db.prepare('SELECT data FROM photos WHERE id=?').get(input.id):null;
+          if(!row)return json(res,404,{error:'Nie znaleziono zdjęcia.'});
+          const photo=JSON.parse(row.data),key=value=>(value||'').trim().normalize('NFC').toLocaleLowerCase('pl');
+          if(!photo.album||photo.visible===false)return json(res,400,{error:'Wybierz widoczne zdjęcie przypisane do albumu.'});
+          mutateGallery(()=>{for(const entry of db.prepare('SELECT data FROM photos').all()){const item=JSON.parse(entry.data);if(key(item.album)===key(photo.album)){item.albumCover=item.id===photo.id;db.prepare('UPDATE photos SET data=? WHERE id=?').run(JSON.stringify(item),item.id);}}});
+          return json(res,200,{ok:true});
+        }
+        if (pathname === '/api/photo-management'  && req.method === 'POST') {
+          const input = await body(req);
+          if (!Array.isArray(input.ids) || !input.ids.length || input.ids.length > 1000 || new Set(input.ids).size !== input.ids.length || input.ids.some(id=>typeof id !== 'string'))
+            return json(res,400,{error:'Wybierz zdjęcia bez powtórzeń.'});
+          if (input.album !== undefined && (typeof input.album !== 'string' || input.album.length > 160)) return json(res,400,{error:'Niepoprawna nazwa albumu.'});
+          if (input.visible !== undefined && typeof input.visible !== 'boolean') return json(res,400,{error:'Niepoprawna widoczność.'});
+          if (input.galleryVisible !== undefined && typeof input.galleryVisible !== 'boolean') return json(res,400,{error:'Niepoprawna widoczność w galerii.'});
+          if (input.album === undefined && input.visible === undefined && input.galleryVisible === undefined) return json(res,400,{error:'Wybierz zmianę.'});
+          const rows = input.ids.map(id=>db.prepare('SELECT data FROM photos WHERE id=?').get(id));
+          if (rows.some(row=>!row)) return json(res,409,{error:'Lista zdjęć się zmieniła. Odśwież panel.'});
+          if (input.galleryVisible === false && rows.some(row=>!(input.album ?? JSON.parse(row.data).album ?? '').trim())) return json(res,400,{error:'Najpierw przypisz zdjęcie do albumu.'});
+          mutateGallery(()=>rows.forEach(row=>{
+            const photo=JSON.parse(row.data);
+            if(input.album !== undefined) { if(photo.album!==input.album.trim().normalize('NFC'))photo.albumCover=false;photo.album=input.album.trim().normalize('NFC'); }
+            if(input.visible !== undefined) photo.visible=input.visible;
+            if(input.galleryVisible !== undefined) photo.galleryVisible=input.galleryVisible;
+            if(!photo.album) photo.galleryVisible=true;
+            db.prepare('UPDATE photos SET data=? WHERE id=?').run(JSON.stringify(photo),photo.id);
+          }));
+          return json(res,200,{ok:true});
+        }
+        if (pathname === '/api/photo-order' && req.method === 'PUT') {
+          const input=await body(req), current=db.prepare('SELECT id FROM photos').all().map(row=>row.id);
+          if (!Array.isArray(input.ids) || input.ids.length !== current.length || new Set(input.ids).size !== current.length || input.ids.some(id=>!current.includes(id)))
+            return json(res,409,{error:'Lista zdjęć się zmieniła. Odśwież panel przed zmianą kolejności.'});
+          mutateGallery(()=>input.ids.forEach((id,index)=>db.prepare('UPDATE photos SET position=? WHERE id=?').run(index,id)));
+          return json(res,200,{ok:true});
+        }
         if (pathname === '/api/photos' && req.method === 'POST') {
           const input = await body(req);
           const photo = normalize(input);
@@ -412,7 +650,12 @@ function createGalleryServer(options = {}) {
           const row = db.prepare('SELECT data FROM photos WHERE id=?').get(id);
           if (!row) return json(res, 404, { error: 'Nie znaleziono zdjęcia.' });
           if (req.method === 'DELETE') {
-            mutateGallery(() => db.prepare('DELETE FROM photos WHERE id=?').run(id));
+            const permanent = url.searchParams.get('permanent') === '1';
+            if (permanent && (await body(req))?.confirmId !== id) return json(res, 400, { error: 'Potwierdź trwałe usunięcie wybranego wpisu.' });
+            mutateGallery(() => {
+              if (!permanent) db.prepare('INSERT INTO trash SELECT ?,id,data,position,? FROM photos WHERE id=?').run('photos', new Date().toISOString(), id);
+              db.prepare('DELETE FROM photos WHERE id=?').run(id);
+            });
             // Plik pozostaje na dysku, aby można było odzyskać usunięte zdjęcie.
             return json(res, 200, { ok: true });
           }
@@ -430,7 +673,12 @@ function createGalleryServer(options = {}) {
         res.writeHead(405);
         return res.end();
       }
-      const relative = pathname === '/' ? 'index.html' : pathname.replace(/^\//, '');
+      const routes = require('./shared/pretty-routes.cjs');
+      const route = routes.resolve(url);
+      if (route.redirect) { res.writeHead(302, {Location: route.redirect, 'Cache-Control':'no-store'}); return res.end(); }
+      const relative = route.file || (pathname === '/' ? 'index.html' : pathname.replace(/^\//, ''));
+      if(route.id) url.searchParams.set('id',route.id);
+      if(route.album) url.searchParams.set('album',route.album);
       // Otwarte przed reorganizacją karty mogą nadal używać dawnych adresów zdjęć.
       if (
         /^assets\/(?:(?:hobby|uploads)|images\/(?:gallery|projects))\/[^/\\]+\.(?:jpe?g|png|webp)$/i.test(
@@ -447,7 +695,7 @@ function createGalleryServer(options = {}) {
           }
         }
       }
-      const file = path.resolve(ROOT, relative);
+      const file = path.resolve(ROOT, relative.endsWith('.html') && !relative.includes('/') ? 'pages/' + relative : relative);
       const extension = path.extname(file).toLowerCase();
       const staticAllowed =
         !relative.includes('\\') &&
@@ -461,6 +709,19 @@ function createGalleryServer(options = {}) {
       const stats = await fs.promises.stat(file);
       if (!stats.isFile()) {
         return notFound(req, res);
+      }
+      if (extension === '.html') {
+        const raw=routes.html(renderPage(await fs.promises.readFile(file, 'utf8'), relative));
+        let base='http://'+req.headers.host;
+        if(process.env.PUBLIC_SITE_URL){try{const configured=new URL(process.env.PUBLIC_SITE_URL);if(['http:','https:'].includes(configured.protocol))base=configured.origin;}catch{}}
+        const html = Buffer.from(relative==='admin.html'?raw:require('./server/social-meta.cjs').socialMeta(raw,{url,base,photos:db.prepare('SELECT data FROM photos ORDER BY position').all().map(row=>JSON.parse(row.data)),projects:db.prepare('SELECT data FROM projects ORDER BY position').all().map(row=>JSON.parse(row.data))}));
+        res.writeHead(200, {
+          'Content-Type': MIME[extension],
+          'Content-Length': html.length,
+          'X-Content-Type-Options': 'nosniff',
+          'Cache-Control': 'no-cache',
+        });
+        return res.end(req.method === 'HEAD' ? undefined : html);
       }
       res.writeHead(200, {
         'Content-Type': MIME[extension],

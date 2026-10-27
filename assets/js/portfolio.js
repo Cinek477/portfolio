@@ -19,10 +19,12 @@ function applyLanguage(value) {
   language = value === 'en' ? 'en' : 'pl';
   root.lang = language;
   document.querySelectorAll('[data-pl]').forEach((element) => {
-    element.textContent = element.dataset[language];
+    const text = element.dataset[language];
+    if (text !== undefined && element.textContent !== text) element.textContent = text;
   });
   document.querySelectorAll('[data-label-pl]').forEach((element) => {
-    element.setAttribute('aria-label', element.dataset[language === 'pl' ? 'labelPl' : 'labelEn']);
+    const label = element.dataset[language === 'pl' ? 'labelPl' : 'labelEn'];
+    if (label !== undefined && element.getAttribute('aria-label') !== label) element.setAttribute('aria-label', label);
   });
   document.querySelector('.language').innerHTML =
     `<span class="${language === 'pl' ? '' : 'inactive'}">PL</span> / <span class="${language === 'en' ? '' : 'inactive'}">EN</span>`;
@@ -33,19 +35,47 @@ function applyLanguage(value) {
   updateLogoLabel();
   document.dispatchEvent(new CustomEvent('portfolio-language-change'));
 }
-document
-  .querySelector('.language')
-  .addEventListener('click', () => applyLanguage(language === 'pl' ? 'en' : 'pl'));
+document.querySelector('.language').addEventListener('click', async () => {
+  if (root.dataset.languageTransition || root.dataset.pageTransition) return;
+  const next = language === 'pl' ? 'en' : 'pl';
+  const targets = [...document.querySelectorAll('main, .navigation, footer')];
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches || !targets.every(element => element.animate)) {
+    applyLanguage(next);
+    return;
+  }
+  const button = document.querySelector('.language');
+  root.dataset.languageTransition = 'true';
+  button.setAttribute('aria-busy', 'true');
+  const animations = [];
+  let changed = false;
+  try {
+    const outgoing = targets.map(element => element.animate(
+      [{ opacity: 1 }, { opacity: 0 }],
+      { duration: 100, easing: 'ease-in', fill: 'forwards' },
+    ));
+    animations.push(...outgoing);
+    await Promise.all(outgoing.map(animation => animation.finished));
+    applyLanguage(next);
+    changed = true;
+    const incoming = targets.filter(element => element.isConnected).map(element => element.animate(
+      [{ opacity: 0 }, { opacity: 1 }],
+      { duration: 180, easing: 'ease-out' },
+    ));
+    animations.push(...incoming);
+    outgoing.forEach(animation => animation.cancel());
+    await Promise.all(incoming.map(animation => animation.finished));
+  } catch {
+    if (!changed) applyLanguage(next);
+  } finally {
+    animations.forEach(animation => animation.cancel());
+    delete root.dataset.languageTransition;
+    button.removeAttribute('aria-busy');
+  }
+});
 applyLanguage(readPreference('portfolio-language') || 'pl');
 function updateLogoLabel() {
   const mobile = matchMedia('(max-width: 760px)').matches;
-  const label = mobile
-    ? language === 'pl'
-      ? 'Otwórz menu'
-      : 'Open menu'
-    : language === 'pl'
-      ? 'Panel administratora'
-      : 'Admin panel';
+  const label = language === 'pl' ? 'Otwórz menu' : 'Open menu';
   menu.setAttribute('aria-label', label);
   menu.title = label;
   if (mobile) menu.setAttribute('aria-expanded', String(navbar.classList.contains('menu-open')));
@@ -55,22 +85,10 @@ function closeMenu() {
   navbar.classList.remove('menu-open');
   updateLogoLabel();
 }
-let lastLogoTap = null;
-menu.addEventListener('click', (event) => {
-  if (matchMedia('(max-width: 760px)').matches) {
-    const now = performance.now();
-    if (event.detail > 0 && lastLogoTap !== null && now - lastLogoTap < 450) {
-      lastLogoTap = null;
-      location.href = 'admin.html';
-      return;
-    }
-    lastLogoTap = event.detail > 0 ? now : null;
-    const open = navbar.classList.toggle('menu-open');
-    menu.setAttribute('aria-expanded', String(open));
-  } else {
-    lastLogoTap = null;
-    location.href = 'admin.html';
-  }
+menu.addEventListener('click', () => {
+  if (!matchMedia('(max-width: 760px)').matches) return;
+  const open = navbar.classList.toggle('menu-open');
+  menu.setAttribute('aria-expanded', String(open));
 });
 document.querySelector('.navigation').addEventListener('click', (event) => {
   if (event.target.closest('a')) closeMenu();
@@ -82,7 +100,8 @@ document.addEventListener('click', (event) => {
   if (!navbar.contains(event.target)) closeMenu();
 });
 function updateScroll() {
-  navbar.classList.toggle('scrolled', scrollY > 90);
+  const compact = navbar.classList.contains('scrolled');
+  navbar.classList.toggle('scrolled', scrollY > (compact ? 70 : 100));
 }
 addEventListener('scroll', updateScroll, { passive: true });
 updateScroll();

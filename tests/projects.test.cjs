@@ -59,6 +59,7 @@ test('Projects: authenticated CRUD, image replacement, export and persistence', 
     technologies: 'Java, SQL',
     link: 'https://github.com/example/project',
     year: 2026,
+    caseStudy: { enabled: true, title: { pl: 'Opis realizacji', en: 'Case study' }, problem: { pl: 'Problem', en: 'Problem' }, solution: { pl: 'Rozwiązanie', en: 'Solution' }, contribution: { pl: '', en: '' }, result: { pl: 'Wynik', en: 'Outcome' } },
   };
   assert.equal((await write('/api/projects', 'POST', input)).status, 401);
   const auth = await write('/api/auth/setup', 'POST', {
@@ -78,9 +79,21 @@ test('Projects: authenticated CRUD, image replacement, export and persistence', 
   let project = await response.json();
   assert.equal(project.src, '');
   assert.equal(project.title.en, 'Test project');
+  assert.deepEqual(project.caseStudy, input.caseStudy);
+  assert.equal((await write('/api/projects', 'POST', { ...input, caseStudy: { enabled: true } })).status, 400);
+  assert.equal((await write('/api/projects', 'POST', { ...input, caseStudy: { ...input.caseStudy, problem: { pl: 'x'.repeat(5001) } } })).status, 400);
   const image =
     'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aOioAAAAASUVORK5CYII=';
   const endpoint = `/api/projects/${project.id}`;
+  const legacyUpdate = { ...input, visible: false }; delete legacyUpdate.caseStudy;
+  assert.equal((await write(endpoint, 'PUT', legacyUpdate)).status, 200);
+  assert.ok(!(await (await fetch(`${base}/api/projects`)).json()).some(item => item.id === project.id));
+  assert.ok(!exported().some(item => item.id === project.id));
+  const hidden = await (await fetch(`${base}/api/projects`, { headers: { Cookie: cookie } })).json();
+  assert.equal(hidden.find(item => item.id === project.id).visible, false);
+  assert.deepEqual(hidden.find(item => item.id === project.id).caseStudy, input.caseStudy);
+  assert.equal((await write(endpoint, 'PUT', { ...input, visible: true })).status, 200);
+  assert.ok((await (await fetch(`${base}/api/projects`)).json()).some(item => item.id === project.id));
   const update = await write(endpoint, 'PUT', {
     ...input,
     title: 'Nowy tytuł',
@@ -111,6 +124,7 @@ test('Projects: authenticated CRUD, image replacement, export and persistence', 
   await start();
   const persisted = await (await fetch(`${base}/api/projects`)).json();
   assert.equal(persisted.find((item) => item.id === project.id).description.pl, input.description);
+  assert.deepEqual(persisted.find(item => item.id === project.id).caseStudy, input.caseStudy);
   assert.equal((await write(endpoint, 'DELETE')).status, 401);
   const login = await write('/api/auth/login', 'POST', {
     username: 'admin',

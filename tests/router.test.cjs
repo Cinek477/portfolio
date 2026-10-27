@@ -103,7 +103,7 @@ test('Routing: internal navigation, history, scope cleanup and ordinary links', 
     let prevented = false;
     const link = {
       href: new URL(path, location.href).href,
-      target: '',
+      target: extra.linkTarget || '',
       hasAttribute: (name) => name === 'download' && extra.download,
     };
     events.click({
@@ -119,6 +119,9 @@ test('Routing: internal navigation, history, scope cleanup and ordinary links', 
   for (const path of ['#projects', '/admin.html', '/assets/CV.pdf', 'https://example.com/'])
     assert.equal(click(path), false);
   assert.equal(click('/hobby.html', { ctrlKey: true }), false);
+  assert.equal(click('/hobby.html', { metaKey: true }), false);
+  assert.equal(click('/hobby.html', { button: 1 }), false);
+  assert.equal(click('/hobby.html', { linkTarget: '_blank' }), false);
   assert.equal(click('/hobby.html', { download: true }), false);
   assert.equal(click('/hobby.html'), true);
   await new Promise((resolve) => setImmediate(resolve));

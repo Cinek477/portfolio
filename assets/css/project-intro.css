@@ -1,0 +1,39 @@
+.projects-intro { display:grid; grid-template-columns:minmax(0,1.2fr) minmax(280px,.85fr); align-items:center; gap:64px; }
+.project-intro-copy { min-width:0; }
+.project-intro-copy>p:not(.eyebrow) { max-width:55ch; color:var(--muted); line-height:1.8; }
+.project-lab { position:relative; width:100%; max-width:420px; justify-self:end; color:var(--accent); }
+.project-lab-window { overflow:hidden; border:1px solid color-mix(in srgb,var(--accent) 30%,transparent); border-radius:24px; background:linear-gradient(140deg,color-mix(in srgb,var(--accent) 11%,transparent),color-mix(in srgb,var(--bg) 40%,transparent)); box-shadow:0 22px 60px color-mix(in srgb,var(--accent) 7%,transparent); transform:rotate(-3deg); animation:project-lab-sway 9s ease-in-out infinite; }
+.project-lab-toolbar { display:flex; align-items:center; gap:8px; padding:16px 20px; border-bottom:1px solid color-mix(in srgb,var(--accent) 16%,transparent); }
+.project-lab-toolbar span { opacity:.75; font-size:12px; font-weight:600; }
+.project-lab-toolbar b { width:6px; height:6px; margin-left:auto; background:currentColor; border-radius:50%; box-shadow:0 0 10px currentColor; }
+.project-lab-canvas { display:block; width:100%; height:auto; }
+.project-lab-grid { opacity:.055; stroke-width:1; }
+.project-lab-pane { fill:color-mix(in srgb,var(--bg) 70%,transparent); stroke:color-mix(in srgb,var(--accent) 55%,transparent); }
+.project-scene { opacity:0; transform-origin:200px 145px; animation:project-scene-cycle 18s ease-in-out infinite; }
+.project-scene-flow { animation-delay:-12s; }
+.project-scene-award { animation-delay:-6s; }
+.project-code-bracket { stroke-width:3; }
+.project-code-line { opacity:.55; transform-origin:94px 200px; animation:project-code-type 3s ease-in-out infinite; }
+.project-code-line.short { animation-delay:-1.2s; opacity:.3; }
+.project-code-cursor { animation:project-cursor 2s ease-in-out infinite; }
+.project-flow-wire { opacity:.2; }
+.project-flow-packet { stroke-dasharray:7 36; animation:project-flow 3s linear infinite; }
+.project-award-orbit { opacity:.25; transform-origin:200px 140px; animation:project-orbit 40s linear infinite; }
+.project-award-check { stroke-width:3; }
+.project-lab-spark { opacity:.6; animation:project-cursor 3s ease-in-out infinite; }
+.project-lab-progress { height:3px; margin:0 20px 18px; border-radius:4px; overflow:hidden; background:color-mix(in srgb,currentColor 9%,transparent); }
+.project-lab-progress span { display:block; height:100%; width:100%; background:currentColor; opacity:.55; transform-origin:left; animation:project-build 6s ease-in-out infinite; }
+.project-lab-float { position:absolute; right:-12px; bottom:28px; padding:14px; border:1px solid color-mix(in srgb,currentColor 30%,transparent); border-radius:16px; background:color-mix(in srgb,var(--bg) 80%,transparent); font:22px ui-monospace,monospace; transform:rotate(7deg); animation:project-float 7s ease-in-out infinite; }
+@keyframes project-scene-cycle { 0%,30% { opacity:1; transform:translateY(0) scale(1); } 33.333%,96% { opacity:0; transform:translateY(-7px) scale(.97); } 100% { opacity:1; transform:translateY(0) scale(1); } }
+@keyframes project-lab-sway { 0%,100% { transform:rotate(-3deg) translateY(0); } 50% { transform:rotate(-1deg) translateY(-7px); } }
+@keyframes project-float { 0%,100% { transform:rotate(7deg) translateY(0); } 50% { transform:rotate(3deg) translateY(-9px); } }
+@keyframes project-code-type { 0%,100% { transform:scaleX(.55); } 50% { transform:scaleX(1); } }
+@keyframes project-cursor { 0%,100% { opacity:.25; } 50% { opacity:1; } }
+@keyframes project-flow { to { stroke-dashoffset:-86; } }
+@keyframes project-orbit { to { transform:rotate(360deg); } }
+@keyframes project-build { 0% { transform:scaleX(.05); opacity:.2; } 75% { transform:scaleX(1); opacity:.65; } 100% { transform:scaleX(1); opacity:0; } }
+.project-lab:not(.is-animating) *, .project-lab:not(.is-animating) { animation-play-state:paused; }
+@media(max-width:760px) { .projects-intro { grid-template-columns:minmax(0,1fr); gap:38px; } .project-lab { width:min(88%,350px); justify-self:center; margin:0 0 12px; } .project-lab-float { right:-10px; } }
+@media(prefers-reduced-motion:reduce) { .project-lab *, .project-lab { animation:none!important; } .project-scene { opacity:0; } .project-scene-code { opacity:1; } }
+
+@media(max-width:760px) { .project-lab { width:min(76%,300px); max-width:100%; } }

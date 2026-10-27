@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- avoid-ai-design-ignore-file: K7 -->
 <html lang="pl">
   <head>
     <meta charset="UTF-8" />
@@ -8,9 +9,10 @@
       content="Portfolio Marcina Podymy — osiągnięcia, projekty i zainteresowania."
     />
     <meta name="theme-color" content="#edf6ff" />
-    <title>Marcin Podyma — Portfolio</title>
+    <title>Projekty — Marcin Podyma</title>
     <link rel="stylesheet" href="assets/css/portfolio.css" />
     <link rel="stylesheet" href="assets/css/controls.css" />
+    <link rel="stylesheet" href="assets/css/project-intro.css" />
     <link rel="icon" type="image/svg+xml" href="assets/images/cinek-ck.svg" />
     <script src="assets/js/router.js" defer></script>
     <script src="assets/js/neon.js" defer></script>
@@ -18,184 +20,108 @@
     <script src="assets/js/portfolio.js" defer></script>
     <script src="assets/js/projects-data.js" defer></script>
     <script src="assets/js/projects.js" defer></script>
+    <script src="assets/js/project-intro.js" defer></script>
+      <script src="assets/js/pages-data.js" defer></script>
+    <script src="assets/js/content-editor.js" defer></script>
   </head>
   <body class="aurora-page">
     <div class="aurora-bg" aria-hidden="true">
       <div class="aurora-blob blob-1"></div>
       <div class="aurora-blob blob-2"></div>
     </div>
-    <header class="navbar">
-      <button
-        class="logo"
-        aria-label="Menu / O mnie"
-        data-label-pl="Menu / O mnie"
-        data-label-en="Menu / About me"
-        aria-expanded="false"
-        aria-controls="navigation"
-      >
-        <span class="logo-mark" aria-hidden="true"></span>
-      </button>
-      <nav
-        class="navigation"
-        id="navigation"
-        aria-label="Nawigacja"
-        data-label-pl="Nawigacja"
-        data-label-en="Navigation"
-      >
-        <a href="index.html" aria-current="page" data-pl="Praca" data-en="Work">Praca</a>
-        <a href="about.html" data-pl="O Mnie" data-en="About Me">O Mnie</a>
-        <a href="knowledge.html" data-pl="Korepetycje" data-en="Tutoring">Korepetycje</a>
-        <a href="hobby.html" data-pl="Hobby" data-en="Hobbies">Hobby</a>
-        <a href="contact.html" data-pl="Kontakt" data-en="Contact">Kontakt</a>
-      </nav>
-      <div class="controls">
-        <button
-          class="language"
-          aria-label="Zmień język"
-          data-label-pl="Zmień język"
-          data-label-en="Change language"
-        >
-          PL / EN</button
-        ><button class="theme" aria-label="Zmień motyw" aria-pressed="false">
-          <svg
-            class="moon"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.7"
-            aria-hidden="true"
-          >
-            <path d="M20.5 13A8.5 8.5 0 0 1 11 3.5 8.5 8.5 0 1 0 20.5 13Z" /></svg
-          ><svg
-            class="sun"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.7"
-            aria-hidden="true"
-          >
-            <circle cx="12" cy="12" r="4" />
-            <path d="M12 1v3m0 16v3M1 12h3m16 0h3M4 4l2 2m12 12 2 2M4 20l2-2M18 6l2-2" />
+    <!-- component:navbar -->
+    <main data-cms-page="projects"><section class="section structure-intro projects-intro" data-cms-group="group-0"><div class="project-intro-copy"><p class="eyebrow" data-pl="Portfolio / Realizacje" data-en="Portfolio / Work" data-cms-text="group-0-text-0">Portfolio / Realizacje</p><h1 data-page-title data-pl="Projekty" data-en="Projects" data-cms-text="group-0-text-1">Projekty</h1><p data-pl="Hackathony, kompetencje i aktualne projekty — poznaj szczegóły mojej pracy." data-en="Hackathons, skills and current projects — explore my work." data-cms-text="group-0-text-2">Hackathony, kompetencje i aktualne projekty — poznaj szczegóły mojej pracy.</p><div class="hero-actions"><a class="primary" href="#achievements" data-pl="Osiągnięcia" data-en="Achievements" data-cms-text="group-0-text-3" data-cms-link="group-0-link-0">Osiągnięcia</a><a class="secondary" href="#projects" data-pl="Aktualne projekty" data-en="Current projects" data-cms-text="group-0-text-4" data-cms-link="group-0-link-1">Aktualne projekty</a></div></div>
+      <div class="project-lab" aria-hidden="true">
+        <div class="project-lab-window">
+          <div class="project-lab-toolbar"><span>architektura / kod / wdrożenie</span><b></b></div>
+          <svg class="project-lab-canvas" viewBox="0 0 400 290" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path class="project-lab-grid" d="M40 50H360M40 100H360M40 150H360M40 200H360M40 250H360M80 30V260M140 30V260M200 30V260M260 30V260M320 30V260"/>
+            <g class="project-scene project-scene-code">
+              <rect class="project-lab-pane" x="58" y="50" width="284" height="190" rx="18"/>
+              <path class="project-code-bracket" d="M111 111l-20 20 20 20m178-40 20 20-20 20M215 95l-26 72"/>
+              <path class="project-code-line" d="M94 191h126"/><path class="project-code-line short" d="M94 210h78"/>
+              <circle class="project-code-cursor" cx="286" cy="201" r="5" fill="currentColor" stroke="none"/>
+            </g>
+            <g class="project-scene project-scene-flow">
+              <path class="project-flow-wire" d="M111 145h49m80 0h49M200 119V83m0 88v36"/>
+              <path class="project-flow-packet" d="M111 145h49m80 0h49M200 119V83m0 88v36"/>
+              <rect class="project-lab-pane" x="162" y="109" width="76" height="72" rx="18"/>
+              <path d="M187 133l-9 12 9 12m26-24 9 12-9 12m-12-28-5 32"/>
+              <rect class="project-lab-pane" x="55" y="120" width="56" height="50" rx="13"/><path d="M71 138h24m-24 12h15"/>
+              <rect class="project-lab-pane" x="289" y="120" width="56" height="50" rx="13"/><path d="m304 146 8 8 17-19"/>
+              <circle class="project-lab-pane" cx="200" cy="62" r="21"/><path d="m192 62 6 6 10-12"/>
+              <circle class="project-lab-pane" cx="200" cy="229" r="21"/><path d="M190 229h20m-10-10v20"/>
+            </g>
+            <g class="project-scene project-scene-award">
+              <circle class="project-award-orbit" cx="200" cy="140" r="94" stroke-dasharray="3 14"/>
+              <path class="project-lab-pane" d="M159 78h82v48c0 32-18 51-41 51s-41-19-41-51z"/>
+              <path d="M159 90h-26v20c0 25 16 36 35 36m73-56h26v20c0 25-16 36-35 36m-32 31v40m-31 0h62m-48 14h34"/>
+              <path class="project-award-check" d="m184 126 11 11 23-25"/>
+              <path class="project-lab-spark" d="M100 77v16m-8-8h16m190 97v16m-8-8h16"/>
+            </g>
           </svg>
-        </button>
+          <div class="project-lab-progress"><span></span></div>
+        </div>
+        <span class="project-lab-float">&lt;/&gt;</span>
       </div>
-    </header>
-    <main>
-      <section class="hero" id="about" aria-labelledby="hero-title">
-        <div class="hero-heading">
-          <p class="eyebrow" data-pl="Cześć, jestem" data-en="Hi, I'm">Cześć, jestem</p>
-          <h1 id="hero-title">Marcin <span>Podyma</span></h1>
-        </div>
-        <div class="portrait">
-          <img
-            src="assets/images/profile/marcin.jpg"
-            alt="Marcin Podyma na plaży o zachodzie słońca"
-            width="2018"
-            height="2048"
-            fetchpriority="high"
-            decoding="async"
-          />
-        </div>
-        <div class="hero-bio">
-          <p
-            data-pl="Moje portfolio to przestrzeń na projekty, doświadczenia i pomysły. Znajdziesz tutaj osiągnięcia z hackathonów oraz aktualne projekty z programowania obiektowego i baz danych."
-            data-en="My portfolio brings together projects, experiences and ideas. Here you'll find hackathon achievements and current projects in object-oriented programming and databases."
-          >
-            Moje portfolio to przestrzeń na projekty, doświadczenia i pomysły. Znajdziesz tutaj
-            osiągnięcia z hackathonów oraz aktualne projekty z programowania obiektowego i baz
-            danych.
-          </p>
-          <div class="tags">
-            <span data-pl="Programowanie obiektowe" data-en="Object-oriented programming"
-              >Programowanie obiektowe</span
-            ><span data-pl="Bazy danych" data-en="Databases">Bazy danych</span
-            ><span>Hackathony / AI</span>
-          </div>
-          <div class="hero-actions">
-            <a class="primary" href="#projects">
-              <span data-pl="Zobacz projekty" data-en="Explore projects">Zobacz projekty</span>
-              <svg
-                class="cta-arrow"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.8"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                aria-hidden="true"
-              >
-                <path d="M12 4v16M5 13l7 7 7-7" />
-              </svg>
-            </a>
-            <a
-              class="secondary"
-              href="assets/CV%20-%20STUDIO.pdf"
-              download="Marcin-Podyma-CV.pdf"
-              data-pl="📄 Pobierz CV"
-              data-en="📄 Download CV"
-              >📄 Pobierz CV</a
-            >
-          </div>
-        </div>
-      </section>
-      <section class="section" id="achievements">
+      </section>      <section class="section" id="achievements" data-cms-group="group-1">
         <div class="section-heading">
           <div>
-            <p class="eyebrow" data-pl="01 / Doświadczenie" data-en="01 / Experience">
-              01 / Doświadczenie
+            <p class="eyebrow" data-pl="Doświadczenie" data-en="Experience" data-cms-text="group-1-text-0">
+              Doświadczenie
             </p>
-            <h2 data-pl="Projekty i kompetencje" data-en="Projects and skills">
+            <h2 data-pl="Projekty i kompetencje" data-en="Projects and skills" data-cms-text="group-1-text-1">
               Projekty i kompetencje
             </h2>
           </div>
           <small
             data-pl="Najedź lub dotknij, aby poznać szczegóły"
             data-en="Hover or tap to explore"
-            >Najedź lub dotknij, aby poznać szczegóły</small
+             data-cms-text="group-1-text-2">Najedź lub dotknij, aby poznać szczegóły</small
           >
         </div>
         <div class="grid projects-grid">
           <article class="card">
             <div class="card-top">
-              <span class="card-number">01 / 2026</span
-              ><span class="card-symbol" aria-hidden="true">↗</span>
+              <span class="card-number">2026</span
+              ><span class="card-symbol" aria-hidden="true">#1</span>
             </div>
-            <h3 data-pl="AI KrackHack 2026" data-en="AI KrackHack 2026">AI KrackHack 2026</h3>
-            <p class="card-summary" data-pl="I miejsce" data-en="1st place">I miejsce</p>
+            <h3 data-pl="AI KrakHack 2026" data-en="AI KrakHack 2026">AI KrakHack 2026</h3>
+            <p class="card-summary" data-pl="I miejsce — Smart Infrastructure (marzec 2026)" data-en="1st place — Smart Infrastructure (March 2026)">I miejsce — Smart Infrastructure (marzec 2026)</p>
             <button
               class="card-toggle"
               aria-expanded="false"
               aria-controls="achievement-0"
-              aria-label="Szczegóły: AI KrackHack 2026"
-              data-label-pl="Szczegóły: AI KrackHack 2026"
-              data-label-en="Details: AI KrackHack 2026"
+              aria-label="Szczegóły: AI KrakHack 2026"
+              data-label-pl="Szczegóły: AI KrakHack 2026"
+              data-label-en="Details: AI KrakHack 2026"
             ></button>
             <div class="card-details" id="achievement-0">
               <div>
                 <p
-                  data-pl="Opis rozwiązania, technologie oraz link do projektu — do uzupełnienia."
-                  data-en="Solution details, technologies and project link — to be added."
+                  data-pl="Symulator ruchu rowerowego Krakowa łączący dane OpenStreetMap, miejskie ścieżki i pomiary z liczników."
+                  data-en="A cycling traffic simulator for Kraków combining OpenStreetMap, city cycle paths and counter measurements."
                 >
-                  Opis rozwiązania, technologie oraz link do projektu — do uzupełnienia.
+                  Symulator ruchu rowerowego Krakowa łączący dane OpenStreetMap, miejskie ścieżki i pomiary z liczników.
                 </p>
-                <a href="#projects" data-pl="Przejdź do projektów ↗" data-en="Explore projects ↗"
-                  >Przejdź do projektów ↗</a
+                <a href="project.html?id=achievements-0" data-pl="Poznaj projekt" data-en="Explore the project"
+                  >Poznaj projekt</a
                 >
               </div>
             </div>
           </article>
           <article class="card">
             <div class="card-top">
-              <span class="card-number">02 / 2026</span
-              ><span class="card-symbol" aria-hidden="true">↗</span>
+              <span class="card-number">2026</span
+              ><span class="card-symbol" aria-hidden="true">#1</span>
             </div>
             <h3 data-pl="HackYeah 2026" data-en="HackYeah 2026">HackYeah 2026</h3>
             <p
               class="card-summary"
-              data-pl="I miejsce · Miasto Kraków"
-              data-en="1st place · City of Kraków"
+              data-pl="I miejsce w zadaniu Miasta Kraków"
+              data-en="1st place in the City of Kraków challenge"
             >
-              I miejsce · Miasto Kraków
+              I miejsce w zadaniu Miasta Kraków
             </p>
             <button
               class="card-toggle"
@@ -208,109 +134,37 @@
             <div class="card-details" id="achievement-1">
               <div>
                 <p
-                  data-pl="Partner Task: Miasto Kraków. Opis rozwiązania i technologie — do uzupełnienia."
-                  data-en="Partner Task: City of Kraków. Solution details and technologies — to be added."
+                  data-pl="Aplikacja „Swoją Drogą” pomagająca osobom z ograniczoną mobilnością odkrywać Kraków i planować trasy."
+                  data-en="“By the Way” — an app helping people with limited mobility explore Kraków and plan tailored routes."
                 >
-                  Partner Task: Miasto Kraków. Opis rozwiązania i technologie — do uzupełnienia.
+                  Aplikacja „Swoją Drogą” pomagająca osobom z ograniczoną mobilnością odkrywać Kraków i planować trasy.
                 </p>
-                <a href="#projects" data-pl="Przejdź do projektów ↗" data-en="Explore projects ↗"
-                  >Przejdź do projektów ↗</a
-                >
-              </div>
-            </div>
-          </article>
-          <article class="card">
-            <div class="card-top">
-              <span class="card-number">03 / 2026</span
-              ><span class="card-symbol" aria-hidden="true">+</span>
-            </div>
-            <h3 data-pl="Kompetencje miękkie" data-en="Soft skills">Kompetencje miękkie</h3>
-            <p
-              class="card-summary"
-              data-pl="Miejsce na kolejne osiągnięcie"
-              data-en="Room for the next achievement"
-            >
-              Miejsce na kolejne osiągnięcie
-            </p>
-            <button
-              class="card-toggle"
-              aria-expanded="false"
-              aria-controls="achievement-2"
-              aria-label="Szczegóły: Kompetencje miękkie"
-              data-label-pl="Szczegóły: Kompetencje miękkie"
-              data-label-en="Details: Soft skills"
-            ></button>
-            <div class="card-details" id="achievement-2">
-              <div>
-                <p
-                  data-pl="TBD — miejsce na przykłady współpracy, komunikacji i pracy zespołowej."
-                  data-en="TBD — room for examples of collaboration, communication and teamwork."
-                >
-                  TBD — miejsce na przykłady współpracy, komunikacji i pracy zespołowej.
-                </p>
-                <a href="#projects" data-pl="Przejdź do projektów ↗" data-en="Explore projects ↗"
-                  >Przejdź do projektów ↗</a
-                >
-              </div>
-            </div>
-          </article>
-          <article class="card">
-            <div class="card-top">
-              <span class="card-number">04 / 2026</span
-              ><span class="card-symbol" aria-hidden="true">+</span>
-            </div>
-            <h3 data-pl="Języki i kompetencje" data-en="Languages and skills">
-              Języki i kompetencje
-            </h3>
-            <p
-              class="card-summary"
-              data-pl="Miejsce na kolejne osiągnięcie"
-              data-en="Room for the next achievement"
-            >
-              Miejsce na kolejne osiągnięcie
-            </p>
-            <button
-              class="card-toggle"
-              aria-expanded="false"
-              aria-controls="achievement-3"
-              aria-label="Szczegóły: Języki i kompetencje"
-              data-label-pl="Szczegóły: Języki i kompetencje"
-              data-label-en="Details: Languages and skills"
-            ></button>
-            <div class="card-details" id="achievement-3">
-              <div>
-                <p
-                  data-pl="TBD — języki, poziomy znajomości i certyfikaty do uzupełnienia."
-                  data-en="TBD — languages, proficiency levels and certificates to be added."
-                >
-                  TBD — języki, poziomy znajomości i certyfikaty do uzupełnienia.
-                </p>
-                <a href="#projects" data-pl="Przejdź do projektów ↗" data-en="Explore projects ↗"
-                  >Przejdź do projektów ↗</a
+                <a href="project.html?id=achievements-1" data-pl="Poznaj projekt" data-en="Explore the project"
+                  >Poznaj projekt</a
                 >
               </div>
             </div>
           </article>
         </div>
       </section>
-      <section class="section" id="projects">
+      <section class="section" id="projects" data-cms-group="group-2">
         <div class="section-heading">
           <div>
-            <p class="eyebrow" data-pl="02 / W trakcie" data-en="02 / In progress">
-              02 / W trakcie
+            <p class="eyebrow" data-pl="W trakcie" data-en="In progress" data-cms-text="group-2-text-0">
+              W trakcie
             </p>
-            <h2 data-pl="Aktualne projekty" data-en="Current projects">Aktualne projekty</h2>
+            <h2 data-pl="Aktualne projekty" data-en="Current projects" data-cms-text="group-2-text-1">Aktualne projekty</h2>
           </div>
           <small
             data-pl="Od pomysłu do działającego rozwiązania"
             data-en="From an idea to a working solution"
-            >Od pomysłu do działającego rozwiązania</small
+             data-cms-text="group-2-text-2">Od pomysłu do działającego rozwiązania</small
           >
         </div>
         <div class="grid projects-grid">
           <article class="card">
             <div class="card-top">
-              <span class="card-number">01 / 2026</span
+              <span class="card-number">2026</span
               ><span class="card-symbol" aria-hidden="true">{ }</span>
             </div>
             <h3 data-pl="Programowanie obiektowe" data-en="Object-oriented programming">
@@ -334,23 +188,23 @@
             <div class="card-details" id="project-oop">
               <div>
                 <p
-                  data-pl="Miejsce na opis projektu, wykorzystane technologie i link do repozytorium."
-                  data-en="Space for the project description, technologies used and repository link."
+                  data-pl="Rozwój aplikacji obiektowych i modeli domenowych w ramach studiów inżynierskich na WI AGH."
+                  data-en="Developing object-oriented applications and domain models as part of my Computer Science studies at AGH."
                 >
-                  Miejsce na opis projektu, wykorzystane technologie i link do repozytorium.
+                  Rozwój aplikacji obiektowych i modeli domenowych w ramach studiów inżynierskich na WI AGH.
                 </p>
                 <a
                   href="contact.html"
-                  data-pl="Zapytaj o projekt →"
-                  data-en="Ask about this project →"
-                  >Zapytaj o projekt →</a
+                  data-pl="Zapytaj o projekt"
+                  data-en="Ask about this project"
+                  >Zapytaj o projekt</a
                 >
               </div>
             </div>
           </article>
           <article class="card">
             <div class="card-top">
-              <span class="card-number">02 / 2026</span
+              <span class="card-number">2026</span
               ><span class="card-symbol" aria-hidden="true">▤</span>
             </div>
             <h3 data-pl="Bazy danych" data-en="Databases">Bazy danych</h3>
@@ -372,24 +226,24 @@
             <div class="card-details" id="project-database">
               <div>
                 <p
-                  data-pl="Miejsce na opis bazy danych, wykorzystane technologie i link do repozytorium."
-                  data-en="Space for the database description, technologies used and repository link."
+                  data-pl="Projektowanie schematów relacyjnych, zapytania SQL oraz optymalizacja struktur danych."
+                  data-en="Designing relational schemas, writing SQL queries and optimising data structures."
                 >
-                  Miejsce na opis bazy danych, wykorzystane technologie i link do repozytorium.
+                  Projektowanie schematów relacyjnych, zapytania SQL oraz optymalizacja struktur danych.
                 </p>
                 <a
                   href="contact.html"
-                  data-pl="Zapytaj o projekt →"
-                  data-en="Ask about this project →"
-                  >Zapytaj o projekt →</a
+                  data-pl="Zapytaj o projekt"
+                  data-en="Ask about this project"
+                  >Zapytaj o projekt</a
                 >
               </div>
             </div>
           </article>
           <article class="card">
             <div class="card-top">
-              <span class="card-number">03 / 2026</span>
-              <span class="card-symbol" aria-hidden="true">✎</span>
+              <span class="card-number">2026</span>
+              <span class="card-symbol" aria-hidden="true">∑</span>
             </div>
             <h3 data-pl="Kurs maturalny" data-en="Matura exam preparation course">
               Kurs maturalny
@@ -418,15 +272,15 @@
                   Pracuję nad kursem przygotowującym do matury. Więcej informacji o zakresie i
                   dostępności pojawi się wkrótce.
                 </p>
-                <a href="contact.html" data-pl="Zapytaj o kurs →" data-en="Ask about the course →"
-                  >Zapytaj o kurs →</a
+                <a href="contact.html" data-pl="Zapytaj o kurs" data-en="Ask about the course"
+                  >Zapytaj o kurs</a
                 >
               </div>
             </div>
           </article>
         </div>
       </section>
-    </main>
+</main>
     <a
       class="contact-fab"
       href="contact.html"
@@ -505,19 +359,19 @@
             />
           </svg>
         </span>
-        <span
+        <a
           class="social facebook"
-          role="img"
-          aria-label="Facebook — link wkrótce"
-          data-label-pl="Facebook — link wkrótce"
-          data-label-en="Facebook — link coming soon"
+          href="https://www.facebook.com/profile.php?id=100013482349373&amp;locale=pl_PL" target="_blank" rel="noopener noreferrer"
+          aria-label="Facebook"
+          data-label-pl="Facebook"
+          data-label-en="Facebook"
         >
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <path
               d="M14 22v-9h3l.5-4H14V7c0-1.2.4-2 2-2h2V1.4A25 25 0 0 0 15 1c-3 0-5 1.8-5 5v3H7v4h3v9Z"
             />
           </svg>
-        </span>
+        </a>
         <a
           class="social spotify"
           href="https://open.spotify.com/user/marcineq42356"

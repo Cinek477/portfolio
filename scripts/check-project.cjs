@@ -2,21 +2,22 @@ const fs = require('node:fs');
 const path = require('node:path');
 const vm = require('node:vm');
 const Module = require('node:module');
+const { renderPage } = require('../shared/render-page.cjs');
 
 const root = path.resolve(__dirname, '..');
 const failures = [];
 let checked = 0;
-const pages = fs.readdirSync(root).filter((file) => file.endsWith('.html'));
+const pages = fs.readdirSync(path.join(root, 'pages')).filter((file) => file.endsWith('.html'));
 for (const page of pages) {
-  const markup = fs.readFileSync(path.join(root, page), 'utf8').replace(/<!--[\s\S]*?-->/g, '');
+  const markup = renderPage(fs.readFileSync(path.join(root, 'pages', page), 'utf8'), page).replace(/<!--[\s\S]*?-->/g, '');
   const ids = [...markup.matchAll(/\bid="([^"]+)"/g)].map((match) => match[1]);
   if (new Set(ids).size !== ids.length) failures.push(`${page}: powtórzone id`);
   for (const [, reference] of markup.matchAll(/\b(?:href|src)="([^"]+)"/g)) {
     if (/^(?:https?:|mailto:|tel:|data:)/i.test(reference)) continue;
     const [file, anchor] = reference.split('#');
     const target = file
-      ? path.resolve(root, decodeURIComponent(file.split('?')[0]))
-      : path.join(root, page);
+      ? path.resolve(root, file.split('?')[0].endsWith('.html') ? 'pages/' + decodeURIComponent(file.split('?')[0]) : decodeURIComponent(file.split('?')[0]))
+      : path.join(root, 'pages', page);
     if (!fs.existsSync(target)) {
       failures.push(`${page}: nie istnieje ${reference}`);
       continue;
@@ -51,7 +52,7 @@ function validateScripts(directory) {
     }
   }
 }
-for (const directory of ['assets/js', 'scripts', 'tests'])
+for (const directory of ['assets/js', 'scripts', 'tests', 'shared', 'server'])
   validateScripts(path.join(root, directory));
 for (const file of fs.readdirSync(root).filter((file) => file.endsWith('.cjs'))) {
   try {

@@ -1,5 +1,5 @@
 (() => {
-  const selector = '.hero-actions a, .contact-submit, .admin-shell .admin-panel button:not(.danger), .admin-shell .admin-link, .lightbox-instagram, .gallery-filter, .contact-radio + label, .admin-shell .admin-tabs button';
+  const selector = '.hero-actions a.primary, .contact-submit, .lightbox-instagram';
   const tracked = new Map();
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   const epoch = performance.now();

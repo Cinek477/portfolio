@@ -4,9 +4,9 @@ Główne repozytorium `Cinek477/WDAI-2026` jest źródłem kodu obu wersji.
 
 | Miejsce | Zawartość |
 | --- | --- |
-| Główny katalog HTML i `assets/` | Wspólne strony, style, zdjęcia i skrypty przeglądarki |
+| `pages/` i `assets/` | Wspólne strony, style, zdjęcia i skrypty przeglądarki |
 | `shared/normalize.cjs` | Wspólna walidacja zdjęć i projektów |
-| `server.cjs`, `inbox.cjs` | Lokalny backend Node.js i SQLite |
+| `server.cjs`, `server/` | Lokalny backend Node.js i SQLite |
 | `sites/` | Backend online Workers, D1, R2 i logowanie ChatGPT |
 | `sites/.openai/hosting.json` | Powiązanie z istniejącym portfolio Sites; nie zmieniaj project_id |
 | `scripts/prepare-sites.cjs` | Przygotowanie wersji online ze wspólnego kodu |
@@ -14,6 +14,8 @@ Główne repozytorium `Cinek477/WDAI-2026` jest źródłem kodu obu wersji.
 ## Codzienna praca
 
 Edytuj strony i zasoby w głównym katalogu. `sites/public/`, `sites/lib/normalize.js` i `sites/lib/seed.json` są generowane, ignorowane przez Git i nadpisywane przy przygotowaniu. Nie edytuj ich ręcznie.
+
+Navbar edytuj w `components/navbar.html`. Znacznik `<!-- component:navbar -->` w stronach jest zastępowany przez lokalny serwer oraz podczas przygotowania Sites; aktywna zakładka dopasowuje się do podstrony. Opublikowane pliki zawierają gotowe menu, bez dodatkowego pobierania przez przeglądarkę. Surowe pliki źródłowe wymagają serwera lub przygotowania przed publikacją na innym hostingu statycznym.
 
 ```sh
 npm start             # dotychczasowa wersja lokalna, localhost:3000
@@ -58,3 +60,11 @@ Adres: https://marcin-podyma-portfolio.cheekyflint256.chatgpt.site
 Przygotowanie kodu nie synchronizuje baz. `seed.json` służy tylko do pierwszego zapełnienia pustej bazy online; kolejne publikacje nie nadpisują edycji z panelu ani wiadomości. Identyfikator pierwszego importu `seed-v1` pozostaje niezmieniony. Nie usuwaj zasobów D1/R2 ani nie resetuj migracji przy publikacji.
 
 Automatyczna synchronizacja danych, eksport online do lokalnej bazy oraz automatyczne wdrożenie po pushu nie są jeszcze skonfigurowane.
+
+## Edycja podstron
+
+Pierwszy etap obejmuje Start i „O mnie”. W panelu są wymienione wszystkie podstrony; pozostałe mają podgląd i komunikat o kolejnym etapie. Osobna grupa „Bazy danych” prowadzi do projektów, osiągnięć i galerii, a wiadomości mają własną zakładkę.
+
+Ustawienia Start pozostają pod kluczem `home`, a treść „O mnie” pod `page-about` w tabeli `settings`. API `/api/pages/home` i `/api/pages/about` udostępnia treść publicznie, ale zapis wymaga sesji administratora (lokalnie) albo konta właściciela (Sites). Dotychczasowe `/api/home` nadal działa. `shared/page-defaults.json` zawiera treści początkowe, nie nadpisuje ustawień zapisanych w bazie.
+
+Zdjęcia podstron są lokalnie w `assets/images/pages/2400px/` oraz `800px/`; online korzystają z R2. Lokalny serwer odświeża `assets/js/pages-data.js` oraz `home-data.js` przy zapisie. Domyślne dane, walidacja i wersja statyczna są przygotowywane także dla Sites.

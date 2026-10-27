@@ -59,3 +59,7 @@ next-env.d.ts
 /public/
 /lib/normalize.js
 /lib/seed.json
+/lib/home.js
+/lib/home-defaults.json
+/lib/page-content.js
+/lib/page-defaults.json

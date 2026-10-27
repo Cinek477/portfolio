@@ -1,0 +1,197 @@
+<!doctype html>
+<!-- avoid-ai-design-ignore-file: K7 -->
+<html lang="pl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Portfolio Marcina Podymy — osiągnięcia, projekty i zainteresowania."
+    />
+    <meta name="theme-color" content="#edf6ff" />
+    <title>Projekt — Marcin Podyma</title>
+    <link rel="stylesheet" href="assets/css/portfolio.css" />
+    <link rel="stylesheet" href="assets/css/controls.css" />
+    <link rel="stylesheet" href="assets/css/project-detail.css" />
+    <link rel="icon" type="image/svg+xml" href="assets/images/cinek-ck.svg" />
+    <script src="assets/js/router.js" defer></script>
+    <script src="assets/js/neon.js" defer></script>
+    <script src="assets/js/theme.js" defer></script>
+    <script src="assets/js/portfolio.js" defer></script>
+    <script src="assets/js/projects-data.js" defer></script>
+    <script src="assets/js/project-detail.js" defer></script>
+
+
+
+  </head>
+  <body class="aurora-page">
+    <div class="aurora-bg" aria-hidden="true">
+      <div class="aurora-blob blob-1"></div>
+      <div class="aurora-blob blob-2"></div>
+    </div>
+    <!-- component:navbar -->
+    <main class="project-detail-page" aria-busy="true">
+      <section class="project-detail-hero">
+        <div class="project-detail-intro">
+          <a class="project-back" href="projects.html" data-pl="Wszystkie projekty" data-en="All projects">Wszystkie projekty</a>
+          <p class="eyebrow" id="project-detail-meta"></p>
+          <h1 id="project-detail-title" data-page-title data-pl="Ładowanie projektu…" data-en="Loading project…">Ładowanie projektu…</h1>
+          <p class="project-detail-lead" id="project-detail-summary"></p>
+          <div class="hero-actions"><a class="primary" id="project-detail-repository" hidden target="_blank" rel="noopener noreferrer" data-pl="Zobacz repozytorium" data-en="View repository">Zobacz repozytorium</a><a class="secondary" href="#project-story" data-pl="Poznaj rozwiązanie" data-en="Explore the solution">Poznaj rozwiązanie</a></div>
+        </div>
+        <aside class="case-outcome" hidden>
+          <svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M25 13h30v18c0 13-7 21-15 21s-15-8-15-21V13Z"/><path d="M25 19H14v9c0 10 6 15 14 15m27-24h11v9c0 10-6 15-14 15M40 52v15m-14 0h28"/><path d="m33 31 5 5 10-11"/></svg>
+          <div><p class="eyebrow" data-pl="Zespołowa wygrana" data-en="Team achievement">Zespołowa wygrana</p><strong id="case-outcome-text"></strong></div>
+        </aside>
+        <figure class="project-detail-cover" hidden><img id="project-detail-image" alt="" decoding="async" fetchpriority="high" /></figure>
+      </section>
+      <section class="case-explainer" hidden aria-labelledby="case-explainer-title">
+        <div class="case-explainer-heading"><p class="eyebrow" data-pl="Idea rozwiązania" data-en="The concept">Idea rozwiązania</p><h2 id="case-explainer-title" data-pl="Od potrzeb do własnej drogi" data-en="From needs to a personal route">Od potrzeb do własnej drogi</h2></div>
+        <div class="case-flow">
+          <div class="case-flow-node"><span class="case-flow-icon" aria-hidden="true"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="24" cy="15" r="6"/><path d="M12 37v-4a12 12 0 0 1 24 0v4M7 13h5M9.5 10.5v5M36 24h5M38.5 21.5v5"/></svg></span><h3 data-pl="Twoje potrzeby" data-en="Your needs">Twoje potrzeby</h3><p data-pl="Tempo, odpoczynek i dostępność" data-en="Pace, rest and accessibility">Tempo, odpoczynek i dostępność</p></div>
+          <span class="case-flow-arrow" aria-hidden="true">→</span>
+          <div class="case-flow-node"><span class="case-flow-icon" aria-hidden="true"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="12" y="12" width="24" height="24" rx="6"/><path d="M18 5v7M30 5v7M18 36v7M30 36v7M5 18h7M5 30h7M36 18h7M36 30h7M19 19h10v10H19z"/></svg></span><h3 data-pl="Dane + AI" data-en="Data + AI">Dane + AI</h3><p data-pl="Miasto, mapa i zgłoszenia użytkowników" data-en="City data, maps and user reports">Miasto, mapa i zgłoszenia użytkowników</p></div>
+          <span class="case-flow-arrow" aria-hidden="true">→</span>
+          <div class="case-flow-node"><span class="case-flow-icon" aria-hidden="true"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="35" r="4"/><path d="M16 35h15a7 7 0 0 0 0-14H17a6 6 0 0 1 0-12h15" stroke-dasharray="3 4"/><path d="M39 13c0 5-7 11-7 11s-7-6-7-11a7 7 0 0 1 14 0Z"/><circle cx="32" cy="13" r="2"/></svg></span><h3 data-pl="Dopasowana trasa" data-en="A tailored route">Dopasowana trasa</h3><p data-pl="Kraków zgodnie z Twoimi potrzebami" data-en="Kraków, around your needs">Kraków zgodnie z Twoimi potrzebami</p></div>
+        </div>
+      </section>
+      <section id="project-story" class="project-story" aria-label="Opis projektu" data-label-pl="Opis projektu" data-label-en="Project story">
+        <section class="project-story-section" data-story="problem" hidden><p class="eyebrow" data-pl="Kontekst" data-en="Context">Kontekst</p><div><h2 data-pl="Problem" data-en="The problem">Problem</h2><p class="project-story-text"></p></div></section>
+        <section class="project-story-section" data-story="solution" hidden><p class="eyebrow" data-pl="Architektura" data-en="Architecture">Architektura</p><div><h2 data-pl="Rozwiązanie" data-en="The solution">Rozwiązanie</h2><p class="project-story-text"></p></div></section>
+        <section class="project-story-section" data-story="contribution" hidden><p class="eyebrow" data-pl="Rola" data-en="Role">Rola</p><div><h2 data-pl="Mój wkład" data-en="My contribution">Mój wkład</h2><p class="project-story-text"></p></div></section>
+        <section class="project-story-section" data-story="result" hidden><p class="eyebrow" data-pl="Wynik" data-en="Outcome">Wynik</p><div><h2 data-pl="Efekt" data-en="The outcome">Efekt</h2><p class="project-story-text"></p></div></section>
+        <section class="project-story-section project-detail-tech" hidden><p class="eyebrow" data-pl="Stack" data-en="Stack">Stack</p><div><h2 data-pl="Technologie" data-en="Technologies">Technologie</h2><div class="project-tech-grid" id="project-detail-tags"></div></div></section>
+      </section>
+      <p id="project-detail-status" class="project-detail-status" role="status" hidden></p>
+      <section class="related-projects" hidden aria-labelledby="related-projects-title"><h2 id="related-projects-title" data-pl="Zobacz też" data-en="Explore more">Zobacz też</h2><div class="related-projects-grid"></div></section>
+    </main>
+    <a
+      class="contact-fab"
+      href="contact.html"
+      aria-label="Przejdź do kontaktu"
+      data-label-pl="Przejdź do kontaktu"
+      data-label-en="Go to contact"
+    >
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.7"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <path
+          d="M21 11.5a8.4 8.4 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.4 8.4 0 0 1 3.8-.9h.5a8.5 8.5 0 0 1 8 8v.5Z"
+        />
+        <path d="M8 11h8M8 14h5" />
+      </svg>
+    </a>
+    <footer>
+      <div class="footer-signature">
+        <span
+          class="footer-copyright"
+          data-pl="© 2026 Marcin Podyma."
+          data-en="© 2026 Marcin Podyma."
+          >© 2026 Marcin Podyma.</span
+        >
+        <div class="footer-status-slot">
+          <div class="status-indicator" tabindex="0">
+            <span class="status-dot" aria-hidden="true"></span>
+            <span
+              class="status-text"
+              data-pl="Otwarty na nowe projekty"
+              data-en="Open to new projects"
+              >Otwarty na nowe projekty</span
+            >
+          </div>
+        </div>
+      </div>
+      <div class="socials" aria-label="Social media">
+        <svg width="0" height="0" aria-hidden="true" style="position: absolute">
+          <defs>
+            <linearGradient id="instagram-gradient" x1="0" y1="1" x2="1" y2="0">
+              <stop stop-color="#feda75" />
+              <stop offset=".5" stop-color="#d62976" />
+              <stop offset="1" stop-color="#4f5bd5" />
+            </linearGradient>
+          </defs>
+        </svg>
+        <a
+          class="social github"
+          href="https://github.com/Cinek477"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="GitHub"
+          data-label-pl="GitHub"
+          data-label-en="GitHub"
+          ><svg viewBox="0 0 24 24" aria-hidden="true">
+            <path
+              d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.86c-2.78.6-3.37-1.18-3.37-1.18-.45-1.15-1.11-1.46-1.11-1.46-.91-.62.07-.61.07-.61 1 .07 1.53 1.03 1.53 1.03.89 1.53 2.34 1.09 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.56-1.11-4.56-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02A9.6 9.6 0 0 1 12 6.83c.85 0 1.71.11 2.51.34 1.91-1.29 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.69-4.57 4.94.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10 10 0 0 0 12 2Z"
+            /></svg
+        ></a>
+        <span
+          class="social linkedin"
+          role="img"
+          aria-label="LinkedIn — link wkrótce"
+          data-label-pl="LinkedIn — link wkrótce"
+          data-label-en="LinkedIn — link coming soon"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path
+              d="M4 3a2 2 0 1 0 0 4 2 2 0 0 0 0-4ZM2 9h4v12H2zm7 0h4v1.6c.7-1.1 1.8-1.9 3.5-1.9 3.4 0 4.5 2.2 4.5 5.4V21h-4v-6.1c0-1.6-.3-2.7-1.9-2.7s-2.1 1.1-2.1 2.7V21H9Z"
+            />
+          </svg>
+        </span>
+        <a
+          class="social facebook"
+          href="https://www.facebook.com/profile.php?id=100013482349373&amp;locale=pl_PL" target="_blank" rel="noopener noreferrer"
+          aria-label="Facebook"
+          data-label-pl="Facebook"
+          data-label-en="Facebook"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path
+              d="M14 22v-9h3l.5-4H14V7c0-1.2.4-2 2-2h2V1.4A25 25 0 0 0 15 1c-3 0-5 1.8-5 5v3H7v4h3v9Z"
+            />
+          </svg>
+        </a>
+        <a
+          class="social spotify"
+          href="https://open.spotify.com/user/marcineq42356"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Spotify"
+          data-label-pl="Spotify"
+          data-label-en="Spotify"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="10" />
+            <g fill="none" stroke="var(--bg)" stroke-width="1.6" stroke-linecap="round">
+              <path d="M6 9c4-1.3 8-1 12 1M7 12c3-1 6.5-.7 10 1M8 15c2.5-.6 5-.4 8 .8" />
+            </g>
+          </svg>
+        </a>
+
+        <a
+          class="social instagram"
+          href="https://www.instagram.com/47.cinek/"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Instagram"
+          data-label-pl="Instagram"
+          data-label-en="Instagram"
+          ><svg viewBox="0 0 24 24" aria-hidden="true">
+            <path
+              class="social-base"
+              d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5Zm0 2a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3Zm5 3a5 5 0 1 1 0 10 5 5 0 0 1 0-10Zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6Zm6-3a1 1 0 1 1 0 2 1 1 0 0 1 0-2Z"
+            />
+            <path
+              class="social-gradient"
+              d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5Zm0 2a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3Zm5 3a5 5 0 1 1 0 10 5 5 0 0 1 0-10Zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6Zm6-3a1 1 0 1 1 0 2 1 1 0 0 1 0-2Z"
+            /></svg
+        ></a>
+      </div>
+    </footer>
+  </body>
+</html>

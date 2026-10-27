@@ -1,0 +1,32 @@
+{
+  "bio": {
+    "pl": "Studiuję informatykę na AGH. Programuję, automatyzuję codzienne zadania i pomagam innym w nauce. Rozwijam się w tworzeniu aplikacji, a pomysły sprawdzam na hackathonach — z HackYeah 2026 wróciłem z pierwszym miejscem. Po godzinach łapię koncertowe kadry, słucham muzyki i spędzam czas ze znajomymi.",
+    "en": "I study computer science at AGH University. I code, automate everyday tasks and help others learn. I’m developing my app-building skills and putting ideas to the test at hackathons — I took first place at HackYeah 2026. Outside of coding, I capture concert moments, listen to music and spend time with friends."
+  },
+  "primary": {
+    "target": "projects",
+    "pl": "Zobacz projekty",
+    "en": "Explore projects"
+  },
+  "secondary": {
+    "target": "cv",
+    "pl": "Pobierz CV",
+    "en": "Download CV"
+  },
+  "featured": [
+    "achievements-1",
+    "projects-0",
+    "achievements-0"
+  ],
+  "currentWork": {
+    "visible": true,
+    "title": {
+      "pl": "Teraz tworzę",
+      "en": "Currently building"
+    },
+    "text": {
+      "pl": "Pracuję nad kursem matematyki przygotowującym do matury podstawowej.",
+      "en": "I am working on a mathematics course for the basic Matura exam."
+    }
+  }
+}

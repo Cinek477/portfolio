@@ -47,3 +47,18 @@ Thumbs.db
 Desktop.ini
 
 # Eksporty i zdjęcia publikujemy; nie obejmuj assets/images regułą ignorowania.
+
+# Lokalne dokumenty robocze i podglądy
+/outputs/
+/work/
+
+# Cache budowania, stan narzędzi i prywatne klucze
+/.next/
+/dist/
+/.wrangler/
+/.sites-runtime/
+/.agents/
+/.codex/
+*.tsbuildinfo
+*.pem
+*.key

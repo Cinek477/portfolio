@@ -152,9 +152,10 @@ test('SQLite import, upload, edit, deletion, persistence and local access rules'
     (await write('/api/photos', 'POST', { ...photo, image: 'data:image/png;base64,YmFk' })).status,
     400,
   );
-  const createdResponse = await write('/api/photos', 'POST', photo);
+  const createdResponse = await write('/api/photos', 'POST', {...photo,crop:{x:20,y:75}});
   assert.equal(createdResponse.status, 201);
   const created = await createdResponse.json();
+  assert.deepEqual(created.crop,{x:20,y:75});
   assert.match(created.thumbUrl, /_thumb\.png$/);
   assert.ok(
     fs.existsSync(
@@ -232,3 +233,21 @@ test('SQLite import, upload, edit, deletion, persistence and local access rules'
     429,
   );
 });
+
+test('Photo albums: optional, bounded, retained by older clients and explicitly removable',()=>{
+ const {normalize}=require('../shared/normalize.cjs');
+ const input={category:'nature',venue:'Kraków',album:'  Koncert — Warszawa  '};
+ const photo=normalize(input);assert.equal(photo.album,'Koncert — Warszawa');
+ const oldClient={category:'nature',venue:'Kraków'};
+ assert.equal(normalize(oldClient,photo).album,photo.album);
+ assert.equal(normalize({...oldClient,album:''},photo).album,'');
+ assert.throws(()=>normalize({...input,album:'x'.repeat(161)}));
+ assert.throws(()=>normalize({...input,album:{name:'wrong'}}));
+});
+
+ test('Photo crop validates bounds and preserves framing for older clients',()=>{
+ const {normalize}=require('../shared/normalize.cjs');const input={category:'nature',venue:'Kraków'};
+ assert.deepEqual(normalize(input).crop,{x:50,y:50});
+ const framed=normalize({...input,crop:{x:0,y:100}});assert.deepEqual(normalize(input,framed).crop,{x:0,y:100});
+ for(const crop of [{x:-1,y:50},{x:101,y:50},{x:'50',y:50},{x:50},[]])assert.throws(()=>normalize({...input,crop}),/kadrowania/);
+ });
