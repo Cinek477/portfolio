@@ -96,3 +96,9 @@ npm run sites:prepare
 Przygotowanie plików i wysłanie kodu do GitHuba nie publikuje strony. Sites ma osobny backend i bazę; lokalne treści nie synchronizują się automatycznie. Budowanie online wymaga osobnych zależności. Zależności usunięte ze starych kopii roboczych można w razie potrzeby zainstalować ponownie.
 
 [Instrukcja wersji online](docs/SITES.md).
+
+## GitHub Pages
+
+Publiczna wersja statyczna jest przygotowywana przez GitHub Actions z gałęzi main. W ustawieniach Pages wybierz Source: GitHub Actions. Panel i backend pozostają lokalnie; kreator kontaktu otwiera szkic w programie pocztowym.
+
+[Instrukcja uruchomienia GitHub Pages](docs/GITHUB-PAGES.md).

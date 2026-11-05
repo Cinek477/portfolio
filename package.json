@@ -9,7 +9,10 @@
     "sites:stage": "node scripts/stage-sites.cjs",
     "sites:build": "node scripts/run-sites.cjs build",
     "sites:dev": "node scripts/run-sites.cjs dev",
-    "sites:test": "node scripts/run-sites.cjs test"
+    "sites:test": "node scripts/run-sites.cjs test",
+    "pages:prepare": "node scripts/prepare-pages.cjs"
   },
-  "engines": { "node": ">=24" }
+  "engines": {
+    "node": ">=24"
+  }
 }
