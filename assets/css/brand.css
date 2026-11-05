@@ -1,0 +1,58 @@
+/* Supplied Cinek artwork, tinted through its original transparency. */
+.brand-link,
+.footer-brand {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  min-height: 44px;
+  color: var(--accent);
+  border-radius: 8px;
+}
+.brand-link { width: 94px; }
+.brand-wordmark,
+.brand-monogram {
+  display: block;
+  background: currentColor;
+  -webkit-mask-image: var(--brand-image);
+  mask-image: var(--brand-image);
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+}
+.brand-wordmark {
+  --brand-image: url('../images/brand/cinek-wordmark.png');
+  width: 94px;
+  height: 42px;
+}
+.brand-monogram {
+  --brand-image: url('../images/brand/cinek-monogram.png');
+  width: 32px;
+  height: 36px;
+}
+.brand-link .brand-monogram { display: none; }
+.footer-brand { margin-right: 12px; }
+.footer-brand .brand-wordmark { width: 110px; height: 46px; }
+@media (min-width: 761px) {
+  .navbar.scrolled .brand-link { width: 32px; }
+  .navbar.scrolled .brand-wordmark { display: none; }
+  .navbar.scrolled .brand-monogram { display: block; }
+}
+@media (min-width: 761px) and (max-width: 980px) {
+  .brand-link { width: 32px; }
+  .brand-link .brand-wordmark { display: none; }
+  .brand-link .brand-monogram { display: block; }
+}
+@media (max-width: 760px) {
+  .brand-link { width: 76px; margin-right: 4px; }
+  .brand-link .brand-wordmark { width: 76px; height: 36px; }
+  .footer-brand { margin: 0; align-self: center; }
+}
+@media (max-width: 380px) {
+  .brand-link { width: 32px; }
+  .brand-link .brand-wordmark { display: none; }
+  .brand-link .brand-monogram { display: block; }
+}
