@@ -11,6 +11,8 @@
       ? 'dark'
       : 'light';
   const update = () => {
+    const icon = document.querySelector('link[data-theme-icon]');
+    if (icon) icon.href = new URL(icon.dataset[root.dataset.theme], document.baseURI).href;
     root.style.removeProperty('background-color');
     root.style.removeProperty('color-scheme');
     document.querySelector('meta[name="theme-color"]')?.setAttribute('content', root.dataset.theme === 'dark' ? '#091526' : '#edf6ff');
