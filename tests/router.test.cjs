@@ -3,7 +3,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const vm = require('node:vm');
 
-test('Routing: internal navigation, history, scope cleanup and ordinary links', async () => {
+for (const prefix of ['', '/portfolio']) test(`Routing ${prefix || '/'}: navigation, history, cleanup and ordinary links`, async () => {
   const events = {};
   const assigned = [];
   const fetched = [];
@@ -11,7 +11,7 @@ test('Routing: internal navigation, history, scope cleanup and ordinary links', 
   let transitions = 0;
   let disposed = 0;
   const location = {
-    href: 'http://localhost:3000/index.html',
+    href: `http://localhost:3000${prefix}/index.html`,
     origin: 'http://localhost:3000',
     protocol: 'http:',
     assign: (value) => assigned.push(value),
@@ -37,6 +37,7 @@ test('Routing: internal navigation, history, scope cleanup and ordinary links', 
   });
   const navigation = { innerHTML: '', classList: { remove() {} } };
   const document = {
+    baseURI: `http://localhost:3000${prefix}/`,
     documentElement: { dataset: {} },
     scripts: [],
     styleSheets: [],
@@ -102,7 +103,7 @@ test('Routing: internal navigation, history, scope cleanup and ordinary links', 
   const click = (path, extra = {}) => {
     let prevented = false;
     const link = {
-      href: new URL(path, location.href).href,
+      href: new URL(path.startsWith('/') ? prefix + path : path, location.href).href,
       target: extra.linkTarget || '',
       hasAttribute: (name) => name === 'download' && extra.download,
     };
@@ -125,16 +126,16 @@ test('Routing: internal navigation, history, scope cleanup and ordinary links', 
   assert.equal(click('/hobby.html', { download: true }), false);
   assert.equal(click('/hobby.html'), true);
   await new Promise((resolve) => setImmediate(resolve));
-  assert.equal(view, '/hobby.html');
-  assert.equal(document.title, '/hobby.html');
-  assert.equal(location.href, 'http://localhost:3000/hobby.html');
+  assert.equal(view, prefix + '/hobby.html');
+  assert.equal(document.title, prefix + '/hobby.html');
+  assert.equal(location.href, `http://localhost:3000${prefix}/hobby.html`);
   assert.equal(signal.aborted, true);
   assert.equal(disposed, 1);
   assert.equal(transitions, 1);
-  location.href = 'http://localhost:3000/index.html';
+  location.href = `http://localhost:3000${prefix}/index.html`;
   events.popstate({ state: { portfolioScroll: 80 } });
   await new Promise((resolve) => setImmediate(resolve));
-  assert.equal(view, '/index.html');
+  assert.equal(view, prefix + '/index.html');
   assert.equal(transitions, 2);
   assert.equal(fetched.length, 2);
   assert.deepEqual(assigned, []);
@@ -144,5 +145,5 @@ test('Routing: internal navigation, history, scope cleanup and ordinary links', 
   };
   assert.equal(click('/contact.html'), true);
   await new Promise((resolve) => setImmediate(resolve));
-  assert.deepEqual(assigned, ['http://localhost:3000/contact.html']);
+  assert.deepEqual(assigned, [`http://localhost:3000${prefix}/contact.html`]);
 });

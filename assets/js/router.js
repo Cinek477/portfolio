@@ -66,9 +66,11 @@
     { passive: true },
   );
   function publicPage(url) {
+    const base = new URL(document.baseURI || '/', location.href).pathname;
+    const pathname = base !== '/' && url.pathname.startsWith(base) ? '/' + url.pathname.slice(base.length) : url.pathname;
     return (
       url.origin === location.origin &&
-      /^(?:\/(?:index|projects|project|about|hobby|contact|knowledge)\.html|\/|\/(?:o-mnie|projekty|korepetycje|po-godzinach|kontakt)|\/(?:projekty|album)\/[^/]+)$/.test(url.pathname)
+      /^(?:\/(?:index|projects|project|about|hobby|contact|knowledge)\.html|\/|\/(?:o-mnie|projekty|korepetycje|po-godzinach|kontakt)|\/(?:projekty|album)\/[^/]+)\/?$/.test(pathname)
     );
   }
   async function loadScript(source) {
@@ -99,12 +101,14 @@
       });
       if (!response.ok || !response.headers.get('content-type')?.includes('text/html'))
         throw new Error('Nie udało się pobrać strony.');
-      if (response.url) url = new URL(response.url);
+      const requestedHash = url.hash;
+      if (response.url) { url = new URL(response.url); url.hash = requestedHash; }
       const next = new DOMParser().parseFromString(await response.text(), 'text/html');
       const main = next.querySelector('main');
       if (!main || !next.querySelector('.navbar')) throw new Error('Brak zawartości strony.');
+      const documentBase = new URL(next.querySelector('base')?.getAttribute?.('href') || document.baseURI || url.href, url.href);
       for (const link of next.querySelectorAll('link[rel="stylesheet"]')) {
-        const href = new URL(link.getAttribute('href'), url).href;
+        const href = new URL(link.getAttribute('href'), documentBase).href;
         if ([...document.styleSheets].some((sheet) => sheet.href === href)) continue;
         await new Promise((resolve, reject) => {
           const style = document.createElement('link');
@@ -121,7 +125,7 @@
       window.portfolioRouting = true;
       try {
         for (const script of next.querySelectorAll('script[src]')) {
-          const source = new URL(script.getAttribute('src'), url).href;
+          const source = new URL(script.getAttribute('src'), documentBase).href;
           if (/\/(?:router|theme|portfolio)\.js$/.test(source)) continue;
           await loadScript(source);
         }

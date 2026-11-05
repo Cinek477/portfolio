@@ -21,6 +21,10 @@ test('Pages export: base paths, complete pages, snapshots, privacy and honest st
     assert.doesNotMatch(contact, /fetch\('\/api\/contact/);
     assert.match(read('assets/js/gallery.js'), /new URL\('hobby.html',document.baseURI\)/);
     assert.doesNotMatch(read('assets/js/spotify.js'), /\/api\//);
+    assert.match(read('assets/js/router.js'), /startViewTransition/);
+    assert.match(read('assets/js/router.js'), /documentBase/);
+    assert.ok(read('index.html').indexOf('data-theme-init') < read('index.html').indexOf('rel="stylesheet"'));
+    assert.match(read('hobby.html'), /photo-loader\.js/);
     const snapshots = JSON.parse(read('static-api/photos.json'));
     assert.ok(snapshots.every(photo => photo.visible !== false && !photo.archived));
     for (const file of fs.readdirSync(path.join(output, 'assets/js')).filter(name => name.endsWith('.js'))) {

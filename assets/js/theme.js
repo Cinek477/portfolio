@@ -10,7 +10,12 @@
     : matchMedia('(prefers-color-scheme: dark)').matches
       ? 'dark'
       : 'light';
-  const update = () => button.setAttribute('aria-pressed', String(root.dataset.theme === 'dark'));
+  const update = () => {
+    root.style.removeProperty('background-color');
+    root.style.removeProperty('color-scheme');
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', root.dataset.theme === 'dark' ? '#091526' : '#edf6ff');
+    button.setAttribute('aria-pressed', String(root.dataset.theme === 'dark'));
+  };
   update();
   let running = false;
   button.addEventListener('click', async () => {

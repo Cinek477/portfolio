@@ -23,7 +23,7 @@ window.portfolioPages['gallery.js'] = async () => {
   const dialog = document.querySelector('.photo-lightbox');
   const focusButton=document.createElement('button');focusButton.type='button';focusButton.className='lightbox-focus';focusButton.setAttribute('aria-pressed','false');
   const updateFocusLabel=()=>{focusButton.textContent=document.documentElement.lang==='en'?(dialog.classList.contains('is-focused')?'Show information':'Photo only'):(dialog.classList.contains('is-focused')?'Pokaż informacje':'Samo zdjęcie');};
-  focusButton.addEventListener('click',()=>{dialog.classList.toggle('is-focused');focusButton.setAttribute('aria-pressed',String(dialog.classList.contains('is-focused')));updateFocusLabel();},{signal:pageScope.signal});dialog.append(focusButton);updateFocusLabel();
+  focusButton.addEventListener('click',()=>{dialog.classList.toggle('is-focused');focusButton.setAttribute('aria-pressed',String(dialog.classList.contains('is-focused')));updateFocusLabel();if(dialog.open&&selectedPhoto)renderLightbox();},{signal:pageScope.signal});dialog.append(focusButton);updateFocusLabel();
   document.addEventListener('portfolio-language-change',updateFocusLabel,{signal:pageScope.signal});
   dialog.addEventListener('close',()=>{dialog.classList.remove('is-focused');focusButton.setAttribute('aria-pressed','false');updateFocusLabel();},{signal:pageScope.signal});
   const mobileQuery = matchMedia('(max-width: 768px)');
@@ -73,7 +73,7 @@ window.portfolioPages['gallery.js'] = async () => {
 
   function selectPhoto(photo) {
     selectedPhoto = photo;
-    track.querySelectorAll('.photo-card').forEach((card) => {
+    if (!dialog.open) track.querySelectorAll('.photo-card').forEach((card) => {
       const active = card.dataset.photoId === photo.id;
       card.classList.toggle('selected', active);
       card.setAttribute('aria-pressed', String(active));
@@ -109,6 +109,8 @@ window.portfolioPages['gallery.js'] = async () => {
     if(mobileQuery.matches) dialog.style.setProperty('--mobile-photo-height', Math.round(innerHeight*.55)+'px');
     dialog.classList.add('is-loading-first');
     dialog.showModal();
+    document.body.classList.add('photo-view-open');
+    document.dispatchEvent(new Event('portfolio-lightbox-state'));
     dialog.scrollTop = 0;
     renderLightbox();
     document.body.style.overflow = 'hidden';
@@ -252,6 +254,8 @@ window.portfolioPages['gallery.js'] = async () => {
   pageScope.cleanup(() => {
     clearTimeout(closingTimer);
     dialog.classList.remove('is-closing');
+    document.body.classList.remove('photo-view-open');
+    document.dispatchEvent(new Event('portfolio-lightbox-state'));
   });
 
   function movePhoto(direction) {
@@ -287,6 +291,8 @@ window.portfolioPages['gallery.js'] = async () => {
     clearTimeout(closingTimer);
     dialog.classList.remove('is-closing');
     document.body.style.overflow = '';
+    document.body.classList.remove('photo-view-open');
+    document.dispatchEvent(new Event('portfolio-lightbox-state'));
     const focusTarget = returnFocus?.isConnected
       ? returnFocus
       : track.querySelector(`[data-photo-id="${CSS.escape(selectedPhoto?.id || '')}"]`);

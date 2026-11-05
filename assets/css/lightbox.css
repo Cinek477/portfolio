@@ -17,14 +17,14 @@
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: var(--radius-modal);
   background: rgba(7, 17, 37, 0.92);
-  backdrop-filter: blur(15px); /* avoid-ai-design-ignore: K3 */
-  -webkit-backdrop-filter: blur(15px); /* avoid-ai-design-ignore: K3 */
+  backdrop-filter: none; /* avoid-ai-design-ignore: K3 */
+  -webkit-backdrop-filter: none; /* avoid-ai-design-ignore: K3 */
   color: #f3f6ff;
   box-shadow: 0 30px 100px #0008;
 }
 .photo-lightbox::backdrop {
   background: #030b1bcc;
-  backdrop-filter: blur(12px); /* avoid-ai-design-ignore: K3 */
+  backdrop-filter: none; /* avoid-ai-design-ignore: K3 */
 }
 .photo-lightbox[open] {
   animation: lightbox-in 0.25s ease both;
@@ -149,7 +149,7 @@
   box-shadow:
     0 0 15px rgba(56, 189, 248, 0.16),
     inset 0 0 8px rgba(34, 211, 238, 0.08);
-  transition: all 0.3s ease;
+  transition: border-color 0.2s ease;
 }
 
 /* Jasny motyw: szkło baby blue, bez zmian zdjęcia i jego poświaty. */
@@ -582,3 +582,8 @@
     max-height: var(--mobile-photo-height,55svh);
   }
 }
+
+/* Only the photograph is changing; wrapping metadata needs no JS resize loop. */
+.photo-lightbox .lightbox-value { overflow-wrap: anywhere; min-width: 0; }
+.photo-lightbox .lightbox-carousel .lightbox-image img { opacity: 1; transition: none; }
+body.photo-view-open main *, body.photo-view-open .aurora-blob { animation-play-state: paused !important; }

@@ -46,7 +46,7 @@
   const first = new Float32Array(2), second = new Float32Array(2);
   function animate(now) {
     frame = 0;
-    if (document.hidden || reduced.matches) return;
+    if (document.hidden || reduced.matches || document.body.classList.contains('photo-view-open')) return;
     const phase = ((now - epoch) % 4000) / 4000;
     let active = false;
     for (const [button, item] of tracked) {
@@ -108,5 +108,6 @@
   reduced.addEventListener('change', () => {
     if (reduced.matches) { cancelAnimationFrame(frame); frame = 0; } else resume();
   });
+  document.addEventListener('portfolio-lightbox-state', () => { cancelAnimationFrame(frame); frame = 0; if (!document.body.classList.contains('photo-view-open')) resume(); });
   sync();
 })();

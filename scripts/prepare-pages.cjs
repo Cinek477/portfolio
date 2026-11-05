@@ -88,8 +88,7 @@ function preparePages({ base = process.env.PAGES_BASE_PATH || '/portfolio/', out
     }
     fs.writeFileSync(file, source);
   }
-  // Normal document navigation avoids server-dependent paths and history handling.
-  fs.writeFileSync(path.join(output, 'assets/js/router.js'), '// Static Pages: native browser navigation.\n');
+  // The shared router resolves assets against the Pages base URL.
   fs.writeFileSync(path.join(output, 'assets/js/spotify.js'), '// Live Spotify is unavailable without the backend.\n');
   function html(page, extra = '') {
     let source = renderPage(fs.readFileSync(path.join(root, 'pages', page), 'utf8'), page);

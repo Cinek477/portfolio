@@ -11,7 +11,6 @@ window.portfolioPages['lightbox.js'] = () => {
   let activePhoto;
   let activeCollection = [];
   let selectPhoto;
-  let collectionKey = '';
 
   const information = dialog.querySelector('.lightbox-metadata');
   const counter = dialog.querySelector('.lightbox-counter');
@@ -43,8 +42,11 @@ window.portfolioPages['lightbox.js'] = () => {
     return wrapper;
   }
   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
-  const pendingImages = new Map();
-  const readyImages = new Map();
+  const loader = window.createPortfolioPhotoLoader({
+    limit: 3,
+    preferThumbnail: () => mobile.matches || (!dialog.classList.contains('is-focused') && dialog.clientWidth * .5 * Math.min(devicePixelRatio || 1, 1.5) <= 800),
+  });
+  let prefetchTimer = 0;
   let renderVersion = 0;
   let pictureAnimation;
   let displayedPhoto;
@@ -53,76 +55,40 @@ window.portfolioPages['lightbox.js'] = () => {
   loadStatus.setAttribute('role', 'status');
   loadStatus.hidden = true;
   dialog.append(loadStatus);
-  function preparePhoto(photo) {
-    if (!photo.src) return Promise.resolve();
-    if (readyImages.has(photo.src)) return Promise.resolve(readyImages.get(photo.src));
-    if (pendingImages.has(photo.src)) return pendingImages.get(photo.src);
-    const promise = new Promise((resolve, reject) => {
-      const image = new Image();
-      image.decoding = 'async';
-      if (location.protocol !== 'file:') image.crossOrigin = 'anonymous';
-      let settled = false, fallback = false;
-      const timeout = setTimeout(() => finish(new Error('Image load timed out')), 15000);
-      function finish(error) {
-        if (settled) return;
-        settled = true; clearTimeout(timeout);
-        image.onload = image.onerror = null;
-        if (error) { reject(error); return; }
-        image.dataset.loadedSource = image.src;
-        readyImages.set(photo.src, image);
-        if (readyImages.size > (mobile.matches ? 2 : 6)) readyImages.delete(readyImages.keys().next().value);
-        resolve(image);
-      }
-      image.onload = async () => {
-        try { await image.decode(); } catch { /* A loaded image can still be displayed. */ }
-        finish(image.naturalWidth ? null : new Error('Empty image'));
-      };
-      const primarySource=mobile.matches && photo.thumbUrl ? photo.thumbUrl : photo.src;
-      image.onerror = () => {
-        const alternate=primarySource===photo.src?photo.thumbUrl:photo.src;
-        if(!fallback && alternate && alternate!==primarySource){fallback=true;image.src=alternate;}
-        else finish(new Error('Image unavailable'));
-      };
-      image.src = primarySource;
-    });
-    pendingImages.set(photo.src, promise);
-    promise.finally(() => pendingImages.delete(photo.src)).catch(() => {});
-    return promise;
-  }
+  const preparePhoto = photo => loader.load(photo);
   function cancelRender() {
     renderVersion++;
+    clearTimeout(prefetchTimer);
+    loader.cancelPending();
+    displayedPhoto = null;
     pictureAnimation?.cancel();
     loadStatus.hidden = true;
     carousel.removeAttribute('aria-busy');
   }
   dialog.addEventListener('close', cancelRender, { signal: pageScope.signal });
   dialog.addEventListener('lightbox-closing', cancelRender, { signal: pageScope.signal });
-  pageScope.cleanup(cancelRender);
+  pageScope.cleanup(() => { cancelRender(); loader.dispose(); });
   window.renderPortfolioLightbox = async (photo, collection, select, options = {}) => {
     const version = ++renderVersion;
+    loader.cancelOthers(photo);
     pictureAnimation?.cancel();
     carousel.setAttribute('aria-busy', 'true');
     loadStatus.textContent = translate('Ładowanie zdjęcia…', 'Loading photo…');
-    loadStatus.hidden = !photo.src || readyImages.has(photo.src);
+    loadStatus.hidden = !photo.src || loader.has(photo);
     try {
       const prepared = await preparePhoto(photo);
       if (version !== renderVersion || pageScope.signal.aborted || !dialog.isConnected || !dialog.open) return;
       const animate = displayedPhoto && displayedPhoto.id !== photo.id && !mobile.matches && !reducedMotion.matches && carousel.animate;
-      if (animate) {
-        pictureAnimation = carousel.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 120, easing: 'ease-in', fill: 'forwards' });
-        await pictureAnimation.finished;
-        if (version !== renderVersion || pageScope.signal.aborted || !dialog.open) return;
-      }
-      const outgoing = pictureAnimation;
       renderReadyPhoto(photo, collection, select, options, prepared);
       displayedPhoto = photo;
-      if (animate) {
-        pictureAnimation = carousel.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 260, easing: 'ease-out' });
-        outgoing?.cancel();
-      }
-      const index = collection.indexOf(photo);
-      if (collection.length > 1) {
-        for (const offset of [-1, 1]) preparePhoto(collection[(index + offset + collection.length) % collection.length]).catch(() => {});
+      if (animate) pictureAnimation = carousel.animate([{ opacity: .85 }, { opacity: 1 }], { duration: 140, easing: 'ease-out' });
+      clearTimeout(prefetchTimer);
+      // Decode just the next photograph after the visible frame has settled.
+      if (collection.length > 1 && !navigator.connection?.saveData) {
+        const nextPhoto = collection[(collection.indexOf(photo) + 1) % collection.length];
+        prefetchTimer = setTimeout(() => {
+          if (version === renderVersion && dialog.open && !pageScope.signal.aborted) preparePhoto(nextPhoto).catch(() => {});
+        }, 180);
       }
     } catch (error) {
       if (version === renderVersion && !pageScope.signal.aborted && error?.name !== 'AbortError') {
@@ -136,67 +102,6 @@ window.portfolioPages['lightbox.js'] = () => {
       }
     }
   };
-  const colorCache = new Map();
-
-  function sampleGlow(image) {
-    if (colorCache.has(image.src)) return colorCache.get(image.src);
-    const canvas = document.createElement('canvas');
-    canvas.width = canvas.height = 48;
-    const context = canvas.getContext('2d', { willReadFrequently: true });
-    context.drawImage(image, 0, 0, 48, 48);
-    const { data } = context.getImageData(0, 0, 48, 48);
-    const buckets = new Map();
-    for (let i = 0; i < data.length; i += 4) {
-      const [r, g, b] = [data[i], data[i + 1], data[i + 2]];
-      const high = Math.max(r, g, b),
-        low = Math.min(r, g, b);
-      if (data[i + 3] < 128 || high < 35 || low > 235) continue;
-      const saturation = (high - low) / high;
-      if (saturation < 0.3) continue;
-      const difference = high - low;
-      let hue =
-        high === r
-          ? ((g - b) / difference) % 6
-          : high === g
-            ? (b - r) / difference + 2
-            : (r - g) / difference + 4;
-      hue = (hue * 60 + 360) % 360;
-      const key = Math.floor(hue / 15);
-      const bucket = buckets.get(key) || { weight: 0, r: 0, g: 0, b: 0 };
-      const weight = saturation ** 2 * Math.sqrt(high / 255);
-      bucket.weight += weight;
-      bucket.r += r * weight;
-      bucket.g += g * weight;
-      bucket.b += b * weight;
-      buckets.set(key, bucket);
-    }
-    const dominant = [...buckets.values()].sort((a, b) => b.weight - a.weight)[0];
-    if (!dominant) return 'rgba(98, 115, 220, 0.6)';
-    const channels = [dominant.r, dominant.g, dominant.b].map((value) => value / dominant.weight);
-    const boost = Math.min(2.2, 190 / Math.max(...channels));
-    const color = `rgba(${channels.map((value) => Math.round(Math.min(255, value * boost))).join(', ')}, 0.65)`;
-    colorCache.set(image.src, color);
-    return color;
-  }
-
-  function fitText() {
-    if(mobile.matches)return;
-    information.querySelectorAll('.lightbox-value').forEach((value) => {
-      value.style.fontSize = '';
-      let size = parseFloat(getComputedStyle(value).fontSize);
-      // Kafelki mogą rosnąć w pionie: nic nie jest ucinane ani zastępowane wielokropkiem.
-      while (value.scrollWidth > value.clientWidth + 1 && size > 12) {
-        size -= 0.5;
-        value.style.fontSize = `${size}px`;
-      }
-    });
-  }
-  const observer = new ResizeObserver(() => requestAnimationFrame(fitText));
-  observer.observe(information);
-  pageScope.cleanup(() => {
-    observer.disconnect();
-  });
-
   function renderReadyPhoto(photo, collection, select, options, prepared) {
     dialog.classList.remove('is-loading-first');
     activePhoto = photo;
@@ -206,88 +111,15 @@ window.portfolioPages['lightbox.js'] = () => {
     if(mobile.matches){if(previous.parentElement!==pagination)pagination.prepend(previous);if(next.parentElement!==pagination)pagination.append(next);}else{if(previous.parentElement!==dialog)dialog.append(previous);if(next.parentElement!==dialog)dialog.append(next);}
     // Własny kolor zdjęcia działa również przy file://, gdzie canvas jest blokowany.
     dialog.style.setProperty('--dynamic-glow-color', photo.glowColor || 'rgba(98, 115, 220, 0.6)');
-    if(mobile.matches){
-      let frame=carousel.firstElementChild;
-      if(!frame){frame=document.createElement('div');frame.className='lightbox-image is-active';carousel.append(frame);}
-      frame.style.setProperty('--dynamic-glow-color',photo.glowColor||'rgba(98,115,220,.4)');
-      const image=prepared;
-      if(image){image.alt=local(photo.title);image.classList.add('is-ready');image.draggable=false;if(frame.firstElementChild!==image)frame.replaceChildren(image);}
-      collectionKey='';
-    }else{
-    const key = JSON.stringify([mobile.matches, collection.map((item) => [item.id, item.src])]);
-    if (key !== collectionKey) {
-      collectionKey = key;
-      carousel.replaceChildren();
-      collection.forEach((item) => {
-        const imageFrame = document.createElement('div');
-        imageFrame.className = 'lightbox-image';
-        imageFrame.style.setProperty(
-          '--dynamic-glow-color',
-          item.glowColor || 'rgba(98, 115, 220, 0.6)',
-        );
-        carousel.append(imageFrame);
-        if (item.src) {
-          const image = new Image();
-          image.alt = local(item.title);
-          image.decoding = 'async';
-          image.loading = 'lazy';
-          if (location.protocol !== 'file:') image.crossOrigin = 'anonymous';
-          image.addEventListener(
-            'load',
-            () => {
-              try {
-                const color = sampleGlow(image);
-                imageFrame.style.setProperty('--dynamic-glow-color', color);
-                if (activePhoto === item) dialog.style.setProperty('--dynamic-glow-color', color);
-              } catch {
-                // Zachowaj kolor zapisany dla zdjęcia, zamiast wymuszać niebieską poświatę.
-              }
-            },
-            { once: true },
-          );
-          image.src = image.dataset.loadedSource || item.src;
-          imageFrame.append(image);
-          const reveal = () => {
-            if (pageScope.signal.aborted) return;
-            image.classList.add('is-ready');
-          };
-          if (image.complete && image.naturalWidth) reveal();
-          else image.addEventListener('load', async () => { try { await image.decode(); } catch {} reveal(); }, { once: true });
-        } else {
-          const placeholder = document.createElement('div');
-          placeholder.className = 'photo-placeholder';
-          placeholder.textContent = translate('Miejsce na zdjęcie', 'Photo placeholder');
-          imageFrame.append(placeholder);
-        }
-      });
-    }
-    const selectedIndex = collection.indexOf(photo);
-    [...carousel.children].forEach((frame, index) => {
-      frame.classList.toggle('is-active', index === selectedIndex);
-      const image = frame.querySelector('img');
-      if (image) {
-        image.alt = local(collection[index].title);
-        image.loading = index === selectedIndex ? 'eager' : 'lazy';
-      }
-    });
-    const selectedFrame = carousel.children[selectedIndex];
-
-    if (selectedFrame) {
-      const prepared = readyImages.get(photo.src);
-      if (prepared) {
-        const previous = selectedFrame.querySelector('img');
-        if (previous !== prepared) { if (previous) previous.replaceWith(prepared); else selectedFrame.append(prepared); }
-        prepared.alt = local(photo.title);
-        prepared.classList.add('is-ready');
-        try { selectedFrame.style.setProperty('--dynamic-glow-color', sampleGlow(prepared)); } catch {}
-      }
-      dialog.style.setProperty(
-        '--dynamic-glow-color',
-        selectedFrame.style.getPropertyValue('--dynamic-glow-color'),
-      );
-
-    }
-
+    // One decoded image and one frame on both desktop and mobile.
+    let frame = carousel.firstElementChild;
+    if (!frame) { frame = document.createElement('div'); frame.className = 'lightbox-image is-active'; carousel.append(frame); }
+    if (prepared) {
+      prepared.alt = local(photo.title); prepared.classList.add('is-ready'); prepared.draggable = false;
+      if (frame.firstElementChild !== prepared) frame.replaceChildren(prepared);
+    } else {
+      const placeholder = document.createElement('div'); placeholder.className = 'photo-placeholder';
+      placeholder.textContent = translate('Miejsce na zdjęcie', 'Photo placeholder'); frame.replaceChildren(placeholder);
     }
     information.replaceChildren();
     const badges = document.createElement('div');
@@ -393,7 +225,7 @@ window.portfolioPages['lightbox.js'] = () => {
     counter.setAttribute('aria-live', 'polite');
     dots.setAttribute('aria-label', translate('Wybierz zdjęcie', 'Choose a photo'));
     dots.replaceChildren();
-    collection.forEach((item, position) => {
+    if (!mobile.matches && collection.length <= 30) collection.forEach((item, position) => {
       const dot = document.createElement('button');
       dot.type = 'button';
       dot.className = 'lightbox-dot';
@@ -405,7 +237,7 @@ window.portfolioPages['lightbox.js'] = () => {
       });
       dots.append(dot);
     });
-    requestAnimationFrame(fitText);
+
   };
 
 };
