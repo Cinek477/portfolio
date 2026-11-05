@@ -10,7 +10,7 @@ Kod pozostaje na gałęzi `main`. Workflow `.github/workflows/github-pages.yml` 
 4. W **Actions → Publish portfolio to GitHub Pages** uruchom **Run workflow**, jeśli nie rozpoczął się automatycznie po wysłaniu kodu.
 5. Po udanej publikacji użyj adresu wskazanego w zakończonym zadaniu `deploy`.
 
-Dla repozytorium `Cinek477/WDAI-2026` domyślny adres to `https://cinek477.github.io/WDAI-2026/`. Repozytorium prywatne wymaga planu GitHub umożliwiającego Pages z prywatnych repozytoriów.
+Dla repozytorium `Cinek477/portfolio` domyślny adres to `https://cinek477.github.io/portfolio/`. Repozytorium prywatne wymaga planu GitHub umożliwiającego Pages z prywatnych repozytoriów.
 
 ## Kolejne aktualizacje
 
@@ -36,7 +36,7 @@ Edytuj kod i treści lokalnie, a następnie świadomie wyślij zmiany oraz publi
 npm run pages:prepare
 ```
 
-Wynik: `dist/github-pages/`, ignorowany przez Git. Domyślny prefiks to `/WDAI-2026/`; workflow otrzymuje właściwy prefiks z ustawień Pages. Dla domeny głównej ustaw `PAGES_BASE_PATH=/` w środowisku przed uruchomieniem eksportu.
+Wynik: `dist/github-pages/`, ignorowany przez Git. Domyślny prefiks to `/portfolio/`; workflow otrzymuje właściwy prefiks z ustawień Pages. Dla domeny głównej ustaw `PAGES_BASE_PATH=/` w środowisku przed uruchomieniem eksportu.
 
 Eksporter kopiuje tylko źródła publicznych stron i `assets/`. Nie kopiuje `data/`, `backups/`, `.env`, historii Git ani kodu serwera. Zapisy API w publicznych modułach są zastępowane odczytem jawnych plików JSON w `static-api/`; nie są to działające endpointy serwera. Niewidoczne i zarchiwizowane zdjęcia, projekty i opinie są odfiltrowane z eksportowanych list. Pliki zdjęć obecne w `assets/` pozostają publiczne, nawet jeśli wpis usunięto z listy.
 

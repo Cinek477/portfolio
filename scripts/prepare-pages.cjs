@@ -6,7 +6,7 @@ const { renderPage } = require('../shared/render-page.cjs');
 const root = path.resolve(__dirname, '..');
 const aliases = { 'o-mnie': 'about.html', projekty: 'projects.html', korepetycje: 'knowledge.html', 'po-godzinach': 'hobby.html', kontakt: 'contact.html' };
 const pageNames = ['index.html', 'about.html', 'projects.html', 'project.html', 'knowledge.html', 'hobby.html', 'contact.html', '404.html'];
-function preparePages({ base = process.env.PAGES_BASE_PATH || '/WDAI-2026/', output = path.join(root, 'dist/github-pages') } = {}) {
+function preparePages({ base = process.env.PAGES_BASE_PATH || '/portfolio/', output = path.join(root, 'dist/github-pages') } = {}) {
   if (!/^\/(?:[A-Za-z0-9_.-]+\/)*$/.test(base) || base.split('/').some(part => part === '.' || part === '..')) throw Error('Nieprawidłowy prefiks adresu Pages.');
   output = path.resolve(output);
   const dist = path.join(root, 'dist');
