@@ -99,11 +99,41 @@ document.addEventListener('keydown', (event) => {
 document.addEventListener('click', (event) => {
   if (!navbar.contains(event.target)) closeMenu();
 });
+let navbarAnimations = [];
+let navbarScrollFrame = 0;
 function updateScroll() {
   const compact = navbar.classList.contains('scrolled');
-  navbar.classList.toggle('scrolled', scrollY > (compact ? 70 : 100));
+  const nextCompact = scrollY > (compact ? 70 : 100);
+  if (compact === nextCompact) return;
+  const animate = !matchMedia('(max-width: 760px)').matches && !matchMedia('(prefers-reduced-motion: reduce)').matches && typeof navbar.animate === 'function';
+  const elements = animate ? [...navbar.querySelectorAll('.brand-link, .navigation > a, .controls > button')] : [];
+  const before = elements.map(element => element.getBoundingClientRect());
+  const oldBounds = animate ? navbar.getBoundingClientRect() : null;
+  navbarAnimations.forEach(animation => animation.cancel());
+  navbarAnimations = [];
+  navbar.classList.toggle('scrolled', nextCompact);
+  if (!animate) return;
+  const bounds = navbar.getBoundingClientRect();
+  const after = elements.map(element => element.getBoundingClientRect());
+  const options = { duration: 260, easing: 'cubic-bezier(0.22, 0.61, 0.36, 1)' };
+  // Layout changes once; the moving surface and labels use compositor transforms.
+  try {
+    if (bounds.width && bounds.height) navbarAnimations.push(navbar.animate([
+      { transform: `scale(${oldBounds.width / bounds.width}, ${oldBounds.height / bounds.height})` },
+      { transform: 'scale(1, 1)' },
+    ], { ...options, pseudoElement: '::before' }));
+    elements.forEach((element, index) => {
+      const dx = before[index].left - after[index].left, dy = before[index].top - after[index].top;
+      if (dx || dy) navbarAnimations.push(element.animate([
+        { transform: `translate(${dx}px, ${dy}px)` }, { transform: 'translate(0, 0)' },
+      ], options));
+    });
+  } catch { navbarAnimations.forEach(animation => animation.cancel()); navbarAnimations = []; }
 }
-addEventListener('scroll', updateScroll, { passive: true });
+addEventListener('scroll', () => {
+  if (navbarScrollFrame) return;
+  navbarScrollFrame = requestAnimationFrame(() => { navbarScrollFrame = 0; updateScroll(); });
+}, { passive: true });
 updateScroll();
 matchMedia('(max-width: 760px)').addEventListener('change', closeMenu);
 window.refreshPortfolioPage = () => {

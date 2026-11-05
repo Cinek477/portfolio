@@ -215,14 +215,22 @@ button {
   padding: 15px 24px;
   border: 1px solid var(--line);
   border-radius: var(--radius-panel);
-  background: var(--glass);
-  backdrop-filter: blur(20px); /* avoid-ai-design-ignore: K3 */
+  background: transparent;
+  border-color: transparent;
+  isolation: isolate;
+  transition: none;
+}
+.navbar::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  z-index: -1;
+  pointer-events: none;
+  border: 1px solid var(--line);
+  border-radius: inherit;
+  background: color-mix(in srgb, var(--panel) 96%, transparent);
   box-shadow: var(--shadow);
-  transition:
-    width 0.45s cubic-bezier(0.22, 0.61, 0.36, 1),
-    padding 0.45s cubic-bezier(0.22, 0.61, 0.36, 1),
-    gap 0.45s cubic-bezier(0.22, 0.61, 0.36, 1),
-    border-radius 0.45s cubic-bezier(0.22, 0.61, 0.36, 1);
+  transform-origin: center;
 }
 .logo {
   background: none;
@@ -1329,15 +1337,10 @@ footer {
 :root:not([data-theme='dark']) .aurora-page .aurora-blob {
   filter: blur(120px);
 }
-:root:not([data-theme='dark']) .navbar {
-  background: rgba(255, 255, 255, 0.56);
-  border: 1px solid rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(24px); /* avoid-ai-design-ignore: K3 */
-  -webkit-backdrop-filter: blur(24px); /* avoid-ai-design-ignore: K3 */
-  box-shadow:
-    0 4px 10px rgba(15, 23, 42, 0.04),
-    0 16px 36px rgba(15, 23, 42, 0.08),
-    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+:root:not([data-theme='dark']) .navbar::before {
+  background: rgba(245, 250, 255, 0.96);
+  border-color: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 4px 10px rgba(15, 23, 42, 0.04), 0 16px 36px rgba(15, 23, 42, 0.08);
 }
 :root:not([data-theme='dark'])
   :is(.card:not(.project-photo-card), .subpage-content, .contact-card, .glass-error-card) {
@@ -1474,7 +1477,7 @@ footer {
     overflow: hidden;
     opacity: 1;
     visibility: visible;
-    transition: flex-basis 0.45s cubic-bezier(0.22, 0.61, 0.36, 1), opacity 0.2s ease, transform 0.45s ease, visibility 0s;
+    transition: none;
   }
   .navbar .menu-icon { flex-shrink: 0; }
   .navigation { flex: 1; justify-content: center; gap: clamp(12px, 1.6vw, 24px); }
