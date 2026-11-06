@@ -62,6 +62,7 @@ window.portfolioProjects = [
     },
     "technologies": "Python, FastAPI, React, TypeScript, SQLite, AI",
     "link": "https://github.com/AdamStajek/Jakobiany-HackYeah",
+    "demoUrl": "https://www.youtube.com/watch?v=L1NXAl0BuAY",
     "src": "assets/images/projects/illustrations/hackyeah.svg",
     "year": 2026,
     "symbol": "#1",

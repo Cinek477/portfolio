@@ -152,7 +152,7 @@
         window.portfolioRouting = true;
         try {
           for (const script of next.querySelectorAll('script[src]')) {
-            const name = script.getAttribute('src').split('/').at(-1);
+            const name = script.getAttribute('src').split('/').at(-1).split('?')[0];
             if (initializers[name]) await initializers[name]();
           }
         } finally {

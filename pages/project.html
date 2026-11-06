@@ -13,14 +13,14 @@
     <link rel="stylesheet" href="assets/css/portfolio.css" />
     <link rel="stylesheet" href="assets/css/brand.css" />
     <link rel="stylesheet" href="assets/css/controls.css" />
-    <link rel="stylesheet" href="assets/css/project-detail.css" />
+    <link rel="stylesheet" href="assets/css/project-detail.css?v=4" />
     <link rel="icon" type="image/png" href="assets/images/brand/favicon-light.png" data-theme-icon data-light="assets/images/brand/favicon-light.png" data-dark="assets/images/brand/favicon-dark.png" />
     <script src="assets/js/router.js" defer></script>
     <script src="assets/js/neon.js" defer></script>
     <script src="assets/js/theme.js" defer></script>
     <script src="assets/js/portfolio.js" defer></script>
-    <script src="assets/js/projects-data.js" defer></script>
-    <script src="assets/js/project-detail.js" defer></script>
+    <script src="assets/js/projects-data.js?v=4" defer></script>
+    <script src="assets/js/project-detail.js?v=4" defer></script>
 
 
 
@@ -38,7 +38,7 @@
           <p class="eyebrow" id="project-detail-meta"></p>
           <h1 id="project-detail-title" data-page-title data-pl="Ładowanie projektu…" data-en="Loading project…">Ładowanie projektu…</h1>
           <p class="project-detail-lead" id="project-detail-summary"></p>
-          <div class="hero-actions"><a class="primary" id="project-detail-repository" hidden target="_blank" rel="noopener noreferrer" data-pl="Zobacz repozytorium" data-en="View repository">Zobacz repozytorium</a><a class="secondary" href="#project-story" data-pl="Poznaj rozwiązanie" data-en="Explore the solution">Poznaj rozwiązanie</a></div>
+          <div class="hero-actions"><a class="primary" id="project-detail-repository" hidden target="_blank" rel="noopener noreferrer" data-pl="Zobacz repozytorium" data-en="View repository">Zobacz repozytorium</a><a class="secondary" id="project-detail-demo" hidden target="_blank" rel="noopener noreferrer" data-pl="Zobacz demo (YouTube)" data-en="Watch demo (YouTube)">Zobacz demo (YouTube)</a><a class="secondary" href="#project-story" data-pl="Poznaj rozwiązanie" data-en="Explore the solution">Poznaj rozwiązanie</a></div>
         </div>
         <aside class="case-outcome" hidden>
           <svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M25 13h30v18c0 13-7 21-15 21s-15-8-15-21V13Z"/><path d="M25 19H14v9c0 10 6 15 14 15m27-24h11v9c0 10-6 15-14 15M40 52v15m-14 0h28"/><path d="m33 31 5 5 10-11"/></svg>
@@ -56,6 +56,19 @@
           <div class="case-flow-node"><span class="case-flow-icon" aria-hidden="true"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="35" r="4"/><path d="M16 35h15a7 7 0 0 0 0-14H17a6 6 0 0 1 0-12h15" stroke-dasharray="3 4"/><path d="M39 13c0 5-7 11-7 11s-7-6-7-11a7 7 0 0 1 14 0Z"/><circle cx="32" cy="13" r="2"/></svg></span><h3 data-pl="Dopasowana trasa" data-en="A tailored route">Dopasowana trasa</h3><p data-pl="Kraków zgodnie z Twoimi potrzebami" data-en="Kraków, around your needs">Kraków zgodnie z Twoimi potrzebami</p></div>
         </div>
       </section>
+      <section class="project-demo-section" id="project-demo" hidden aria-labelledby="project-demo-title">
+        <div class="project-demo-card">
+          <div class="project-demo-copy">
+            <p class="eyebrow" data-pl="Wideo z działania" data-en="Video walkthrough">Wideo z działania</p>
+            <h2 id="project-demo-title" data-pl="Zobacz aplikację w akcji" data-en="See the app in action">Zobacz aplikację w akcji</h2>
+            <p class="project-demo-lead" data-pl="Krótka prezentacja działania „Swoją Drogą” — od wyboru indywidualnego profilu potrzeb, przez ocenę barier i źródeł danych, po wyznaczenie dostępnej trasy po Krakowie." data-en="A short walkthrough of “Swoją Drogą” — from choosing a personal mobility profile, through barrier and data-source assessment, to planning an accessible route across Kraków.">Krótka prezentacja działania „Swoją Drogą” — od wyboru indywidualnego profilu potrzeb, przez ocenę barier i źródeł danych, po wyznaczenie dostępnej trasy po Krakowie.</p>
+            <div class="hero-actions"><a class="secondary" id="project-demo-external" href="https://www.youtube.com/watch?v=L1NXAl0BuAY" target="_blank" rel="noopener noreferrer" data-pl="Otwórz w YouTube ↗" data-en="Open on YouTube ↗">Otwórz w YouTube ↗</a></div>
+          </div>
+          <div class="project-demo-frame">
+            <iframe id="project-demo-iframe" title="Demo projektu" src="https://www.youtube-nocookie.com/embed/L1NXAl0BuAY?rel=0" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+          </div>
+        </div>
+      </section>
       <section id="project-story" class="project-story" aria-label="Opis projektu" data-label-pl="Opis projektu" data-label-en="Project story">
         <section class="project-story-section" data-story="problem" hidden><p class="eyebrow" data-pl="Kontekst" data-en="Context">Kontekst</p><div><h2 data-pl="Problem" data-en="The problem">Problem</h2><p class="project-story-text"></p></div></section>
         <section class="project-story-section" data-story="solution" hidden><p class="eyebrow" data-pl="Architektura" data-en="Architecture">Architektura</p><div><h2 data-pl="Rozwiązanie" data-en="The solution">Rozwiązanie</h2><p class="project-story-text"></p></div></section>
@@ -64,7 +77,7 @@
         <section class="project-story-section project-detail-tech" hidden><p class="eyebrow" data-pl="Stack" data-en="Stack">Stack</p><div><h2 data-pl="Technologie" data-en="Technologies">Technologie</h2><div class="project-tech-grid" id="project-detail-tags"></div></div></section>
       </section>
       <p id="project-detail-status" class="project-detail-status" role="status" hidden></p>
-      <section class="related-projects" hidden aria-labelledby="related-projects-title"><h2 id="related-projects-title" data-pl="Zobacz też" data-en="Explore more">Zobacz też</h2><div class="related-projects-grid"></div></section>
+      <section class="related-projects" hidden aria-labelledby="related-projects-title"><h2 id="related-projects-title" data-pl="Zobacz też" data-en="Explore more">Zobacz też</h2><div class="grid projects-grid related-projects-grid"></div></section>
     </main>
     <a
       class="contact-fab"

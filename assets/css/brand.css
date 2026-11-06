@@ -50,11 +50,17 @@
   .brand-link .brand-monogram { display: block; }
 }
 @media (max-width: 760px) {
-  .brand-link { width: 76px; margin-right: 4px; }
+  .brand-link {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 76px;
+    margin: 0;
+  }
   .brand-link .brand-wordmark { width: 76px; height: 36px; }
   .footer-brand { margin: 0; align-self: center; }
 }
-@media (max-width: 380px) {
+@media (max-width: 340px) {
   .brand-link { width: 32px; }
   .brand-link .brand-wordmark { display: none; }
   .brand-link .brand-monogram { display: block; }

@@ -146,6 +146,15 @@ window.portfolioPages['projects.js'] = () => {
           if (/^https?:/i.test(project.link)) { link.target = '_blank'; link.rel = 'noopener noreferrer'; }
           actions.append(link);
         }
+        if (project.demoUrl && /^https?:\/\/[^\s]+$/i.test(project.demoUrl)) {
+          const demo = document.createElement('a');
+          demo.href = project.demoUrl;
+          demo.textContent = translated('Demo wideo', 'Video demo');
+          demo.className = 'project-repository-link';
+          demo.target = '_blank';
+          demo.rel = 'noopener noreferrer';
+          actions.append(demo);
+        }
         if (actions.children.length) inner.append(actions);
         details.append(inner);
         toggle.addEventListener('click', () => {

@@ -106,6 +106,13 @@ function normalizeProject(input, old = {}) {
     !/^(?:contact\.html|#projects)$/.test(project.link)
   )
     throw Object.assign(new Error('Podaj link HTTP/HTTPS.'), { status: 400 });
+  if (input.demoUrl !== undefined || old.demoUrl !== undefined) {
+    const demoUrl = string(input.demoUrl ?? old.demoUrl ?? '', 'demoUrl', 2000);
+    if (demoUrl && !/^https?:\/\/[^\s]+$/i.test(demoUrl))
+      throw Object.assign(new Error('Podaj link HTTP/HTTPS.'), { status: 400 });
+    if (demoUrl) project.demoUrl = demoUrl;
+    else delete project.demoUrl;
+  }
   if (input.visible !== undefined && typeof input.visible !== 'boolean')
     throw Object.assign(new Error('Niepoprawna widoczność wpisu.'), { status: 400 });
   project.visible = input.visible ?? old.visible ?? true;
