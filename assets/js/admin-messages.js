@@ -1,3 +1,4 @@
+// Prywatna skrzynka: listy, filtry, szczegóły spraw i odpowiedzi.
 (() => {
   const list = document.querySelector('#messages-list');
   window.createAdminSearch(list,'E-mail, temat lub treść wiadomości…');

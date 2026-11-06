@@ -28,6 +28,6 @@ Zakładka Wiadomości ma foldery Odebrane, Spam i Kosz wiadomości. Oznaczenie j
 
 „Do kosza” wymaga potwierdzenia. Trwałe usunięcie jest dostępne tylko w koszu, po dodatkowym wpisaniu `USUŃ`. Kosz nie opróżnia się automatycznie. Foldery i usuwanie dotyczą lokalnej/online bazy panelu — nie przenoszą ani nie usuwają powiadomień, które dotarły już do Gmaila. Dostęp do wszystkich folderów i zmian wymaga administratora. Dane nie są eksportowane do publicznych plików.
 
-Lokalnie istniejące wiadomości otrzymują folder Odebrane przy uruchomieniu serwera. Sites wymaga migracji `0002_message_folders.sql` przed wdrożeniem backendu.
+Lokalnie istniejące wiadomości otrzymują folder Odebrane przy uruchomieniu serwera. Dawna integracja Sites została usunięta z projektu.
 
 Przenoszenie do kosza używa okna w panelu zamiast okna przeglądarki. „Nie pytaj ponownie” dotyczy wyłącznie przenoszenia pojedynczych wiadomości do kosza, w tej przeglądarce i pod tym adresem strony. „Przywróć potwierdzenia” włącza je ponownie. Trwałe usuwanie i przycisk „Opróżnij kosz” zawsze wymagają potwierdzenia przez wpisanie `USUŃ`. Opróżnienie obejmuje cały kosz, również wiadomości spoza listy ostatnich 100; zmiana zawartości od momentu wyświetlenia powoduje konieczność ponownego sprawdzenia i potwierdzenia. Odebrane i Spam pozostają bez zmian.

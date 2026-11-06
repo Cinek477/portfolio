@@ -1,3 +1,4 @@
+// Edytor podstron: formularze treści, szkice, publikacja i historia zmian.
 (() => {
   const form = document.querySelector('#page-editor-form');
   const fields = document.querySelector('#page-editor-fields');

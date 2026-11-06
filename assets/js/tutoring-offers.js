@@ -1,10 +1,16 @@
+// Promocje pakietów i FAQ pobierane z opublikowanych ustawień korepetycji.
 window.portfolioPages ||= {};
 window.portfolioPages['tutoring-offers.js'] = () => {
   const main = document.querySelector('.tutoring-page');
   if (!main) return;
   const scope = window.portfolioPageScope || { signal: new AbortController().signal };
+  let signature;
   function apply(data) {
     if (scope.signal.aborted || !main.isConnected || !Array.isArray(data?.offers)) return;
+    // Eksport i API często zawierają to samo: nie przebudowuj FAQ ani odznak.
+    const nextSignature = JSON.stringify([data.offers, data.faq]);
+    if (signature === nextSignature) return;
+    signature = nextSignature;
     const faq = main.querySelector('.tutoring-faq-list');
     if (faq && Array.isArray(data.faq)) {
       const openQuestions = new Set([...faq.querySelectorAll('details[open] summary')].map(el => el.dataset.pl));
@@ -22,8 +28,9 @@ window.portfolioPages['tutoring-offers.js'] = () => {
       }
       main.querySelector('.tutoring-faq').hidden = !faq.children.length;
     }
+    const cards = new Map([...main.querySelectorAll('[data-offer-id]')].map(card => [card.dataset.offerId, card]));
     for (const offer of data.offers) {
-      const card = [...main.querySelectorAll('[data-offer-id]')].find(card => card.dataset.offerId === offer.id);
+      const card = cards.get(offer.id);
       if (!card) continue;
       card.querySelector('.offer-discount')?.remove();
       card.classList.remove('has-discount');

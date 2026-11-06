@@ -1,3 +1,4 @@
+// Kosz panelu: przywracanie wpisów i potwierdzone trwałe usuwanie.
 (() => {
   const list = document.querySelector('#trash-list');
   const category = item => item.kind === 'photos' ? 'Zdjęcie' : item.data.section === 'achievements' ? 'Osiągnięcie' : 'Projekt';

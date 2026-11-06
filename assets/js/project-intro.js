@@ -1,3 +1,4 @@
+// Uruchamianie animacji ilustracji projektów tylko przy widocznej sekcji.
 window.portfolioPages ||= {};
 window.portfolioPages['project-intro.js'] = () => {
   const board = document.querySelector('.project-lab');

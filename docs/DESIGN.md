@@ -72,4 +72,4 @@ Używaj zmiennych zamiast wpisywać osobne kolory dla kolejnych sekcji. Niebiesk
 | Pozostałe pliki w `assets/css/` | Konkretne podstrony i komponenty |
 | `assets/js/` | Interakcje, animacje i renderowanie treści |
 
-Po zmianie wykonaj kontrolę projektu i sprawdź zmieniony komponent na komputerze oraz telefonie. Podgląd Sites generuje się ze źródeł; nie poprawiaj ręcznie `sites/public/`.
+Po zmianie wykonaj kontrolę projektu i sprawdź zmieniony komponent na komputerze oraz telefonie. Eksport Pages generuje się ze źródeł; nie poprawiaj ręcznie `dist/github-pages/`.

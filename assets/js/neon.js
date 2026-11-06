@@ -1,10 +1,14 @@
+// Dekoracyjny obrys przycisków; jeden cykl animacji tylko dla widocznych elementów.
 (() => {
   const selector = '.hero-actions a.primary, .contact-submit, .lightbox-instagram';
   const tracked = new Map();
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   const epoch = performance.now();
   const sampleCount = 1024;
-  const steps = 96;
+  const steps = 48;
+  // Dekoracja nie wymaga 60–144 odrysowań na sekundę na szybkich ekranach.
+  const frameInterval = 1000 / 30;
+  let lastPaint = -Infinity;
   const colors = Array.from({ length: steps }, (_, index) => {
     const t = (index + 1) / steps;
     const head = Math.max(0, (t - 0.7) / 0.3);
@@ -47,6 +51,11 @@
   function animate(now) {
     frame = 0;
     if (document.hidden || reduced.matches || document.body.classList.contains('photo-view-open')) return;
+    if (now - lastPaint < frameInterval - 1) {
+      frame = requestAnimationFrame(animate);
+      return;
+    }
+    lastPaint = now;
     const phase = ((now - epoch) % 4000) / 4000;
     let active = false;
     for (const [button, item] of tracked) {

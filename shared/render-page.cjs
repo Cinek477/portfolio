@@ -3,9 +3,12 @@ const path = require('node:path');
 const root = path.resolve(__dirname, '..');
 
 function renderPage(source, page) {
-  const rendered = source.replace('<!-- component:navbar -->', () => {
-    const navbar = fs.readFileSync(path.join(root, 'components/navbar.html'), 'utf8');
-    return navbar.replace(/<a href="([^"]+)"/g, (link, href) =>
+  // Składamy wspólne fragmenty po stronie serwera i podczas eksportu Pages.
+  // Nazwy są zamkniętą listą, nie ścieżką otrzymaną od użytkownika.
+  const rendered = source.replace(/<!-- component:(navbar|footer|contact-fab) -->/g, (_, name) => {
+    const component = fs.readFileSync(path.join(root, 'components', `${name}.html`), 'utf8');
+    if (name !== 'navbar') return component;
+    return component.replace(/<a href="([^"]+)"/g, (link, href) =>
       href === (path.basename(page) === 'project.html' ? 'projects.html' : path.basename(page)) ? `${link} aria-current="page"` : link,
     );
   });

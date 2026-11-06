@@ -1,3 +1,4 @@
+// Kreator kontaktu: wybór tematu, pytania, podsumowanie i wysłanie zapytania.
 window.portfolioPages ||= {};
 window.portfolioPages['contact.js'] = async () => {
   const scope = window.portfolioPageScope || { signal:new AbortController().signal };

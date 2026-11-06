@@ -28,7 +28,7 @@ Edytuj kod i treści lokalnie, a następnie świadomie wyślij zmiany oraz publi
 - Brak panelu zapisu, prywatnej skrzynki i bazy na Pages. Pod adresem panelu wyświetlana jest informacja o edycji lokalnej.
 - Brak Spotify na żywo; pozostaje link do profilu i nieruchoma dekoracja.
 - Publiczne treści są migawką ostatniego eksportu, nie połączeniem z lokalną bazą.
-- Lokalna strona i backend Sites zachowują swoje działanie; adaptacje dotyczą wyłącznie wygenerowanych plików Pages.
+- Lokalna strona zachowuje swoje działanie; adaptacje dotyczą wyłącznie wygenerowanych plików Pages.
 
 ## Eksport na komputerze
 

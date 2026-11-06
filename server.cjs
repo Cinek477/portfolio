@@ -9,6 +9,7 @@ const { DatabaseSync } = require('node:sqlite');
 
 const ROOT = __dirname;
 const { renderPage } = require('./shared/render-page.cjs');
+const { sendAsset } = require('./server/static-assets.cjs');
 const { defaults: homeDefaults, normalizeHome, hydrateHome } = require('./shared/home.cjs');
 const { pageDefaults, normalizeContent, normalizeOffers, normalizeEditor } = require('./shared/page-content.cjs');
 const { normalize, normalizeProject } = require('./shared/normalize.cjs');
@@ -477,19 +478,14 @@ function createGalleryServer(options = {}) {
           mutateGallery(()=>db.prepare('INSERT INTO settings(key,value) VALUES (?,?) ON CONFLICT(key) DO UPDATE SET value=excluded.value').run('tutoring-reviews',JSON.stringify(items)));
           return json(res,old?200:201,item);
         }
-        if (pathname === '/api/pages/contact') {
-          if(req.method === 'GET') return json(res,200,readContact());
-          if(req.method !== 'PUT') return json(res,405,{error:'Niedozwolona metoda.'});
-          const input=await body(req), page={editor:normalizeEditor(input.editor,readContact().editor)};
-          mutateGallery(()=>db.prepare('INSERT INTO settings(key,value) VALUES (?,?) ON CONFLICT(key) DO UPDATE SET value=excluded.value').run('page-contact',JSON.stringify(page)));
-          return json(res,200,page);
-        }
-        if (pathname === '/api/pages/projects') {
-          if (req.method === 'GET') return json(res, 200, readProjectPage());
+        // Kontakt i lista projektów mają ten sam model edytora i zapis ustawień.
+        if (['/api/pages/contact', '/api/pages/projects'].includes(pathname)) {
+          const name = pathname.split('/').at(-1);
+          const old = readPublished(name);
+          if (req.method === 'GET') return json(res, 200, old);
           if (req.method !== 'PUT') return json(res, 405, { error: 'Niedozwolona metoda.' });
-          const input = await body(req);
-          const page = { editor: normalizeEditor(input.editor, readProjectPage().editor) };
-          mutateGallery(() => db.prepare('INSERT INTO settings(key,value) VALUES (?,?) ON CONFLICT(key) DO UPDATE SET value=excluded.value').run('page-projects', JSON.stringify(page)));
+          const page = normalizeDraft(name, await body(req), old);
+          mutateGallery(() => db.prepare('INSERT INTO settings(key,value) VALUES (?,?) ON CONFLICT(key) DO UPDATE SET value=excluded.value').run('page-' + name, JSON.stringify(page)));
           return json(res, 200, page);
         }
         if (pathname === '/api/pages/knowledge') {
@@ -723,14 +719,7 @@ function createGalleryServer(options = {}) {
         });
         return res.end(req.method === 'HEAD' ? undefined : html);
       }
-      res.writeHead(200, {
-        'Content-Type': MIME[extension],
-        'Content-Length': stats.size,
-        'X-Content-Type-Options': 'nosniff',
-        'Cache-Control': 'no-cache',
-      });
-      if (req.method === 'HEAD') return res.end();
-      fs.createReadStream(file).pipe(res);
+      return sendAsset(req, res, file, stats, MIME[extension]);
     } catch (error) {
       if (error.code === 'ENOENT') {
         return notFound(req, res);

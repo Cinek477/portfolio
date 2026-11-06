@@ -1,3 +1,4 @@
+// Treści Start i O mnie: dane początkowe z eksportu, następnie aktualizacja przez API.
 window.portfolioPages ||= {};
 window.portfolioPages['page-content.js'] = () => {
   const main = document.querySelector('main[data-editable-page]');

@@ -1,3 +1,4 @@
+// Zmiana motywu z zapisem preferencji i opcjonalnym przejściem wizualnym.
 (() => {
   const root = document.documentElement;
   const button = document.querySelector('.theme');

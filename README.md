@@ -18,7 +18,7 @@ powershell -ExecutionPolicy Bypass -File .\scripts\start-gallery.ps1
 
 Strona: http://127.0.0.1:3000/ · Panel: http://127.0.0.1:3000/admin
 
-Zatrzymanie serwera uruchomionego w oknie: Ctrl+C. Serwer nasłuchuje wyłącznie lokalnie. Osobny podgląd `.local/lan-preview.cjs` wymaga aktualnego adresu Wi-Fi i nie udostępnia administracji.
+Zatrzymanie serwera uruchomionego w oknie: Ctrl+C. Serwer nasłuchuje wyłącznie lokalnie.
 
 ## Adresy lokalne
 
@@ -57,7 +57,6 @@ Dawne adresy HTML przekierowują na nowe. Pliki źródłowe zachowują nazwy. Na
 | `components/`, `shared/` | Wspólne elementy, walidacja i treści domyślne |
 | `scripts/`, `tests/` | Uruchamianie i kontrole |
 | `docs/` | Instrukcje |
-| `sites/` | Źródła backendu online |
 | `data/`, `backups/` | Prywatne dane i kopie bezpieczeństwa |
 | `outputs/checklista-portfolio/` | Gotowa checklista XLSX |
 | `outputs/previews/` | Zrzuty wcześniejszych podglądów |
@@ -78,24 +77,22 @@ Lokalna baza: `data/gallery.sqlite`. Dane, hasła, tokeny Spotify, `.env` i kopi
 - [Dane, galeria i kopie](docs/LOCAL-GALLERY.md)
 - [Wiadomości i konfiguracja poczty](docs/CONTACT-MESSAGES.md)
 
+Bez npm można uruchomić serwer przez `node server.cjs`, kontrole przez `node scripts/check-project.cjs`, testy przez `node --test --test-concurrency=1 tests/*.test.cjs`, a eksport przez `node scripts/prepare-pages.cjs`.
+
 ## Sprawdzanie
 
 ```sh
 npm run check
-node --test --test-concurrency=1 tests/*.test.cjs
+npm test
 ```
 
 Kontrole sprawdzają składnię, zasoby i działanie backendu na odizolowanych danych. Nie zastępują sprawdzenia wyglądu na rzeczywistym telefonie.
 
-## Wersja online
+## Dokumentacja
 
-```sh
-npm run sites:prepare
-```
+[Spis dokumentacji](docs/README.md): opisy podstron, designu, funkcji, architektury i wydajności.
 
-Przygotowanie plików i wysłanie kodu do GitHuba nie publikuje strony. Sites ma osobny backend i bazę; lokalne treści nie synchronizują się automatycznie. Budowanie online wymaga osobnych zależności. Zależności usunięte ze starych kopii roboczych można w razie potrzeby zainstalować ponownie.
-
-[Instrukcja wersji online](docs/SITES.md).
+Katalog `sites/` i polecenia `sites:*` zostały na razie usunięte. Pozostają lokalny serwer i eksport GitHub Pages. Usunięcie plików lokalnych nie zmienia opublikowanej witryny.
 
 ## GitHub Pages
 

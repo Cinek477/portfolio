@@ -39,7 +39,7 @@ for (const prefix of ['', '/portfolio']) test(`Routing ${prefix || '/'}: navigat
   const document = {
     baseURI: `http://localhost:3000${prefix}/`,
     documentElement: { dataset: {} },
-    scripts: [],
+    scripts: [{ src: `http://localhost:3000${prefix}/assets/js/deferred.js` }],
     styleSheets: [],
     title: 'Index',
     querySelector(selector) {
@@ -68,6 +68,8 @@ for (const prefix of ['', '/portfolio']) test(`Routing ${prefix || '/'}: navigat
     AbortController,
     AbortSignal,
     console,
+    setTimeout,
+    clearTimeout,
     scrollY: 80,
     requestAnimationFrame: (callback) => {
       callback();
@@ -91,13 +93,16 @@ for (const prefix of ['', '/portfolio']) test(`Routing ${prefix || '/'}: navigat
         return {
           title: path,
           querySelector: (selector) => (selector === 'main' ? main(path) : navigation),
-          querySelectorAll: () => [],
+          querySelectorAll: selector => selector === 'script[src]'
+            ? [{ getAttribute: () => 'assets/js/deferred.js' }] : [],
         };
       }
     },
   };
   context.window = context;
   vm.runInNewContext(fs.readFileSync('assets/js/router.js', 'utf8'), context);
+  // Nigdy niekończące się API modułu nie może zatrzymać przejścia widoku.
+  context.portfolioPages['deferred.js'] = () => new Promise(() => {});
   const signal = context.portfolioPageScope.signal;
   context.portfolioPageScope.cleanup(() => disposed++);
   const click = (path, extra = {}) => {

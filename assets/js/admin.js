@@ -1,3 +1,4 @@
+// Panel galerii: sesja administratora, lista zdjęć, kadrowanie i zapis formularza.
 const form = document.querySelector('#photo-form');
 const statusElement = document.querySelector('#status');
 const preview = document.querySelector('#preview');

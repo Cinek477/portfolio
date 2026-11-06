@@ -1,3 +1,4 @@
+// Wspólne dialogi potwierdzania usunięcia i operacji nieodwracalnych.
 (() => {
   const dialog = document.createElement('dialog'); dialog.className = 'admin-panel admin-delete-dialog';
   dialog.setAttribute('aria-labelledby', 'delete-dialog-title');

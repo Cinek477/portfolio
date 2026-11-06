@@ -1,3 +1,4 @@
+// Prezentacja opublikowanych opinii i animowana zmiana wybranej opinii.
 window.portfolioPages ||= {};
 window.portfolioPages['tutoring-reviews.js'] = () => {
  const card=document.querySelector('.tutoring-reviews');if(!card)return;

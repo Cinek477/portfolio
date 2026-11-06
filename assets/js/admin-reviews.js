@@ -1,3 +1,4 @@
+// Panel opinii: oceny, treści PL/EN i widoczność wpisów.
 (() => {
  const form=document.querySelector('#review-form'),list=document.querySelector('#review-list'),message=document.querySelector('#review-status');
  let editing=null;

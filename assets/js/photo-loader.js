@@ -1,3 +1,4 @@
+// Współdzielone ładowanie zdjęć, dekodowanie, anulowanie i mały cache LRU.
 (function (host) {
   function createPhotoLoader({ createImage = () => new Image(), preferThumbnail = () => false, limit = 3, timeoutMs = 15000 } = {}) {
     const ready = new Map(), pending = new Map();

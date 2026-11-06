@@ -1,3 +1,4 @@
+// Galeria: filtry, cykle miniaturek, albumy i sterowanie podglądem zdjęć.
 window.portfolioPages ||= {};
 window.portfolioPages['gallery.js'] = async () => {
   const pageScope = window.portfolioPageScope || {
@@ -7,11 +8,11 @@ window.portfolioPages['gallery.js'] = async () => {
   let photos = window.portfolioPhotos;
   if (location.protocol !== 'file:') {
     try {
-      const response = await fetch('/api/photos', { signal: AbortSignal.timeout(5000) });
+      const response = await fetch('/api/photos', { signal: AbortSignal.any([pageScope.signal, AbortSignal.timeout(5000)]) });
       if (response.ok) {
         photos = await response.json();
         window.portfolioPhotos = photos;
-        document.querySelector('.hobby-note').hidden = true;
+        if (!pageScope.signal.aborted) document.querySelector('.hobby-note').hidden = true;
       }
     } catch {
       // Statyczny hosting nadal może używać danych zapisanych w pliku.
@@ -167,26 +168,20 @@ window.portfolioPages['gallery.js'] = async () => {
   }
 
   function selectCentralPhoto() {
-    if (dialog.open) return;
     if (dialog.open || !mobileQuery.matches || !filteredPhotos.length) return;
     const bounds = track.getBoundingClientRect();
     const center = bounds.left + bounds.width / 2;
     const buttons = [...track.querySelectorAll('.photo-card')];
-    const closest = buttons.reduce((best, button) => {
+    // Jeden odczyt geometrii na kartę; ponownie używamy wyniku przy remisie.
+    const positions = buttons.map(button => {
       const box = button.getBoundingClientRect();
-      const distance = Math.abs(box.left + box.width / 2 - center);
-      return !best || distance < best.distance ? { button, distance } : best;
-    }, null);
+      return { button, distance: Math.abs(box.left + box.width / 2 - center) };
+    });
+    const closest = positions.reduce((best, item) => !best || item.distance < best.distance ? item : best, null);
     if (!closest) return;
     // Przy tej samej pozycji zachowaj rząd zdjęcia wybranego dotknięciem.
-    const current = buttons.find((button) => {
-      const box = button.getBoundingClientRect();
-      return (
-        button.dataset.photoId === selectedPhoto?.id &&
-        Math.abs(box.left + box.width / 2 - center) < closest.distance + 3
-      );
-    });
-    const id = (current || closest.button).dataset.photoId;
+    const current = positions.find(item => item.button.dataset.photoId === selectedPhoto?.id && item.distance < closest.distance + 3);
+    const id = (current?.button || closest.button).dataset.photoId;
     if (id !== selectedPhoto?.id) selectPhoto(filteredPhotos.find((photo) => photo.id === id));
   }
 

@@ -1,3 +1,4 @@
+// Nawigacja bez przeładowania dokumentu oraz sprzątanie zasobów poprzedniej podstrony.
 (() => {
   if (location.protocol === 'file:' || !document.querySelector('.navbar')) return;
   const root = document.documentElement;
@@ -20,13 +21,15 @@
   let transition;
   let updating = false;
   let pending;
-  let scrollFrame;
+  let scrollTimer;
   const savedScroll = history.state?.portfolioScroll;
   let restoring = Number.isFinite(savedScroll) && savedScroll > 0;
   let stopRestore = () => { restoring = false; };
   history.scrollRestoration = 'manual';
   const saveScroll = () => {
-    if (!request && !restoring)
+    clearTimeout(scrollTimer);
+    scrollTimer = 0;
+    if (!request && !restoring && history.state?.portfolioScroll !== scrollY)
       history.replaceState({ ...history.state, portfolioScroll: scrollY }, '', location.href);
   };
   if (!restoring) saveScroll();
@@ -57,11 +60,9 @@
   addEventListener(
     'scroll',
     () => {
-      if (scrollFrame) return;
-      scrollFrame = requestAnimationFrame(() => {
-        scrollFrame = 0;
-        saveScroll();
-      });
+      // Historia nie musi być przepisywana w każdej klatce przewijania.
+      // pagehide/beforeunload oraz kliknięcie zapisują pozycję od razu.
+      if (!scrollTimer) scrollTimer = setTimeout(saveScroll, 150);
     },
     { passive: true },
   );
@@ -151,9 +152,16 @@
         current = new URL(url);
         window.portfolioRouting = true;
         try {
+          const pageSignal = scope.signal;
           for (const script of next.querySelectorAll('script[src]')) {
             const name = script.getAttribute('src').split('/').at(-1).split('?')[0];
-            if (initializers[name]) await initializers[name]();
+            if (!initializers[name]) continue;
+            // Moduły zaczynają pracę w kolejności HTML, ale ich żądania sieciowe
+            // nie mogą zatrzymywać przejścia i blokować następnej nawigacji.
+            const result = initializers[name]();
+            if (result?.catch) result.catch(error => {
+              if (!pageSignal.aborted) console.error(error);
+            });
           }
         } finally {
           window.portfolioRouting = false;

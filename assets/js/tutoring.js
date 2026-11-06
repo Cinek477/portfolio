@@ -1,3 +1,4 @@
+// Wykresy matematyczne; zatrzymanie timerów i animacji przy ukrytej sekcji.
 window.portfolioPages ||= {};
 window.portfolioPages['tutoring.js'] = () => {
   const board = document.querySelector('.tutoring-page .math-board');

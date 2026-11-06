@@ -66,7 +66,7 @@ function preparePages({ base = process.env.PAGES_BASE_PATH || '/portfolio/', out
   fs.mkdirSync(path.join(api, 'pages'), { recursive: true });
   const snapshots = { photos, projects, reviews, 'pages/home': { ...home, content: pages.home }, 'pages/about': { content: pages.about }, 'pages/knowledge': pages.knowledge, 'pages/projects': pages.projects, 'pages/contact': pages.contact };
   for (const [name, value] of Object.entries(snapshots)) fs.writeFileSync(path.join(api, name + '.json'), JSON.stringify(value ?? {}));
-  // Adapt only generated browser files. Local/Sites sources retain their backend behaviour.
+  // Adaptujemy tylko eksport; lokalne źródła nadal korzystają z backendu.
   for (const entry of fs.readdirSync(path.join(output, 'assets/js'))) {
     if (!entry.endsWith('.js')) continue;
     const file = path.join(output, 'assets/js', entry);

@@ -8,9 +8,6 @@ window.portfolioPages['lightbox.js'] = () => {
   const dialog = document.querySelector('.photo-lightbox');
   const carousel = dialog.querySelector('.lightbox-carousel');
   const mobile = matchMedia('(max-width: 768px)');
-  let activePhoto;
-  let activeCollection = [];
-  let selectPhoto;
 
   const information = dialog.querySelector('.lightbox-metadata');
   const counter = dialog.querySelector('.lightbox-counter');
@@ -104,9 +101,6 @@ window.portfolioPages['lightbox.js'] = () => {
   };
   function renderReadyPhoto(photo, collection, select, options, prepared) {
     dialog.classList.remove('is-loading-first');
-    activePhoto = photo;
-    activeCollection = collection;
-    selectPhoto = select;
     const previous=dialog.querySelector('.lightbox-prev'), next=dialog.querySelector('.lightbox-next');
     if(mobile.matches){if(previous.parentElement!==pagination)pagination.prepend(previous);if(next.parentElement!==pagination)pagination.append(next);}else{if(previous.parentElement!==dialog)dialog.append(previous);if(next.parentElement!==dialog)dialog.append(next);}
     // Własny kolor zdjęcia działa również przy file://, gdzie canvas jest blokowany.

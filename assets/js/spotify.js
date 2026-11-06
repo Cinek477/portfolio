@@ -1,3 +1,4 @@
+// Publiczny widok Spotify: metadane utworów, odświeżanie i dekoracja winyla.
 window.portfolioPages ||= {};
 window.portfolioPages['spotify.js']=()=>{
  const section=document.querySelector('.hobby-music');if(!section)return;const scope=window.portfolioPageScope||{signal:new AbortController().signal,cleanup:()=>{}};

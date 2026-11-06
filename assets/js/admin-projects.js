@@ -1,3 +1,4 @@
+// Panel projektów: edycja wpisów, opisów realizacji i ilustracji.
 (() => {
   const projectForm = document.querySelector('#project-form');
   const list = document.querySelector('#project-list');

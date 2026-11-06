@@ -1,3 +1,4 @@
+// Wspólne zachowania strony: język, menu mobilne i nawigacja podczas przewijania.
 const root = document.documentElement;
 const navbar = document.querySelector('.navbar');
 const menu = document.querySelector('.logo');
@@ -26,8 +27,9 @@ function applyLanguage(value) {
     const label = element.dataset[language === 'pl' ? 'labelPl' : 'labelEn'];
     if (label !== undefined && element.getAttribute('aria-label') !== label) element.setAttribute('aria-label', label);
   });
-  document.querySelector('.language').innerHTML =
-    `<span class="${language === 'pl' ? '' : 'inactive'}">PL</span> / <span class="${language === 'en' ? '' : 'inactive'}">EN</span>`;
+  const languageButton = document.querySelector('.language');
+  const languageMarkup = `<span class="${language === 'pl' ? '' : 'inactive'}">PL</span> / <span class="${language === 'en' ? '' : 'inactive'}">EN</span>`;
+  if (languageButton.innerHTML !== languageMarkup) languageButton.innerHTML = languageMarkup;
   themeButton.setAttribute('aria-label', language === 'pl' ? 'Zmień motyw' : 'Change theme');
   const pageTitle = document.querySelector('[data-page-title]');
   document.title = `${pageTitle ? pageTitle.dataset[language] : 'Portfolio'} — Marcin Podyma`;

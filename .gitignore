@@ -33,11 +33,7 @@ coverage/
 *~
 
 # Tymczasowe strony używane podczas sprawdzania projektu
-/.gallery-check.html
-/.hobby-check.html
-/.cta-check.html
-/.cta-layout-check.html
-/.lightbox-check.html
+/.*-check.html
 /gallery-browser-check.html
 /gallery-browser-check.js
 
@@ -46,19 +42,20 @@ coverage/
 Thumbs.db
 Desktop.ini
 
-# Eksporty i zdjęcia publikujemy; nie obejmuj assets/images regułą ignorowania.
+# Publiczne eksporty w assets/js i zdjęcia w assets/images pozostają wersjonowane.
 
 # Lokalne dokumenty robocze i podglądy
 /outputs/
 /work/
+/output/
 
 # Cache budowania, stan narzędzi i prywatne klucze
-/.next/
 /dist/
-/.wrangler/
-/.sites-runtime/
 /.agents/
 /.codex/
 *.tsbuildinfo
 *.pem
 *.key
+
+# Wycofana lokalna integracja — nie dodawaj przypadkiem ponownie artefaktów.
+/sites/

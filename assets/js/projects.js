@@ -1,3 +1,4 @@
+// Karty projektów i osiągnięć; zachowanie rozwinięcia i pomijanie identycznych danych.
 window.portfolioPages ||= {};
 window.portfolioPages['projects.js'] = () => {
   const pageScope = window.portfolioPageScope || {

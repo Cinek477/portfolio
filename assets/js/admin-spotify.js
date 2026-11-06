@@ -1,3 +1,4 @@
+// Ustawienia prywatnego połączenia Spotify oraz rozpoczęcie autoryzacji.
 (() => {
  const state=document.querySelector('#spotify-admin-status'),connect=document.querySelector('#spotify-connect'),disconnect=document.querySelector('#spotify-disconnect'),form=document.querySelector('#spotify-config-form');
  window.loadAdminSpotify=async()=>{try{const value=await api('/api/spotify/status');document.querySelector('#spotify-redirect').textContent=value.redirectUri;connect.disabled=!value.configured;disconnect.disabled=!value.connected;state.textContent=(value.connected?'Konto połączone.':value.configured?'Client ID zapisany. Możesz połączyć konto.':'Najpierw utwórz aplikację i zapisz Client ID.')+(value.lastError?' '+value.lastError:'');}catch(error){state.textContent=error.message;}};

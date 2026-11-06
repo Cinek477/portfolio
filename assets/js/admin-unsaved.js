@@ -1,3 +1,4 @@
+// Ochrona niezapisanych formularzy przed wyjściem lub zmianą sekcji.
 (() => {
  const forms=new Set(['photo-form','project-form','review-form']),dirty=new Set();
  window.markAdminClean=form=>{if(form)dirty.delete(form.id);};

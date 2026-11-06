@@ -1,3 +1,4 @@
+// Nakładanie opublikowanych pól edytora CMS na istniejący HTML.
 window.portfolioPages ||= {};
 window.portfolioPages['content-editor.js'] = () => {
   const main = document.querySelector('main[data-cms-page]');
@@ -24,7 +25,7 @@ window.portfolioPages['content-editor.js'] = () => {
         element.dataset.en = splitHeading ? item.value.en.trimEnd() + ' ' : item.value.en;
         // Preserve the exact spacing in split headings.
         const text = local(item.value);
-        element.textContent = element.parentElement.classList.contains('tutoring-title-line') && element === element.parentElement.firstElementChild ? text.trimEnd() + ' ' : text;
+        element.textContent = splitHeading ? text.trimEnd() + ' ' : text;
       }
       for (const item of group.links) {
         const element = main.querySelector('[data-cms-link="' + group.id + '-' + item.id + '"]');

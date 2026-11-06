@@ -1,3 +1,4 @@
+// Opis pojedynczego projektu: historia realizacji, demo i powiązane karty.
 window.portfolioPages ||= {};
 window.portfolioPages['project-detail.js'] = async () => {
   const main = document.querySelector('.project-detail-page');

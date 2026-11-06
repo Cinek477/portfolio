@@ -10,6 +10,8 @@ let checked = 0;
 const pages = fs.readdirSync(path.join(root, 'pages')).filter((file) => file.endsWith('.html'));
 for (const page of pages) {
   const markup = renderPage(fs.readFileSync(path.join(root, 'pages', page), 'utf8'), page).replace(/<!--[\s\S]*?-->/g, '');
+  const source = fs.readFileSync(path.join(root, 'pages', page), 'utf8');
+  if (/<!-- component:/.test(renderPage(source, page))) failures.push(`${page}: nierozpoznany komponent`);
   const ids = [...markup.matchAll(/\bid="([^"]+)"/g)].map((match) => match[1]);
   if (new Set(ids).size !== ids.length) failures.push(`${page}: powtórzone id`);
   for (const [, reference] of markup.matchAll(/\b(?:href|src)="([^"]+)"/g)) {
@@ -23,7 +25,7 @@ for (const page of pages) {
       continue;
     }
     if (anchor) {
-      const targetMarkup = file ? fs.readFileSync(target, 'utf8') : markup;
+      const targetMarkup = file ? renderPage(fs.readFileSync(target, 'utf8'), path.basename(target)) : markup;
       if (!targetMarkup.includes(`id="${anchor}"`))
         failures.push(`${page}: brak kotwicy ${reference}`);
     }
@@ -35,6 +37,32 @@ for (const page of pages) {
     failures.push(`${page}: brak języka lub kodowania`);
   checked++;
 }
+// Style mają również lokalne zależności (fonty, ilustracje), niewidoczne w HTML.
+for (const name of fs.readdirSync(path.join(root, 'assets/css')).filter(name => name.endsWith('.css'))) {
+  const file = path.join(root, 'assets/css', name);
+  const source = fs.readFileSync(file, 'utf8').replace(/\/\*[\s\S]*?\*\//g, '');
+  for (const [, reference] of source.matchAll(/url\(\s*['"]?([^'"\s)]+)['"]?\s*\)/g)) {
+    if (/^(?:data:|https?:|#)/.test(reference)) continue;
+    if (!fs.existsSync(path.resolve(path.dirname(file), decodeURIComponent(reference.split(/[?#]/)[0]))))
+      failures.push(`${name}: brak zasobu ${reference}`);
+  }
+  checked++;
+}
+// Dokumentacja nie może kierować do usuniętych instrukcji i plików.
+function validateDocs(directory) {
+  for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
+    const file = path.join(directory, entry.name);
+    if (entry.isDirectory()) { validateDocs(file); continue; }
+    if (!entry.name.endsWith('.md')) continue;
+    for (const [, reference] of fs.readFileSync(file, 'utf8').matchAll(/\]\(([^\s)]+)\)/g)) {
+      if (/^(?:[a-z]+:|#)/i.test(reference)) continue;
+      const target = path.resolve(path.dirname(file), decodeURIComponent(reference.split('#')[0]));
+      if (!fs.existsSync(target)) failures.push(`${path.relative(root, file)}: brak odnośnika ${reference}`);
+    }
+    checked++;
+  }
+}
+validateDocs(path.join(root, 'docs'));
 function validateScripts(directory) {
   for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
     const file = path.join(directory, entry.name);
