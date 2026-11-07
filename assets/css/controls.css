@@ -28,6 +28,10 @@
 :root:not([data-theme='dark']) .control-neon.control-neon {
   filter: drop-shadow(0 0 2px rgba(29, 95, 224, 0.35));
 }
+/* Biała smuga na wypełnionym niebieskim przycisku ma białą poświatę (klasę ustawia neon.js). */
+:root:not([data-theme='dark']) .control-neon.control-neon.is-on-fill {
+  filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.7));
+}
 :disabled > .control-neon,
 [aria-disabled='true'] > .control-neon {
   display: none;

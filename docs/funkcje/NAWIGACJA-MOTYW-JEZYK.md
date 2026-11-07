@@ -57,7 +57,7 @@ Nie należy zakładać automatycznego śledzenia każdej późniejszej zmiany mo
 ## 7. Ruch i neon
 
 `prefers-reduced-motion` ogranicza animacje menu, przejść, ilustracji i zdjęć.
-Neon przycisków korzysta z canvas, do 60 odrysowań/s i 48 segmentów. W jasnym motywie smuga jest niebieska, w ciemnym cyjanowa.
+Neon przycisków korzysta z canvas, do 60 odrysowań/s i 48 segmentów. W jasnym motywie smuga jest niebieska (biała na wypełnionych niebieskich przyciskach i po najechaniu), w ciemnym cyjanowa.
 Obejmuje główne i drugorzędne przyciski CTA, także CV, oferty i Instagram. Link do Spotify (`.music-link`) jest celowo bez smugi.
 Po zmianie języka odtwarza warstwę smugi, zachowując informację o widoczności przycisku.
 Zatrzymuje się przy ukrytej karcie, braku widocznych kontrolek, ograniczeniu ruchu lub otwartym podglądzie fotografii.
