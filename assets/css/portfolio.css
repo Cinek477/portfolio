@@ -1787,9 +1787,6 @@ a.course-preview[aria-disabled="true"] { cursor:default; }
   :root[data-theme='dark'] .card.project-photo-card.project-illustration-card {
     --project-art-dark: hsl(from var(--project-art-bg) h calc(s * 0.9) calc(l * 0.3));
   }
-  :root[data-theme='dark'] main.has-case-art .project-detail-cover {
-    background: hsl(from var(--case-art-bg) h calc(s * 0.9) calc(l * 0.3));
-  }
 }
 :root[data-theme='dark'] .card.project-photo-card.project-illustration-card,
 :root[data-theme='dark'] .card.project-photo-card.project-illustration-card:is(:hover, .is-hovered, :focus-within, .expanded) {
@@ -1809,9 +1806,15 @@ a.course-preview[aria-disabled="true"] { cursor:default; }
 :root[data-theme='dark'] .card.project-photo-card.project-illustration-card :is(.card-number, .card-symbol) {
   color: rgba(255, 255, 255, 0.78);
 }
-/* Okładka opisu realizacji (HackYeah, KrakHack) w tym samym ciemnym odcieniu. */
+/* Okładka opisu realizacji (HackYeah, KrakHack) w tym samym ciemnym odcieniu co tło ciemnego SVG.
+   Rezerwa musi stać przed regułą @supports, inaczej nadpisuje ją szarą mieszanką. */
 :root[data-theme='dark'] main.has-case-art .project-detail-cover {
   background: color-mix(in srgb, var(--case-art-bg) 28%, #0a1020);
+}
+@supports (color: hsl(from red h s l)) {
+  :root[data-theme='dark'] main.has-case-art .project-detail-cover {
+    background: hsl(from var(--case-art-bg) h calc(s * 0.9) calc(l * 0.3));
+  }
 }
 
 /* Ciemny motyw: karty prawie czarne, by odcinały się od granatowego tła i poświaty. */

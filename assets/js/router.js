@@ -117,7 +117,8 @@
           style.href = href;
           style.onload = resolve;
           style.onerror = reject;
-          document.head.insertBefore(style, document.querySelector('link[href$="controls.css"]'));
+          // Eksport Pages dopisuje ?v=<skrót>, więc dopasowujemy nazwę pliku, a nie koniec adresu.
+          document.head.insertBefore(style, document.querySelector('link[href*="/controls.css"], link[href^="controls.css"], link[href*="assets/css/controls.css"]'));
         });
       }
       if (controller.signal.aborted) return;
@@ -127,7 +128,7 @@
       try {
         for (const script of next.querySelectorAll('script[src]')) {
           const source = new URL(script.getAttribute('src'), documentBase).href;
-          if (/\/(?:router|theme|portfolio)\.js$/.test(source)) continue;
+          if (/\/(?:router|theme|portfolio)\.js(?:\?|$)/.test(source)) continue;
           await loadScript(source);
         }
       } finally { window.portfolioRouting = false; }
