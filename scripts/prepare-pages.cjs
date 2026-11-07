@@ -1,6 +1,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const vm = require('node:vm');
+const crypto = require('node:crypto');
 const { renderPage } = require('../shared/render-page.cjs');
 const { pageDataScripts } = require('../shared/page-content.cjs');
 
@@ -98,7 +99,20 @@ function preparePages({ base = process.env.PAGES_BASE_PATH || '/portfolio/', out
     if (page === 'hobby.html') source = source.replace('</head>', '<style>.spotify-current,.spotify-live{display:none!important}.music-record{animation-play-state:paused!important}</style></head>');
     source = source.replace(/href="(#[^"]*|\/(?!\/)[^"]*)"/g, (_, href) => `href="${localLink(href, page)}"`);
     source = source.replace(/<head([^>]*)>/i, `<head$1><base href="${base}">${extra}`);
+    // GitHub Pages pozwala przeglądarce trzymać pliki 10 minut. Skrót zawartości w adresie
+    // sprawia, że po publikacji zmienione CSS/JS są pobierane od razu, a niezmienione zostają w cache.
+    source = source.replace(/(\b(?:src|href)=")(assets\/(?:css|js)\/[^"?#]+\.(?:css|js))(")/g,
+      (_, start, asset, end) => `${start}${asset}?v=${assetVersion(asset)}${end}`);
     return source;
+  }
+  const versions = new Map();
+  function assetVersion(asset) {
+    if (!versions.has(asset)) {
+      const file = path.join(output, asset);
+      const hash = fs.existsSync(file) ? crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex').slice(0, 10) : 'missing';
+      versions.set(asset, hash);
+    }
+    return versions.get(asset);
   }
   function write(name, source) { const file = path.join(output, name); fs.mkdirSync(path.dirname(file), { recursive: true }); fs.writeFileSync(file, source); }
   for (const page of pageNames) write(page, html(page));
