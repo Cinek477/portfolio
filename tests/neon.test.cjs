@@ -87,3 +87,40 @@ test('Neon keeps drawing after translated text replaces its canvas', () => {
   assert.equal(strokes, before + 48);
   assert.equal(observed, 1, 'The same control stays registered with its original visibility');
 });
+
+test('Neon is white on filled blue buttons in the light theme and blue elsewhere', () => {
+  const styles = new Map();
+  let frame, intersection;
+  const makeButton = filled => {
+    const nodes = [], used = new Set();
+    const context = { setTransform() {}, clearRect() {}, beginPath() {}, moveTo() {}, lineTo() {},
+      set strokeStyle(value) { used.add(value); }, stroke() {} };
+    return { filled, used, context, clientWidth: 160, clientHeight: 48, isConnected: true,
+      querySelector: () => nodes[0], append: node => nodes.push(node), getAttribute() {},
+      matches: selector => filled && !selector.includes(':hover') };
+  };
+  const filled = makeButton(true), outline = makeButton(false);
+  const queue = [filled, outline];
+  vm.runInNewContext(fs.readFileSync('assets/js/neon.js', 'utf8'), {
+    document: {
+      hidden: false, documentElement: { dataset: { theme: 'light' } },
+      body: { classList: { contains: () => false } },
+      querySelectorAll: () => [filled, outline],
+      createElement: () => { const owner = queue.shift(); return { setAttribute() {}, classList: { toggle() {} }, getContext: () => owner.context }; },
+      createElementNS: () => ({ setAttribute() {}, getTotalLength: () => 400, getPointAtLength: length => ({ x: length, y: 0 }) }),
+      addEventListener() {},
+    },
+    devicePixelRatio: 1, performance: { now: () => 0 },
+    getComputedStyle: () => ({ borderTopLeftRadius: '14px' }),
+    matchMedia: () => ({ matches: false, addEventListener() {} }),
+    requestAnimationFrame(callback) { frame = callback; return 1; },
+    cancelAnimationFrame() {},
+    MutationObserver: class { observe() {} },
+    ResizeObserver: class { observe() {} },
+    IntersectionObserver: class { constructor(callback) { intersection = callback; } observe() {} },
+  });
+  intersection([{ target: filled, isIntersecting: true }, { target: outline, isIntersecting: true }]);
+  frame(0);
+  assert.ok([...filled.used].every(color => color.startsWith('rgba(255,255,255,')), 'Filled button uses a white trail');
+  assert.ok(outline.used.size && [...outline.used].every(color => !color.startsWith('rgba(255,255,255,')), 'Outline button keeps the blue trail');
+});

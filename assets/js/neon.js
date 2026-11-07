@@ -22,6 +22,12 @@
   });
   const darkColors = palette([56, 189, 248], [224, 250, 255]);
   const lightColors = palette([29, 95, 224], [14, 165, 233]);
+  // Wypełnione niebieskie przyciski jasnego motywu (oraz każdy z tej grupy po najechaniu, gdy też
+  // robi się niebieski) dostają białą smugę — niebieska zlewała się z ich tłem.
+  const whiteColors = palette([255, 255, 255], [255, 255, 255]);
+  const filledSelector = '.hero-actions a:not(.secondary), .contact-submit, .instagram-cta';
+  const hoverFilledSelector = ':is(.hero-actions a, .contact-submit, .instagram-cta):is(:hover, :focus-visible)';
+  const isFilled = button => Boolean(button.matches?.(filledSelector) || button.matches?.(hoverFilledSelector));
   let frame = 0, scheduled = false;
   function resize(button) {
     const item = tracked.get(button);
@@ -66,10 +72,14 @@
     lastPaint = now;
     const phase = ((now - epoch) % 4000) / 4000;
     let active = false;
-    const colors = document.documentElement?.dataset?.theme === 'dark' ? darkColors : lightColors;
+    const dark = document.documentElement?.dataset?.theme === 'dark';
     for (const [button, item] of tracked) {
       if (!item.visible || !item.points || button.disabled || button.getAttribute('aria-disabled') === 'true') continue;
       active = true;
+      const filled = !dark && isFilled(button);
+      const colors = dark ? darkColors : filled ? whiteColors : lightColors;
+      // Klasa przełącza poświatę canvasu (biała zamiast niebieskiej) — tylko gdy stan się zmienia.
+      if (item.filled !== filled) { item.filled = filled; item.canvas.classList?.toggle('is-on-fill', filled); }
       const context = item.context;
       context.clearRect(0, 0, item.width, item.height);
       position(item.points, phase - 0.35, first);
