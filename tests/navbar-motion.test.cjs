@@ -5,7 +5,7 @@ const vm = require('node:vm');
 test('Navbar measures layout only at thresholds, coalesces scroll events and respects reduced motion', () => {
   const source = fs.readFileSync('assets/js/portfolio.js', 'utf8');
   const start = source.indexOf('let navbarAnimations = []');
-  const end = source.indexOf('\nupdateScroll();\nmatchMedia', start);
+  const end = source.indexOf('\nupdateScroll();\nmobileQuery', start);
   assert.ok(start >= 0 && end > start);
   for (const mode of ['desktop', 'mobile', 'reduced']) {
     const classes = new Set(), events = {}, frames = [], animations = [];
@@ -26,6 +26,8 @@ test('Navbar measures layout only at thresholds, coalesces scroll events and res
       addEventListener: (name, fn) => { events[name] = fn; },
       requestAnimationFrame: fn => { frames.push(fn); return frames.length; },
     };
+    context.mobileQuery = context.matchMedia('(max-width: 760px)');
+    context.reducedMotionQuery = context.matchMedia('(prefers-reduced-motion: reduce)');
     vm.runInNewContext(source.slice(start, end), context);
     context.updateScroll(); assert.equal(reads, 0);
     context.scrollY = 120; context.updateScroll(); assert.equal(classes.has('scrolled'), true);

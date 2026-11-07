@@ -38,7 +38,7 @@
   --font-body: 'Plus Jakarta Sans', 'Segoe UI', Arial, sans-serif;
   --radius-card: 22px;
   --radius-panel: 24px;
-  --bg: #edf6ff;
+  --bg: #eef4fc;
   --panel: #e1effc;
   --glass: rgba(221, 237, 252, 0.8);
   --text: #142e50;
@@ -94,7 +94,7 @@ h3 {
   --aurora-opacity: 0.65;
 }
 :root[data-theme='dark'] .aurora-page {
-  --card: rgba(16, 32, 57, 0.78);
+  --card: rgba(6, 12, 24, 0.84);
   --aurora-blue: #155ab0;
   --aurora-secondary: #234980;
   --aurora-opacity: 0.32;
@@ -110,32 +110,39 @@ h3 {
   pointer-events: none;
   background: var(--bg);
 }
+/* Plamy tła: gradient o profilu rozmytego koła zamiast filter: blur().
+   Wygląd odpowiada dawnemu blur(--aurora-sigma) bez rozmywania dużej warstwy w każdej klatce.
+   Element jest większy o zasięg rozmycia, a ujemny margines zachowuje położenie środka. */
 .aurora-blob {
+  --aurora-radius: clamp(140px, 19vw, 270px);
+  --aurora-sigma: 65px;
+  --aurora-color: var(--aurora-blue);
   position: absolute;
-  border-radius: 50%;
-  filter: blur(120px);
+  width: calc(2 * (var(--aurora-radius) + 2.5 * var(--aurora-sigma)));
+  height: calc(2 * (var(--aurora-radius) + 2.5 * var(--aurora-sigma)));
+  margin: calc(-2.5 * var(--aurora-sigma));
   opacity: var(--aurora-opacity);
+  background: radial-gradient(
+    circle closest-side,
+    var(--aurora-color) calc(var(--aurora-radius) - 2 * var(--aurora-sigma)),
+    color-mix(in srgb, var(--aurora-color) 84%, transparent) calc(var(--aurora-radius) - var(--aurora-sigma)),
+    color-mix(in srgb, var(--aurora-color) 50%, transparent) var(--aurora-radius),
+    color-mix(in srgb, var(--aurora-color) 16%, transparent) calc(var(--aurora-radius) + var(--aurora-sigma)),
+    color-mix(in srgb, var(--aurora-color) 2%, transparent) calc(var(--aurora-radius) + 2 * var(--aurora-sigma)),
+    transparent calc(var(--aurora-radius) + 2.5 * var(--aurora-sigma))
+  );
+  will-change: transform;
 }
 .blob-1 {
-  width: max(600px, 65vw);
-  height: max(600px, 80vh);
-  background: var(--aurora-blue);
   top: -10%;
   left: -10%;
   animation: float-blob-1 20s infinite alternate ease-in-out;
 }
 .blob-2 {
-  width: max(500px, 60vw);
-  height: max(500px, 75vh);
-  background: var(--aurora-secondary);
+  --aurora-color: var(--aurora-secondary);
   bottom: -10%;
   right: -10%;
   animation: float-blob-2 25s infinite alternate-reverse ease-in-out;
-}
-.aurora-page .aurora-blob {
-  width: clamp(280px, 38vw, 540px);
-  height: clamp(280px, 38vw, 540px);
-  filter: blur(65px);
 }
 @keyframes float-blob-1 {
   from {
@@ -1309,54 +1316,76 @@ footer {
   }
 }
 
-/* Light mode: baby blue base, white aurora and frosted glass. */
+/* Jasny motyw: chłodna, prawie biała baza i kolorowa poświata (błękit + lawenda),
+   tak by miał głębię jak ciemny motyw, zamiast błękitu na błękicie. */
 :root:not([data-theme='dark']) {
-  --bg: #d8ecff;
-  --text: #0f172a;
-  --muted: #475569;
-  --accent: #0284c7;
+  --bg: #eef4fc;
+  --text: #0b1a33;
+  --muted: #4a5d78;
+  --line: #d3e0f0;
+  --accent: #1d5fe0;
 }
 :root:not([data-theme='dark']) .aurora-page {
-  --aurora-blue: #ffffff;
-  --aurora-secondary: #f0f9ff;
-  --aurora-opacity: 0.85;
+  --aurora-blue: #8ec5ff;
+  --aurora-secondary: #b9b2ff;
+  --aurora-opacity: 0.5;
 }
 :root:not([data-theme='dark']) .aurora-page .aurora-blob {
-  filter: blur(120px);
+  --aurora-sigma: 110px;
 }
 :root:not([data-theme='dark']) .navbar::before {
-  background: rgba(245, 250, 255, 0.96);
-  border-color: rgba(255, 255, 255, 0.95);
-  box-shadow: 0 4px 10px rgba(15, 23, 42, 0.04), 0 16px 36px rgba(15, 23, 42, 0.08);
+  background: rgba(255, 255, 255, 0.86);
+  border-color: rgba(29, 95, 224, 0.1);
+  box-shadow: 0 4px 10px rgba(29, 78, 216, 0.04), 0 16px 36px rgba(29, 78, 216, 0.1);
+}
+/* Nazwisko i akcent nagłówków dostają gradient — odpowiednik poświaty z ciemnego motywu. */
+:root:not([data-theme='dark']) .hero-heading h1 > span:not(.page-heading-main) {
+  background: linear-gradient(115deg, #1d4ed8 10%, #3b82f6 55%, #7c6cf2 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 :root:not([data-theme='dark'])
   :is(.card:not(.project-photo-card), .subpage-content, .contact-card, .glass-error-card) {
-  background: rgba(255, 255, 255, 0.72);
-  border: 1px solid rgba(255, 255, 255, 0.95);
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(29, 95, 224, 0.1);
   box-shadow:
-    0 4px 10px rgba(15, 23, 42, 0.04),
-    0 16px 36px rgba(15, 23, 42, 0.08),
-    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    0 2px 6px rgba(29, 78, 216, 0.04),
+    0 18px 40px rgba(29, 78, 216, 0.09),
+    inset 0 1px 0 #fff;
 }
 :root:not([data-theme='dark'])
   .card:not(.project-photo-card):is(:hover, .is-hovered, :focus-within, .expanded) {
-  background: rgba(255, 255, 255, 0.56);
-  border-color: rgba(255, 255, 255, 0.95);
-  color: #0f172a;
+  background: rgba(255, 255, 255, 0.92);
+  border-color: rgba(29, 95, 224, 0.22);
+  color: #0b1a33;
   box-shadow:
-    0 6px 14px rgba(15, 23, 42, 0.05),
-    0 20px 44px rgba(15, 23, 42, 0.11),
-    inset 0 1px 0 rgba(255, 255, 255, 0.95);
+    0 4px 10px rgba(29, 78, 216, 0.06),
+    0 24px 52px rgba(29, 78, 216, 0.14),
+    inset 0 1px 0 #fff;
+}
+/* Karty „Co Cię interesuje?” i „Teraz tworzę”: białe powierzchnie zamiast błękitu na błękicie. */
+:root:not([data-theme='dark']) :is(.path-card, .home-current-work) {
+  background: rgba(255, 255, 255, 0.78);
+  border-color: rgba(29, 95, 224, 0.1);
+  box-shadow: 0 2px 6px rgba(29, 78, 216, 0.04), 0 18px 40px rgba(29, 78, 216, 0.08);
+}
+:root:not([data-theme='dark']) .path-card:is(:hover, :focus-visible) {
+  border-color: rgba(29, 95, 224, 0.24);
+  box-shadow: 0 4px 10px rgba(29, 78, 216, 0.06), 0 24px 52px rgba(29, 78, 216, 0.14);
+}
+:root:not([data-theme='dark']) .path-card .path-action {
+  color: var(--accent);
 }
 /* Kolor nagłówków wynika z ich komponentów; akcenty zachowują --accent. */
 :root:not([data-theme='dark']) .card:not(.project-photo-card) :is(.card-summary, .card-number) {
-  color: #475569;
+  color: var(--muted);
 }
 :root:not([data-theme='dark']) .card:not(.project-photo-card) .card-symbol {
-  color: #0284c7;
+  color: var(--accent);
 }
 :root:not([data-theme='dark']) .glass-error-card h1 {
-  color: #0f172a;
+  color: var(--text);
   text-shadow: none;
 }
 
@@ -1441,11 +1470,12 @@ footer {
 .path-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:24px; }
 .path-card { display:flex; flex-direction:column; gap:18px; padding:32px; border:1px solid color-mix(in srgb,currentColor 16%,transparent); border-radius:24px; color:inherit; text-decoration:none; background:color-mix(in srgb,var(--bg, #edf6ff) 60%,transparent); transition:transform .2s ease; }
 .path-card:hover { transform:translateY(-4px); }
-.path-card:focus-visible { outline:3px solid #0284c7; outline-offset:5px; }
+.path-card:focus-visible { outline:3px solid var(--accent); outline-offset:5px; }
 .path-card h3 { font-size:clamp(24px,3vw,34px); margin:0; }
 .path-card p { line-height:1.7; margin:0; }
 .path-action { margin-top:auto; padding-top:16px; font-weight:600; }
 .home-about { display:flex; align-items:center; justify-content:space-between; gap:32px; }
+.home-about .hero-actions { margin-top:0; flex-shrink:0; }
 .home-about p,.structure-intro>p { max-width:660px; line-height:1.7; }
 .structure-intro { padding-top:150px; }
 .structure-intro h1 { font-size:clamp(40px,7vw,76px); }
@@ -1737,4 +1767,122 @@ a.course-preview[aria-disabled="true"] { cursor:default; }
 .home-featured .project-illustration-card .project-photo-caption h3 {
   line-height: 1.25;
   min-height: 2.5em;
+}
+
+/* Stały przycisk kontaktu (58 px + 24 px od krawędzi) wchodzi na stopkę, gdy obok treści
+   o szerokości 1080 px nie ma wolnego marginesu. Ikony w stopce zostają wtedy obok niego. */
+@media (min-width: 761px) and (max-width: 1264px) {
+  footer { padding-right: 76px; }
+}
+
+/* Ciemny motyw: ten sam układ co w jasnym (kolor ilustracji na całą kartę), ale w ciemnym odcieniu.
+   Ten sam kolor (odcień zachowany, jasność ×0,3) tworzy tło ciemnych wariantów SVG (scripts/make-dark-illustrations.cjs),
+   więc ilustracja i karta łączą się bez widocznej krawędzi. --project-art-bg ustawia JS na karcie. */
+:root[data-theme='dark'] .card.project-photo-card.project-illustration-card {
+  /* Rezerwa dla przeglądarek bez względnej składni kolorów. */
+  --project-art-dark: color-mix(in srgb, var(--project-art-bg) 28%, #0a1020);
+}
+@supports (color: hsl(from red h s l)) {
+  /* Ten sam odcień i prawie to samo nasycenie, tylko ciemniej — żywiej niż mieszanie z granatem. */
+  :root[data-theme='dark'] .card.project-photo-card.project-illustration-card {
+    --project-art-dark: hsl(from var(--project-art-bg) h calc(s * 0.9) calc(l * 0.3));
+  }
+  :root[data-theme='dark'] main.has-case-art .project-detail-cover {
+    background: hsl(from var(--case-art-bg) h calc(s * 0.9) calc(l * 0.3));
+  }
+}
+:root[data-theme='dark'] .card.project-photo-card.project-illustration-card,
+:root[data-theme='dark'] .card.project-photo-card.project-illustration-card:is(:hover, .is-hovered, :focus-within, .expanded) {
+  background: var(--project-art-dark);
+  border-color: color-mix(in srgb, var(--project-art-bg) 22%, transparent);
+}
+:root[data-theme='dark'] .project-illustration-card :is(.project-media, .project-photo-caption) {
+  --project-art-bg: var(--project-art-dark);
+}
+:root[data-theme='dark'] .card.project-illustration-card .project-photo-caption h3,
+:root[data-theme='dark'] .project-illustration-card .card-details > div {
+  color: var(--text);
+}
+:root[data-theme='dark'] .card.project-photo-card.project-illustration-card .card-summary {
+  color: var(--muted);
+}
+:root[data-theme='dark'] .card.project-photo-card.project-illustration-card :is(.card-number, .card-symbol) {
+  color: rgba(255, 255, 255, 0.78);
+}
+/* Okładka opisu realizacji (HackYeah, KrakHack) w tym samym ciemnym odcieniu. */
+:root[data-theme='dark'] main.has-case-art .project-detail-cover {
+  background: color-mix(in srgb, var(--case-art-bg) 28%, #0a1020);
+}
+
+/* Ciemny motyw: karty prawie czarne, by odcinały się od granatowego tła i poświaty. */
+:root[data-theme='dark'] :is(.path-card, .home-current-work) {
+  background: rgba(6, 12, 24, 0.72);
+  border-color: rgba(125, 211, 252, 0.12);
+}
+:root[data-theme='dark'] .path-card:is(:hover, :focus-visible) {
+  background: rgba(6, 12, 24, 0.86);
+  border-color: rgba(125, 211, 252, 0.24);
+}
+
+/* Szeroka karta z ilustracją (np. kurs maturalny na całą szerokość siatki): grafika jest większa,
+   a puste boki wypełniają miękkie plamy, siatka kropek i pierścień w kolorach karty.
+   Zmienne liczone są na .project-media, gdzie w ciemnym motywie --project-art-bg jest już ciemne. */
+@media (min-width: 761px) {
+  .projects-grid > .card.project-illustration-card:last-child:nth-child(odd):not(.home-featured .card) .project-media {
+    --wide-glow: color-mix(in srgb, var(--project-art-bg) 62%, #fff);
+    --wide-tint: color-mix(in srgb, var(--project-art-bg) 72%, #a99bff);
+    --wide-accent: color-mix(in srgb, var(--project-art-bg) 45%, #1e3a8a);
+    /* Plamy kończą się przed krawędzią grafiki (ok. 24% i 76% szerokości), więc nie ma szwu. */
+    background-image:
+      radial-gradient(130px 170px at 12% 46%, var(--wide-glow), transparent 72%),
+      radial-gradient(130px 170px at 88% 52%, var(--wide-tint), transparent 72%);
+  }
+  .projects-grid > .card.project-illustration-card:last-child:nth-child(odd):not(.home-featured .card) .project-cover {
+    position: relative;
+    z-index: 1;
+    height: clamp(240px, 26vw, 340px);
+    /* Brzegi grafiki łagodnie znikają w tle karty (zamiast twardej krawędzi SVG);
+       przy okazji chowają kropki z samej ilustracji, które dublowały siatkę z CSS. */
+    -webkit-mask-image:
+      linear-gradient(90deg, transparent 0, #000 8%, #000 97%, transparent 100%),
+      linear-gradient(180deg, #000 76%, transparent 100%);
+    -webkit-mask-composite: source-in;
+    mask-image:
+      linear-gradient(90deg, transparent 0, #000 8%, #000 97%, transparent 100%),
+      linear-gradient(180deg, #000 76%, transparent 100%);
+    mask-composite: intersect;
+  }
+  .projects-grid > .card.project-illustration-card:last-child:nth-child(odd):not(.home-featured .card) .project-media::before,
+  .projects-grid > .card.project-illustration-card:last-child:nth-child(odd):not(.home-featured .card) .project-media::after {
+    content: '';
+    position: absolute;
+    z-index: 0;
+    pointer-events: none;
+  }
+  /* Siatka kropek po lewej. */
+  .projects-grid > .card.project-illustration-card:last-child:nth-child(odd):not(.home-featured .card) .project-media::before {
+    left: 7%;
+    top: 40%;
+    width: 110px;
+    height: 74px;
+    background: radial-gradient(circle, var(--wide-accent) 1.7px, transparent 2.3px) 0 0 / 18px 18px;
+    opacity: 0.45;
+  }
+  /* Pierścień z kropką po prawej. */
+  .projects-grid > .card.project-illustration-card:last-child:nth-child(odd):not(.home-featured .card) .project-media::after {
+    right: 9%;
+    top: 34%;
+    width: 76px;
+    height: 76px;
+    border: 2px solid var(--wide-accent);
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--wide-accent) 5px, transparent 6px);
+    opacity: 0.38;
+  }
+}
+/* W ciemnym motywie akcenty są jasnym, stonowanym pastelem, a plamy ciemnym pastelem. */
+:root[data-theme='dark'] .projects-grid > .card.project-illustration-card:last-child:nth-child(odd):not(.home-featured .card) .project-media {
+  --wide-glow: color-mix(in srgb, var(--project-art-bg) 70%, #fff 30%);
+  --wide-tint: color-mix(in srgb, var(--project-art-bg) 70%, #8b7cff 30%);
+  --wide-accent: color-mix(in srgb, var(--project-art-bg) 35%, #fff);
 }

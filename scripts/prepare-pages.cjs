@@ -2,6 +2,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const vm = require('node:vm');
 const { renderPage } = require('../shared/render-page.cjs');
+const { pageDataScripts } = require('../shared/page-content.cjs');
 
 const root = path.resolve(__dirname, '..');
 const aliases = { 'o-mnie': 'about.html', projekty: 'projects.html', korepetycje: 'knowledge.html', 'po-godzinach': 'hobby.html', kontakt: 'contact.html' };
@@ -62,6 +63,8 @@ function preparePages({ base = process.env.PAGES_BASE_PATH || '/portfolio/', out
     ['gallery-data.js', 'portfolioPhotos', photos], ['projects-data.js', 'portfolioProjects', projects],
     ['pages-data.js', 'portfolioPageContent', pages], ['home-data.js', 'portfolioHome', home],
   ]) fs.writeFileSync(path.join(output, 'assets/js', file), `window.${property} = ${JSON.stringify(value, null, 2)};\n`);
+  // Nadpisuje skopiowane pliki źródłowe wersją po filtrowaniu opinii i tekstów kontaktu.
+  for (const [file, source] of pageDataScripts(pages)) fs.writeFileSync(path.join(output, 'assets/js', file), source);
   const api = path.join(output, 'static-api');
   fs.mkdirSync(path.join(api, 'pages'), { recursive: true });
   const snapshots = { photos, projects, reviews, 'pages/home': { ...home, content: pages.home }, 'pages/about': { content: pages.about }, 'pages/knowledge': pages.knowledge, 'pages/projects': pages.projects, 'pages/contact': pages.contact };

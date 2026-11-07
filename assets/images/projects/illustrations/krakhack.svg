@@ -1,6 +1,32 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="740" viewBox="0 0 1200 740">
 <defs><linearGradient id="panel" x2="1" y2="1"><stop stop-color="#183d53"/><stop offset="1" stop-color="#102c40"/></linearGradient><linearGradient id="gold" x2="1" y2="1"><stop stop-color="#ffe6a0"/><stop offset="1" stop-color="#d5a23b"/></linearGradient><filter id="shadow" x="-40%" y="-40%" width="180%" height="200%"><feDropShadow dx="0" dy="18" stdDeviation="20" flood-color="#1e5361" flood-opacity=".16"/></filter></defs>
-<rect width="1200" height="740" fill="#b9e1e6"/><circle cx="1090" cy="130" r="200" fill="#d3f0f3" opacity=".7"/><circle cx="100" cy="680" r="220" fill="#9bced8" opacity=".4"/>
+<rect width="1200" height="740" fill="#b9e1e6"/>
+<g data-decor="">
+<defs><filter id="decor-soft" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="34"/></filter></defs>
+<g filter="url(#decor-soft)">
+<circle data-tone="blob" cx="972" cy="228" r="120" fill="#dcf3f6" opacity=".85"/>
+<circle data-tone="blob" cx="228" cy="512" r="120" fill="#b7c3e8" opacity=".7"/>
+</g>
+<circle data-tone="accent" cx="1108" cy="592" r="44" fill="none" stroke="#3fb4c3" stroke-width="3" opacity=".45"/>
+<circle data-tone="accent" cx="1108" cy="592" r="7" fill="#3fb4c3" opacity=".5"/>
+<circle data-tone="accent" cx="46" cy="266" r="3.2" fill="#3fb4c3" opacity=".55"/>
+<circle data-tone="accent" cx="64" cy="266" r="3.2" fill="#3fb4c3" opacity=".55"/>
+<circle data-tone="accent" cx="82" cy="266" r="3.2" fill="#3fb4c3" opacity=".55"/>
+<circle data-tone="accent" cx="100" cy="266" r="3.2" fill="#3fb4c3" opacity=".55"/>
+<circle data-tone="accent" cx="46" cy="284" r="3.2" fill="#3fb4c3" opacity=".55"/>
+<circle data-tone="accent" cx="64" cy="284" r="3.2" fill="#3fb4c3" opacity=".55"/>
+<circle data-tone="accent" cx="82" cy="284" r="3.2" fill="#3fb4c3" opacity=".55"/>
+<circle data-tone="accent" cx="100" cy="284" r="3.2" fill="#3fb4c3" opacity=".55"/>
+<circle data-tone="accent" cx="46" cy="302" r="3.2" fill="#3fb4c3" opacity=".55"/>
+<circle data-tone="accent" cx="64" cy="302" r="3.2" fill="#3fb4c3" opacity=".55"/>
+<circle data-tone="accent" cx="82" cy="302" r="3.2" fill="#3fb4c3" opacity=".55"/>
+<circle data-tone="accent" cx="100" cy="302" r="3.2" fill="#3fb4c3" opacity=".55"/>
+<circle data-tone="accent" cx="1150" cy="311" r="5" fill="#3fb4c3" opacity=".5"/>
+<circle data-tone="accent" cx="1172" cy="370" r="3" fill="#3fb4c3" opacity=".45"/>
+<circle data-tone="accent" cx="60" cy="518" r="4" fill="#3fb4c3" opacity=".45"/>
+<circle data-tone="accent" cx="560" cy="44" r="4" fill="#3fb4c3" opacity=".4"/>
+<circle data-tone="accent" cx="760" cy="30" r="3" fill="#3fb4c3" opacity=".35"/>
+</g>
 <g filter="url(#shadow)"><rect x="135" y="55" width="930" height="610" rx="38" fill="#d5edf0" stroke="#eefcfc" stroke-width="3"/>
 <rect x="135" y="55" width="930" height="62" rx="30" fill="#527f92"/><g fill="#c0e6ec"><circle cx="174" cy="86" r="8"/><circle cx="202" cy="86" r="8"/><circle cx="230" cy="86" r="8"/></g>
 <rect x="285" y="145" width="630" height="215" rx="28" fill="url(#panel)"/>

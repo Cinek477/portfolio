@@ -4,7 +4,33 @@
  
  
  
- <g filter="url(#shadow)"><rect x="110" y="245" width="1050" height="680" rx="30" fill="url(#paper)" /><rect x="110" y="245" width="1050" height="84" rx="30" fill="#3b5c9b" /><rect x="110" y="285" width="1050" height="44" rx="0" fill="#3b5c9b" />
+ <g data-decor="">
+<defs><filter id="decor-soft" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="34"/></filter></defs>
+<g filter="url(#decor-soft)">
+<circle data-tone="blob" cx="972" cy="388" r="120" fill="#e1effc" opacity=".85"/>
+<circle data-tone="blob" cx="228" cy="672" r="120" fill="#bbb4f6" opacity=".7"/>
+</g>
+<circle data-tone="accent" cx="1108" cy="752" r="44" fill="none" stroke="#288ae0" stroke-width="3" opacity=".45"/>
+<circle data-tone="accent" cx="1108" cy="752" r="7" fill="#288ae0" opacity=".5"/>
+<circle data-tone="accent" cx="46" cy="426" r="3.2" fill="#288ae0" opacity=".55"/>
+<circle data-tone="accent" cx="64" cy="426" r="3.2" fill="#288ae0" opacity=".55"/>
+<circle data-tone="accent" cx="82" cy="426" r="3.2" fill="#288ae0" opacity=".55"/>
+<circle data-tone="accent" cx="100" cy="426" r="3.2" fill="#288ae0" opacity=".55"/>
+<circle data-tone="accent" cx="46" cy="444" r="3.2" fill="#288ae0" opacity=".55"/>
+<circle data-tone="accent" cx="64" cy="444" r="3.2" fill="#288ae0" opacity=".55"/>
+<circle data-tone="accent" cx="82" cy="444" r="3.2" fill="#288ae0" opacity=".55"/>
+<circle data-tone="accent" cx="100" cy="444" r="3.2" fill="#288ae0" opacity=".55"/>
+<circle data-tone="accent" cx="46" cy="462" r="3.2" fill="#288ae0" opacity=".55"/>
+<circle data-tone="accent" cx="64" cy="462" r="3.2" fill="#288ae0" opacity=".55"/>
+<circle data-tone="accent" cx="82" cy="462" r="3.2" fill="#288ae0" opacity=".55"/>
+<circle data-tone="accent" cx="100" cy="462" r="3.2" fill="#288ae0" opacity=".55"/>
+<circle data-tone="accent" cx="1150" cy="471" r="5" fill="#288ae0" opacity=".5"/>
+<circle data-tone="accent" cx="1172" cy="530" r="3" fill="#288ae0" opacity=".45"/>
+<circle data-tone="accent" cx="60" cy="678" r="4" fill="#288ae0" opacity=".45"/>
+<circle data-tone="accent" cx="560" cy="204" r="4" fill="#288ae0" opacity=".4"/>
+<circle data-tone="accent" cx="760" cy="190" r="3" fill="#288ae0" opacity=".35"/>
+</g>
+<g filter="url(#shadow)"><rect x="110" y="245" width="1050" height="680" rx="30" fill="url(#paper)" /><rect x="110" y="245" width="1050" height="84" rx="30" fill="#3b5c9b" /><rect x="110" y="285" width="1050" height="44" rx="0" fill="#3b5c9b" />
  <g fill="#bcdcff"><circle cx="150" cy="287" r="5"/><circle cx="171" cy="287" r="5"/><circle cx="192" cy="287" r="5"/></g>
  <rect x="250" y="278" width="142" height="18" rx="9" fill="#bcdcff" /><rect x="445" y="278" width="95" height="18" rx="9" fill="#ffffff40" /><rect x="585" y="278" width="115" height="18" rx="9" fill="#ffffff40" /><rect x="745" y="278" width="95" height="18" rx="9" fill="#ffffff40" /><rect x="1060" y="269" width="56" height="36" rx="12" fill="#ffffff20" />
  <rect x="142" y="358" width="225" height="500" rx="20" fill="#edf3fc" /><text x="169" y="399" font-family="Segoe UI,Arial,sans-serif" font-size="21" fill="#59739c" font-weight="600">Twoja ścieżka</text>

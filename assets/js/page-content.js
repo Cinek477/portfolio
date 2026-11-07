@@ -155,7 +155,12 @@ window.portfolioPages['page-content.js'] = () => {
     const frame = main.querySelector(page === 'home' ? '.portrait' : '.about-photo-frame');
     const image = frame.querySelector('img');
     frame.hidden = !content.photo.visible;
-    if (image.getAttribute('src') !== content.photo.src) image.src = content.photo.src;
+    // srcset w HTML opisuje domyślne zdjęcie; inne źródło nie może dziedziczyć jego wariantów.
+    // Serwer zapisuje src jako /assets/..., a dane jako assets/... — porównujemy pełne adresy.
+    if (image.src !== new URL(content.photo.src, document.baseURI).href) {
+      image.removeAttribute('srcset');
+      image.src = content.photo.src;
+    }
     photoAlt = content.photo.alt;
     updateAlt();
     window.refreshPortfolioPage?.();

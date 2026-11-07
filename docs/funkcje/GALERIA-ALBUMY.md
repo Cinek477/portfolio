@@ -53,7 +53,7 @@ Do wymiany fotografii należy dodać nowy wpis i świadomie przenieść lub usun
 Kształty `regular`, `wide` i `tall` określają układ miniatury, nie proporcje pełnego zdjęcia.
 Punkt kadrowania X/Y ma zakres 0–100%; „Wyśrodkuj” ustawia 50%/50%.
 Panel pokazuje podglądy kadru. W miniaturach używany jest `object-position`.
-Pełny podgląd zachowuje naturalne proporcje i nie powinien przycinać fotografii do kształtu karty.
+Podgląd startuje od kwadratu z tym samym punktem kadru; kliknięcie zdjęcia przełącza na całe zdjęcie w naturalnych proporcjach i z powrotem. Nowe zdjęcie zawsze zaczyna od kwadratu.
 
 ## 6. Widoczność — trzy różne sytuacje
 

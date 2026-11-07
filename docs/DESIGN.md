@@ -4,7 +4,7 @@ Dokument opisuje obecny kierunek wizualny i zasady kolejnych zmian. Źródłem k
 
 ## Charakter
 
-Niebieskie portfolio łączące programowanie, fotografię i matematykę. Jasny motyw opiera się na błękitnych powierzchniach, ciemny na granacie. Szklane panele, zaokrąglenia i subtelne animacje mają wspierać treść, a nie konkurować z nią.
+Niebieskie portfolio łączące programowanie, fotografię i matematykę. Jasny motyw opiera się na chłodnej, prawie białej bazie z błękitno-lawendową poświatą, białych kartach i gradiencie na nazwisku; ciemny na granacie z cyjanową poświatą. Szklane panele, zaokrąglenia i subtelne animacje mają wspierać treść, a nie konkurować z nią.
 
 ## Kolory
 
@@ -12,13 +12,15 @@ Podstawowe zmienne z `assets/css/portfolio.css`:
 
 | Zmienna | Jasny motyw | Ciemny motyw |
 | --- | --- | --- |
-| `--bg` | `#edf6ff` | `#091526` |
+| `--bg` | `#eef4fc` | `#091526` |
 | `--panel` | `#e1effc` | `#10243e` |
-| `--text` | `#142e50` | `#e2efff` |
-| `--muted` | `#56718d` | `#98aec8` |
-| `--line` | `#c9ddef` | `#233d5b` |
-| `--accent` | `#1769e8` | `#7bb5ff` |
+| `--text` | `#0b1a33` | `#e2efff` |
+| `--muted` | `#4a5d78` | `#98aec8` |
+| `--line` | `#d3e0f0` | `#233d5b` |
+| `--accent` | `#1d5fe0` | `#7bb5ff` |
 | `--card` | `#f5faff` | `#102039` |
+
+Wartości jasnego motywu nadpisuje blok „Jasny motyw” w `portfolio.css`. W ciemnym motywie karty z ilustracjami mają ten sam układ co w jasnym, ale kolor projektu jest przyciemniony: ten sam odcień, nasycenie ×0,9, jasność ×0,3 (`hsl(from …)` w CSS). Ilustracje mają ciemne warianty `*-dark.svg` z tym samym tłem — po zmianie ilustracji uruchom `node scripts/make-dark-illustrations.cjs`. Dekoracje tła (miękkie plamy, pierścień, kropki w kolorach pochodnych od tła) dodaje `node scripts/decorate-illustrations.cjs` — skrypt podmienia poprzednią grupę dekoracji, więc można go uruchamiać wielokrotnie; potem wygeneruj ciemne warianty. W ciemnym motywie plamy są ciemnym pastelem jaśniejszym od tła, a kropki i pierścień stonowanym jasnym pastelem. Przełączanie wariantu przy zmianie motywu obsługuje `window.portfolioThemedImage` w `theme.js`.
 
 Używaj zmiennych zamiast wpisywać osobne kolory dla kolejnych sekcji. Niebieskie akcenty pozostają niebieskie również w jasnym motywie. Ilustracje projektów mają własne pastelowe tła i ciemne podpisy.
 
@@ -40,9 +42,10 @@ Używaj zmiennych zamiast wpisywać osobne kolory dla kolejnych sekcji. Niebiesk
 
 ## Fotografia
 
-- Miniatury mogą mieć kadr ustawiony w panelu. Pełny podgląd zachowuje proporcje oryginału: poziom, pion lub kwadrat, bez rozciągania i przycinania.
+- Miniatury mogą mieć kadr ustawiony w panelu. Podgląd otwiera zdjęcie w kwadracie wykadrowanym tym samym punktem; kliknięcie (lub Enter/Spacja) pokazuje całe zdjęcie w oryginalnych proporcjach, bez rozciągania. Podpowiedź w rogu mówi, co pokaże kliknięcie.
+- Wokół zdjęcia w podglądzie jest poświata w kolorze wyliczonym z fotografii w panelu (`glowColor`). Ramka zdjęcia nie może mieć `overflow: hidden`, bo przycięłaby poświatę.
 - Mobilny podgląd jest kartą z zamknięciem i przyciskami zmiany zdjęcia. Kolejne zdjęcie pojawia się dopiero po załadowaniu; nie zastępuj poprzedniego czarnym ekranem.
-- Tytuł, opis i przyciski albumu nie powinny zasłaniać fotografii.
+- Tytuł, opis i przyciski albumu nie powinny zasłaniać fotografii. Informacje w podglądzie to zwarta siatka (ikona, podpis, wartość), opis jest cytatem z akcentem w kolorze poświaty, a „więcej zdjęć z wydarzenia” jest główną akcją. Podgląd ładuje pełną rozdzielczość, chyba że miniatura wystarcza dla gęstości ekranu albo włączono oszczędzanie danych.
 - Nie sugeruj obróbki ani historii zdjęcia, których autor nie potwierdził.
 
 ## Ruch i wydajność

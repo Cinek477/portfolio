@@ -12,7 +12,7 @@ function renderPage(source, page) {
       href === (path.basename(page) === 'project.html' ? 'projects.html' : path.basename(page)) ? `${link} aria-current="page"` : link,
     );
   });
-  const bootstrap = "<script data-theme-init>(function(){var r=document.documentElement,t;try{t=localStorage.getItem('portfolio-theme')}catch(e){}if(t!=='dark'&&t!=='light')t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';r.dataset.theme=t;r.style.colorScheme=t;r.style.backgroundColor=t==='dark'?'#091526':'#edf6ff';var m=document.querySelector('meta[name=\\\"theme-color\\\"]');if(m)m.content=t==='dark'?'#091526':'#edf6ff'})();</script>";
+  const bootstrap = "<script data-theme-init>(function(){var r=document.documentElement,t;try{t=localStorage.getItem('portfolio-theme')}catch(e){}if(t!=='dark'&&t!=='light')t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';r.dataset.theme=t;r.style.colorScheme=t;r.style.backgroundColor=t==='dark'?'#091526':'#eef4fc';var m=document.querySelector('meta[name=\\\"theme-color\\\"]');if(m)m.content=t==='dark'?'#091526':'#eef4fc'})();</script>";
   return /<meta\s+name="theme-color"[^>]*>/i.test(rendered)
     ? rendered.replace(/(<meta\s+name="theme-color"[^>]*>)/i, '$1' + bootstrap)
     : rendered.replace(/<head([^>]*)>/i, '<head$1>' + bootstrap);

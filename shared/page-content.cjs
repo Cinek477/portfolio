@@ -95,4 +95,14 @@ function normalizeOffers(input, old = pageDefaults.knowledge) {
     return { question: bilingual(entry.question, 300), answer: bilingual(entry.answer, 3000), visible: flag(entry.visible) };
   }) };
 }
-module.exports = { pageDefaults, normalizeContent, normalizeOffers, normalizeEditor };
+// Każda podstrona ładuje tylko własne treści (pages-data-<strona>.js) zamiast eksportu wszystkich stron.
+// Pełny pages-data.js zostaje jako źródło dla eksportu Pages i testów.
+const pageDataPages = { home: 'index.html', about: 'about.html', knowledge: 'knowledge.html', projects: 'projects.html', contact: 'contact.html' };
+function pageDataScripts(pages) {
+  return Object.keys(pageDataPages).map(key => [
+    `pages-data-${key}.js`,
+    `(window.portfolioPageContent ||= {})[${JSON.stringify(key)}] = ${JSON.stringify(pages[key] ?? null, null, 2)};\n`,
+  ]);
+}
+
+module.exports = { pageDefaults, normalizeContent, normalizeOffers, normalizeEditor, pageDataPages, pageDataScripts };

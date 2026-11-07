@@ -41,6 +41,9 @@ window.portfolioPages['gallery.js'] = async () => {
   function visual(photo) {
     if (photo.src) {
       const image = document.createElement('img');
+      // Na komputerze miniatury są powielone w trzech cyklach — poza ekranem ładują się później.
+      image.loading = 'lazy';
+      image.decoding = 'async';
       image.src = photo.thumbUrl || photo.src;
       image.addEventListener(
         'error',

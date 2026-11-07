@@ -57,7 +57,9 @@ Nie należy zakładać automatycznego śledzenia każdej późniejszej zmiany mo
 ## 7. Ruch i neon
 
 `prefers-reduced-motion` ogranicza animacje menu, przejść, ilustracji i zdjęć.
-Neon przycisków korzysta z canvas, do 30 odrysowań/s i 48 segmentów.
+Neon przycisków korzysta z canvas, do 60 odrysowań/s i 48 segmentów. W jasnym motywie smuga jest niebieska, w ciemnym cyjanowa.
+Obejmuje główne i drugorzędne przyciski CTA, także CV, oferty, link Spotify i Instagram.
+Po zmianie języka odtwarza warstwę smugi, zachowując informację o widoczności przycisku.
 Zatrzymuje się przy ukrytej karcie, braku widocznych kontrolek, ograniczeniu ruchu lub otwartym podglądzie fotografii.
 Wykres i ilustracja projektowa mają własne obserwatory widoczności.
 Animacje dekoracyjne nie powinny być niezbędne do odczytania informacji lub wykonania akcji.

@@ -40,7 +40,7 @@ Dawne adresy HTML przekierowują na nowe. Pliki źródłowe zachowują nazwy. Na
 
 - Edycja sekcji podstron, szkice i porównanie z opublikowaną treścią.
 - Projekty i osiągnięcia z osobnymi opisami realizacji.
-- Galeria z filtrami, albumami, okładkami, kadrem miniatur i udostępnianiem. Podgląd zachowuje proporcje zdjęć; na telefonie zdjęcia zmienia się przyciskami.
+- Galeria z filtrami, albumami, okładkami, kadrem miniatur i udostępnianiem. Podgląd pokazuje kwadratowy kadr, a po kliknięciu całe zdjęcie z poświatą w jego kolorze; na telefonie zdjęcia zmienia się przyciskami.
 - Oferta korepetycji, promocje, opinie z oceną i FAQ.
 - Kreator kontaktu dopasowany do tematu. Prywatna skrzynka ze statusami spraw, notatkami, spamem i koszem.
 - Kopie ręczne oraz automatyczne przed wybranymi większymi zmianami; pięć najnowszych kopii automatycznych.

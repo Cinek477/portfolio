@@ -1,19 +1,26 @@
 // Dekoracyjny obrys przycisków; jeden cykl animacji tylko dla widocznych elementów.
 (() => {
-  const selector = '.hero-actions a.primary, .contact-submit, .lightbox-instagram';
+  // Obejmujemy również drugorzędne CTA poza hero (CV, pakiety, Spotify).
+  // Zwykłe linki tekstowe i statyczny panel administratora pozostają bez smugi.
+  const selector = 'main a.primary, main a.secondary, .hero-actions a, .instagram-cta, .course-preview, .contact-submit, .lightbox-instagram';
   const tracked = new Map();
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   const epoch = performance.now();
   const sampleCount = 1024;
   const steps = 48;
-  // Dekoracja nie wymaga 60–144 odrysowań na sekundę na szybkich ekranach.
-  const frameInterval = 1000 / 30;
+  // Płynne 60 klatek/s; ekrany 120–144 Hz nie rysują częściej niż co ~16,7 ms.
+  const frameInterval = 1000 / 60;
   let lastPaint = -Infinity;
-  const colors = Array.from({ length: steps }, (_, index) => {
+  // Ogon przechodzi w jaśniejszą „głowę” smugi. Na jasnym tle cyjan i biel znikają,
+  // dlatego jasny motyw ma głęboki niebieski przechodzący w błękit.
+  const palette = (tail, tip) => Array.from({ length: steps }, (_, index) => {
     const t = (index + 1) / steps;
     const head = Math.max(0, (t - 0.7) / 0.3);
-    return `rgba(${Math.round(56 + 168 * head)},${Math.round(189 + 61 * head)},${Math.round(248 + 7 * head)},${Math.pow(t, 1.65).toFixed(3)})`;
+    const channel = i => Math.round(tail[i] + (tip[i] - tail[i]) * head);
+    return `rgba(${channel(0)},${channel(1)},${channel(2)},${Math.pow(t, 1.65).toFixed(3)})`;
   });
+  const darkColors = palette([56, 189, 248], [224, 250, 255]);
+  const lightColors = palette([29, 95, 224], [14, 165, 233]);
   let frame = 0, scheduled = false;
   function resize(button) {
     const item = tracked.get(button);
@@ -58,6 +65,7 @@
     lastPaint = now;
     const phase = ((now - epoch) % 4000) / 4000;
     let active = false;
+    const colors = document.documentElement?.dataset?.theme === 'dark' ? darkColors : lightColors;
     for (const [button, item] of tracked) {
       if (!item.visible || !item.points || button.disabled || button.getAttribute('aria-disabled') === 'true') continue;
       active = true;
@@ -94,20 +102,42 @@
     }
     document.querySelectorAll(selector).forEach(button => {
       if (button.querySelector(':scope > .control-neon')) return;
+      const previous = tracked.get(button);
       const canvas = document.createElement('canvas');
       canvas.className = 'control-neon';
       canvas.setAttribute('aria-hidden', 'true');
       const context = canvas.getContext('2d');
       if (!context) return;
+      canvases.add(canvas);
       button.append(canvas);
       const guide = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-      tracked.set(button, { canvas, context, guide, visible: false });
-      sizes.observe(button); visibility.observe(button); resize(button);
+      // Zmiana tekstu PL/EN może usunąć canvas bez usuwania samego przycisku.
+      // Zachowaj jego widoczność: obserwator nie musi ponownie zgłosić tego samego elementu.
+      tracked.set(button, { canvas, context, guide, visible: previous?.visible ?? false });
+      if (!previous) { sizes.observe(button); visibility.observe(button); }
+      resize(button);
     });
     resume();
   }
-  new MutationObserver(() => {
-    if (scheduled) return;
+  // Pełne przeszukanie dokumentu tylko wtedy, gdy zmiana może dotyczyć przycisku z neonem.
+  // Galeria, Spotify czy dopisanie samego canvasu nie uruchamiają ponownie querySelectorAll.
+  const canvases = new WeakSet();
+  const relevantAdded = node => node.nodeType === 1 && (node.matches(selector) || node.querySelector(selector));
+  const relevantRemoved = node => canvases.has(node) || tracked.has(node)
+    || (node.nodeType === 1 && node.querySelector('.control-neon'));
+  function relevant(records) {
+    for (const record of records) {
+      if (record.type === 'attributes') {
+        if (tracked.has(record.target)) resume();
+        continue;
+      }
+      for (const node of record.removedNodes) if (relevantRemoved(node)) return true;
+      for (const node of record.addedNodes) if (relevantAdded(node)) return true;
+    }
+    return false;
+  }
+  new MutationObserver(records => {
+    if (scheduled || !relevant(records)) return;
     scheduled = true;
     requestAnimationFrame(sync);
   }).observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['disabled', 'aria-disabled'] });

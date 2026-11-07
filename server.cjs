@@ -11,7 +11,7 @@ const ROOT = __dirname;
 const { renderPage } = require('./shared/render-page.cjs');
 const { sendAsset } = require('./server/static-assets.cjs');
 const { defaults: homeDefaults, normalizeHome, hydrateHome } = require('./shared/home.cjs');
-const { pageDefaults, normalizeContent, normalizeOffers, normalizeEditor } = require('./shared/page-content.cjs');
+const { pageDefaults, normalizeContent, normalizeOffers, normalizeEditor, pageDataScripts } = require('./shared/page-content.cjs');
 const { normalize, normalizeProject } = require('./shared/normalize.cjs');
 const MAX_BODY = 32 * 1024 * 1024;
 const MIME = {
@@ -97,6 +97,9 @@ function createGalleryServer(options = {}) {
     fs.writeFileSync(options.dataDir ? path.join(dataDir, 'home-data.js') : path.join(ROOT, 'assets/js/home-data.js'), `window.portfolioHome = ${JSON.stringify(home, null, 2)};\n`);
     const pages = { home: home.content, about: readAbout(), knowledge: { ...readOffers(), reviews: readReviews().filter(item=>item.visible && !item.archived) }, projects: readProjectPage(), contact: readContact() };
     fs.writeFileSync(options.dataDir ? path.join(dataDir, 'pages-data.js') : path.join(ROOT, 'assets/js/pages-data.js'), `window.portfolioPageContent = ${JSON.stringify(pages, null, 2)};\n`);
+    for (const [file, source] of pageDataScripts(pages)) {
+      fs.writeFileSync(options.dataDir ? path.join(dataDir, file) : path.join(ROOT, 'assets/js', file), source);
+    }
     const photos = db
       .prepare('SELECT data FROM photos ORDER BY position')
       .all()

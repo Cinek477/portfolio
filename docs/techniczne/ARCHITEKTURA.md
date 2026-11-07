@@ -11,7 +11,7 @@ Moduły `server/` obsługują skrzynkę, Spotify, kopie, kontrolę publikacji, m
 
 1. Pierwsze uruchomienie importuje publiczne zdjęcia i projekty do prywatnej bazy.
 2. Panel zapisuje zwalidowane zmiany w SQLite. Szkice mają osobne tabele.
-3. Zmiany opublikowanych danych aktualizują publiczne pliki `*-data.js`.
+3. Zmiany opublikowanych danych aktualizują publiczne pliki `*-data.js`. Treści podstron trafiają też do `pages-data-<strona>.js` (home, about, knowledge, projects, contact); podstrona dołącza tylko swój plik.
 4. Interfejs korzysta z eksportów jako danych początkowych i odświeża je przez API.
 5. Eksporter Pages tworzy HTML i migawki `static-api/*.json` w `dist/github-pages/`.
 

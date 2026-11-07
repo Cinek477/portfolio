@@ -11,12 +11,36 @@
     : matchMedia('(prefers-color-scheme: dark)').matches
       ? 'dark'
       : 'light';
+  // Ilustracje projektów mają ciemne warianty (*-dark.svg, scripts/make-dark-illustrations.cjs).
+  // Moduły ustawiają obraz przez portfolioThemedImage, a zmiana motywu podmienia src.
+  const darkVariant = source => /illustrations\/(?:oop|database|matura|hackyeah|krakhack)\.svg$/.test(source || '')
+    ? source.replace(/\.svg$/, '-dark.svg') : '';
+  const preloaded = new Set();
+  window.portfolioThemedImage = (image, source) => {
+    const dark = darkVariant(source);
+    if (!dark) {
+      delete image.dataset.lightSrc; delete image.dataset.darkSrc;
+      if (image.getAttribute('src') !== source) image.src = source;
+      return;
+    }
+    image.dataset.lightSrc = source; image.dataset.darkSrc = dark;
+    const current = root.dataset.theme === 'dark' ? dark : source;
+    if (image.getAttribute('src') !== current) image.src = current;
+    // Drugi wariant w pamięci podręcznej, by przejście motywu nie pokazało pustej ramki.
+    const other = current === dark ? source : dark;
+    if (!preloaded.has(other)) { preloaded.add(other); new Image().src = other; }
+  };
+  const syncThemedImages = () => document.querySelectorAll('img[data-dark-src]').forEach(image => {
+    const next = root.dataset.theme === 'dark' ? image.dataset.darkSrc : image.dataset.lightSrc;
+    if (image.getAttribute('src') !== next) image.src = next;
+  });
   const update = () => {
+    syncThemedImages();
     const icon = document.querySelector('link[data-theme-icon]');
     if (icon) icon.href = new URL(icon.dataset[root.dataset.theme], document.baseURI).href;
     root.style.removeProperty('background-color');
     root.style.removeProperty('color-scheme');
-    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', root.dataset.theme === 'dark' ? '#091526' : '#edf6ff');
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', root.dataset.theme === 'dark' ? '#091526' : '#eef4fc');
     button.setAttribute('aria-pressed', String(root.dataset.theme === 'dark'));
   };
   update();

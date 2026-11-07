@@ -40,8 +40,8 @@ window.portfolioPages['project-detail.js'] = async () => {
       let media;
       if(imageSrc){
         card.classList.add('project-photo-card');media=document.createElement('div');media.className='project-media';
-        const picture=new Image();picture.src=thumbnail||imageSrc;
-        picture.addEventListener('error',()=>{if(thumbnail)picture.src=imageSrc;},{once:true});
+        const picture=new Image();if(window.portfolioThemedImage)window.portfolioThemedImage(picture,thumbnail||imageSrc);else picture.src=thumbnail||imageSrc;
+        picture.addEventListener('error',()=>{if(thumbnail){if(window.portfolioThemedImage)window.portfolioThemedImage(picture,imageSrc);else picture.src=imageSrc;}},{once:true});
         picture.decoding='async';picture.alt=local(item.title);picture.className='project-cover';picture.loading='lazy';
         media.append(picture);
       }
@@ -149,8 +149,14 @@ window.portfolioPages['project-detail.js'] = async () => {
     const src = project.src || project.thumbUrl;
     image.closest('figure').hidden = !src;
     main.classList.toggle('without-cover', !src);
-    main.style.setProperty('--case-art-bg', project.src?.includes('hackyeah.svg') ? '#c6d6f5' : project.src?.includes('krakhack.svg') ? '#b9e1e6' : 'var(--card)');
-    if (src) { if (image.getAttribute('src') !== src) image.src = src; image.alt = local(page.title); }
+    const artColor = project.src?.includes('hackyeah.svg') ? '#c6d6f5' : project.src?.includes('krakhack.svg') ? '#b9e1e6' : '';
+    main.style.setProperty('--case-art-bg', artColor || 'var(--card)');
+    main.classList.toggle('has-case-art', Boolean(artColor));
+    if (src) {
+      if (window.portfolioThemedImage) window.portfolioThemedImage(image, src);
+      else if (image.getAttribute('src') !== src) image.src = src;
+      image.alt = local(page.title);
+    }
     main.querySelector('#project-story').hidden = false;
     main.setAttribute('aria-busy', 'false');
   }

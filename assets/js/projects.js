@@ -73,11 +73,13 @@ window.portfolioPages['projects.js'] = () => {
           media = document.createElement('div');
           media.className = 'project-media';
           const image = new Image();
-          image.src = thumbnail || imageSrc;
+          // Ilustracje mają ciemny wariant; zdjęcia ustawiane są bez zmian.
+          if (window.portfolioThemedImage) window.portfolioThemedImage(image, thumbnail || imageSrc);
+          else image.src = thumbnail || imageSrc;
           image.addEventListener(
             'error',
             () => {
-              if (thumbnail) image.src = imageSrc;
+              if (thumbnail) window.portfolioThemedImage ? window.portfolioThemedImage(image, imageSrc) : (image.src = imageSrc);
             },
             { once: true },
           );

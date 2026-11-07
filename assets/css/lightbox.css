@@ -152,72 +152,68 @@
   transition: border-color 0.2s ease;
 }
 
-/* Jasny motyw: szkło baby blue, bez zmian zdjęcia i jego poświaty. */
+/* Jasny motyw: pełne, jasne tło karty (bez prześwitującej strony), mocniejsze przyciemnienie
+   wokół i białe kafelki z niebieskim akcentem — zdjęcie i jego poświata zostają bez zmian. */
 :root[data-theme='light'] .photo-lightbox {
   color-scheme: light;
-  background: rgba(230, 242, 255, 0.92);
-  border-color: rgba(255, 255, 255, 0.65);
-  color: #142e50;
-  box-shadow: 0 30px 100px rgba(20, 46, 80, 0.2);
+  background: linear-gradient(160deg, #ffffff 0%, #f3f7fe 55%, #eef1ff 100%);
+  border-color: rgba(29, 95, 224, 0.12);
+  color: var(--text);
+  box-shadow: 0 40px 120px rgba(11, 26, 51, 0.3);
 }
 :root[data-theme='light'] .photo-lightbox::backdrop {
-  background: rgba(30, 57, 88, 0.35);
+  background: rgba(11, 26, 51, 0.55);
 }
 :root[data-theme='light'] .lightbox-badges span {
-  color: #245a97;
+  background: #fff;
+  border-color: rgba(29, 95, 224, 0.2);
+  color: var(--accent);
+  box-shadow: 0 2px 8px rgba(29, 78, 216, 0.06);
 }
 :root[data-theme='light'] .lightbox-info-tile {
-  background: linear-gradient(
-    135deg,
-    rgba(125, 211, 252, 0.42) 0%,
-    rgba(56, 189, 248, 0.24) 50%,
-    rgba(34, 211, 238, 0.25) 100%
-  );
-  border-color: rgba(14, 165, 233, 0.4);
-  box-shadow:
-    0 0 18px rgba(56, 189, 248, 0.2),
-    inset 0 0 10px rgba(255, 255, 255, 0.55);
+  background: #fff;
+  border: 1px solid rgba(29, 95, 224, 0.12);
+  box-shadow: 0 2px 6px rgba(29, 78, 216, 0.04), 0 12px 28px rgba(29, 78, 216, 0.07);
 }
 :root[data-theme='light'] .lightbox-info-tile:hover {
-  background: linear-gradient(
-    135deg,
-    rgba(125, 211, 252, 0.58) 0%,
-    rgba(56, 189, 248, 0.36) 50%,
-    rgba(34, 211, 238, 0.38) 100%
-  );
-  border-color: rgba(14, 165, 233, 0.65);
-  box-shadow:
-    0 0 24px rgba(56, 189, 248, 0.18),
-    inset 0 0 12px rgba(255, 255, 255, 0.65);
+  background: #fff;
+  border-color: rgba(29, 95, 224, 0.3);
+  box-shadow: 0 4px 10px rgba(29, 78, 216, 0.06), 0 18px 36px rgba(29, 78, 216, 0.12);
 }
 :root[data-theme='light'] .lightbox-info-tile dt {
-  color: #48668a;
+  color: var(--muted);
 }
 :root[data-theme='light'] .lightbox-info-tile .lightbox-value {
-  color: #142e50;
-  text-shadow: 0 0 10px rgba(255, 255, 255, 0.35);
+  color: var(--text);
+  text-shadow: none;
 }
 :root[data-theme='light'] .lightbox-info-tile .lightbox-icon {
-  color: #087fae;
-  filter: drop-shadow(0 0 2px rgba(14, 165, 233, 0.3));
+  color: var(--accent);
+  filter: none;
 }
 :root[data-theme='light'] .lightbox-icon {
-  color: #52749a;
+  color: var(--muted);
 }
 :root[data-theme='light'] .lightbox-description {
-  background: rgba(255, 255, 255, 0.25);
-  border-color: rgba(40, 90, 150, 0.12);
+  background: rgba(29, 95, 224, 0.05);
+  border-color: rgba(29, 95, 224, 0.1);
 }
 :root[data-theme='light'] .lightbox-description p,
 :root[data-theme='light'] .lightbox-counter {
-  color: #526b89;
+  color: var(--muted);
 }
 :root[data-theme='light'] .lightbox-dot::before {
-  background: rgba(50, 80, 120, 0.3);
+  background: rgba(11, 26, 51, 0.22);
 }
 :root[data-theme='light'] .lightbox-dot[aria-pressed='true']::before {
-  background: #1769e8;
-  box-shadow: 0 0 12px rgba(23, 105, 232, 0.2);
+  background: var(--accent);
+  box-shadow: 0 0 12px rgba(29, 95, 224, 0.25);
+}
+:root[data-theme='light'] .photo-lightbox :is(.lightbox-arrow, .lightbox-close, .lightbox-focus) {
+  background: #fff;
+  border: 1px solid rgba(29, 95, 224, 0.16);
+  color: var(--accent);
+  box-shadow: 0 4px 14px rgba(29, 78, 216, 0.12);
 }
 .lightbox-info-tile:hover {
   background-image: linear-gradient(
@@ -558,28 +554,76 @@
 .photo-lightbox.is-focused .lightbox-details { width:100%; flex:auto; }
 @media(max-width:768px) { .lightbox-focus { top:10px; left:16px; font-size:12px; } }
 
-/* Preserve the original photograph proportions in the viewer and focus mode. */
+/* Podgląd zdjęcia: najpierw kwadrat z kadrem ustawionym w panelu, kliknięcie pokazuje całe
+   zdjęcie w oryginalnych proporcjach. Poświata ma kolor zdjęcia (glowColor liczony w panelu).
+   Ramka nie może przycinać (overflow), bo cień leży poza zdjęciem. */
+.photo-lightbox {
+  --lightbox-photo-size: min(68dvh, 650px);
+}
 .photo-lightbox .lightbox-carousel .lightbox-image.is-active {
+  position: relative;
   width: fit-content;
   max-width: 100%;
   height: auto;
   max-height: none;
   aspect-ratio: auto;
   margin-inline: auto;
+  overflow: visible;
   background: transparent;
   box-shadow: none;
+  border-radius: var(--radius-tile);
+}
+.photo-lightbox .lightbox-carousel .lightbox-image[role='button'] {
+  cursor: zoom-out;
+}
+.photo-lightbox .lightbox-carousel .lightbox-image.is-cropped[role='button'] {
+  cursor: zoom-in;
+}
+.photo-lightbox .lightbox-carousel .lightbox-image[role='button']:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 6px;
 }
 .photo-lightbox .lightbox-carousel .lightbox-image img {
   display: block;
   width: auto;
   height: auto;
   max-width: 100%;
-  max-height: min(68dvh, 650px);
+  max-height: var(--lightbox-photo-size);
   object-fit: contain;
+  border-radius: var(--radius-tile);
+  box-shadow:
+    0 0 34px color-mix(in srgb, var(--dynamic-glow-color) 55%, transparent),
+    0 0 96px color-mix(in srgb, var(--dynamic-glow-color) 32%, transparent);
+  transition: box-shadow 0.6s ease;
+}
+.photo-lightbox .lightbox-carousel .lightbox-image.is-cropped img {
+  width: var(--lightbox-photo-size);
+  max-width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  object-position: var(--crop-position, 50% 50%);
+}
+/* Podpowiedź w rogu: co pokaże kliknięcie. */
+.photo-lightbox .lightbox-carousel .lightbox-image[data-hint]::after {
+  content: attr(data-hint);
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  padding: 6px 11px;
+  border-radius: 999px;
+  background: rgba(7, 17, 37, 0.62);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  pointer-events: none;
 }
 @media(max-width:768px) {
+  .photo-lightbox {
+    --lightbox-photo-size: var(--mobile-photo-height, 55svh);
+  }
+  /* Na telefonie mniejsza poświata — statyczny cień jest tani, ale nie może wychodzić poza kartę. */
   .photo-lightbox .lightbox-carousel .lightbox-image img {
-    max-height: var(--mobile-photo-height,55svh);
+    box-shadow: 0 0 22px color-mix(in srgb, var(--dynamic-glow-color) 45%, transparent);
   }
 }
 
@@ -587,3 +631,161 @@
 .photo-lightbox .lightbox-value { overflow-wrap: anywhere; min-width: 0; }
 .photo-lightbox .lightbox-carousel .lightbox-image img { opacity: 1; transition: none; }
 body.photo-view-open main *, body.photo-view-open .aurora-blob { animation-play-state: paused !important; }
+
+/* ===== Układ podglądu (listopad 2026) =====
+   Zdjęcie ma więcej miejsca, informacje są zwartą siatką (ikona w kwadraciku, podpis, wartość),
+   opis jest cytatem, a „Zobacz więcej zdjęć” głównym przyciskiem. Plakietka albumu przy koncertach
+   powtarzała artystę, wydarzenie i datę z kafelków, więc jest ukryta. */
+@media (min-width: 769px) {
+  .photo-lightbox .lightbox-content {
+    align-items: center;
+    gap: 52px;
+  }
+  .photo-lightbox .lightbox-carousel {
+    flex: 1 1 54%;
+  }
+  .photo-lightbox .lightbox-content > div:last-child {
+    flex: 1 1 46%;
+  }
+}
+.lightbox-metadata:has(.lightbox-info-grid:not(.is-simple)) .lightbox-album {
+  display: none;
+}
+.photo-lightbox .lightbox-badges {
+  gap: 8px;
+  margin-bottom: 14px;
+}
+.photo-lightbox .lightbox-badges span {
+  padding: 5px 11px;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  box-shadow: none;
+}
+.photo-lightbox .lightbox-metadata h2 {
+  font-size: clamp(30px, 7cqi, 46px);
+  margin-bottom: 22px;
+}
+.photo-lightbox .lightbox-info-grid {
+  gap: 10px;
+}
+.photo-lightbox .lightbox-info-tile {
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr);
+  grid-template-rows: auto auto;
+  column-gap: 14px;
+  row-gap: 2px;
+  align-items: center;
+  min-height: 0;
+  padding: 14px 16px;
+  border: 1px solid rgba(125, 211, 252, 0.16);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.03);
+  box-shadow: none;
+  transform: none;
+}
+.photo-lightbox .lightbox-info-tile:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(125, 211, 252, 0.3);
+  box-shadow: none;
+  transform: none;
+}
+.photo-lightbox .lightbox-info-tile .lightbox-icon {
+  grid-column: 1;
+  grid-row: 1 / 3;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: rgba(56, 189, 248, 0.12);
+  filter: none;
+}
+.photo-lightbox .lightbox-info-tile .lightbox-icon svg {
+  width: 19px;
+  height: 19px;
+}
+.photo-lightbox .lightbox-info-tile dt {
+  grid-column: 2;
+  grid-row: 1;
+  margin: 0;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.photo-lightbox .lightbox-info-tile .lightbox-value {
+  grid-column: 2;
+  grid-row: 2;
+  font-size: 16px;
+  line-height: 1.35;
+  text-shadow: none;
+}
+.photo-lightbox .lightbox-description {
+  margin-top: 22px;
+  padding: 2px 0 2px 16px;
+  border: 0;
+  border-left: 2px solid var(--dynamic-glow-color);
+  border-radius: 0;
+  background: none;
+}
+.photo-lightbox .lightbox-description .lightbox-icon {
+  display: none;
+}
+.photo-lightbox .lightbox-description p {
+  font-size: 15px;
+  line-height: 1.6;
+  color: #c9d6ea;
+}
+.photo-lightbox .lightbox-album-actions {
+  gap: 10px;
+  margin-top: 24px;
+}
+/* Ostatni przycisk (więcej zdjęć z wydarzenia) jest główną akcją, gdy jest ich kilka. */
+.photo-lightbox .lightbox-album-actions .lightbox-album-action:last-child:not(:first-child) {
+  background: linear-gradient(135deg, #3b82f6, #1d5fe0);
+  border-color: #1d5fe0;
+  color: #fff;
+}
+.photo-lightbox .lightbox-album-actions .lightbox-album-action:last-child:not(:first-child):hover {
+  background: linear-gradient(135deg, #1d5fe0, #1e40af);
+}
+.photo-lightbox .lightbox-pagination {
+  margin-top: 26px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+.photo-lightbox .lightbox-carousel .lightbox-image[data-hint]::after {
+  content: '⤢  ' attr(data-hint);
+}
+
+/* Jasny motyw tego układu. */
+:root[data-theme='light'] .photo-lightbox .lightbox-info-tile {
+  background: #fff;
+  border-color: rgba(29, 95, 224, 0.12);
+}
+:root[data-theme='light'] .photo-lightbox .lightbox-info-tile .lightbox-icon {
+  background: rgba(29, 95, 224, 0.08);
+}
+:root[data-theme='light'] .photo-lightbox .lightbox-description {
+  background: none;
+}
+:root[data-theme='light'] .photo-lightbox .lightbox-description p {
+  color: var(--text);
+}
+:root[data-theme='light'] .photo-lightbox .lightbox-pagination {
+  border-top-color: rgba(29, 95, 224, 0.1);
+}
+
+@media (max-width: 768px) {
+  .photo-lightbox .lightbox-info-tile {
+    grid-template-columns: 34px minmax(0, 1fr);
+    padding: 12px;
+  }
+  .photo-lightbox .lightbox-info-tile .lightbox-icon {
+    width: 34px;
+    height: 34px;
+  }
+  .photo-lightbox .lightbox-description p {
+    font-size: 14px;
+  }
+}

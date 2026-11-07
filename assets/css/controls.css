@@ -2,6 +2,10 @@
 :root
   :is(
     .hero-actions a,
+    main a.primary,
+    main a.secondary,
+    .instagram-cta,
+    .course-preview,
     .contact-submit,
     .admin-shell .admin-panel button:not(.danger),
     .admin-shell .admin-link,
@@ -20,6 +24,9 @@
   pointer-events: none;
   overflow: visible;
   filter: drop-shadow(0 0 2px rgba(56, 189, 248, 0.55));
+}
+:root:not([data-theme='dark']) .control-neon.control-neon {
+  filter: drop-shadow(0 0 2px rgba(29, 95, 224, 0.35));
 }
 :disabled > .control-neon,
 [aria-disabled='true'] > .control-neon {
@@ -228,38 +235,44 @@
 
 /* Light controls sit above the frosted panels. */
 :root:not([data-theme='dark']) {
-  --control-bg: rgba(255, 255, 255, 0.88);
-  --control-border: #ffffff;
-  --control-glow: rgba(2, 132, 199, 0.18);
-  --pill-active-bg: linear-gradient(135deg, #38bdf8, #0284c7);
-  --pill-active-border: #0284c7;
+  /* Kontrolki muszą być widoczne przed kliknięciem: wyraźna ramka i delikatnie niebieskie tło. */
+  --control-bg: linear-gradient(180deg, #ffffff, #eef3ff);
+  --control-border: rgba(29, 95, 224, 0.34);
+  --control-glow: rgba(29, 95, 224, 0.18);
+  --pill-active-bg: linear-gradient(135deg, #3b82f6, #1d5fe0);
+  --pill-active-border: #1d5fe0;
   --pill-active-text: #ffffff;
 }
 :root:not([data-theme='dark']) .tags span {
   background: rgba(255, 255, 255, 0.88);
-  border: 1px solid #ffffff;
-  color: #475569;
+  border: 1px solid rgba(29, 95, 224, 0.12);
+  color: var(--muted);
 }
 :root:not([data-theme='dark']) :is(.hero-actions a:not(.secondary), .contact-submit, .instagram-cta) {
-  background: linear-gradient(135deg, #38bdf8, #0284c7);
-  border: 1px solid #0284c7;
+  background: linear-gradient(135deg, #3b82f6, #1d5fe0);
+  border: 1px solid #1d5fe0;
   color: #ffffff;
-  box-shadow: 0 8px 20px rgba(2, 132, 199, 0.18);
+  box-shadow: 0 8px 20px rgba(29, 95, 224, 0.18);
 }
 :root:not([data-theme='dark']) .hero-actions a.secondary {
-  background: rgba(255, 255, 255, 0.86);
-  border: 1px solid rgba(2, 132, 199, 0.28);
-  color: #0f172a;
-  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.06);
+  background: linear-gradient(180deg, #ffffff, #eef3ff);
+  border: 1px solid rgba(29, 95, 224, 0.4);
+  color: #1e40af;
+  box-shadow: 0 4px 14px rgba(29, 78, 216, 0.1);
+}
+/* Niewybrane filtry i opcje formularza: ciemnoniebieski tekst i cień zamiast bladej szarości. */
+:root:not([data-theme='dark']) :is(.gallery-filter:not([aria-pressed='true']), .contact-radio:not(:checked) + label) {
+  color: #1e3a8a;
+  box-shadow: 0 2px 8px rgba(29, 78, 216, 0.08);
 }
 :root:not([data-theme='dark'])
   :is(.hero-actions a, .contact-submit, .instagram-cta):not(:disabled):not(
     [aria-disabled='true']
   ):is(:hover, :focus-visible) {
-  background: linear-gradient(135deg, #0284c7, #1d4ed8);
-  border-color: #0284c7;
+  background: linear-gradient(135deg, #1d5fe0, #1e40af);
+  border-color: #1d5fe0;
   color: #ffffff;
-  box-shadow: 0 8px 20px rgba(2, 132, 199, 0.18);
+  box-shadow: 0 8px 20px rgba(29, 95, 224, 0.18);
 }
 :root:not([data-theme='dark'])
   :is(.gallery-filter, .contact-radio + label):is(:hover, :focus-visible),
@@ -268,15 +281,15 @@
 }
 :root:not([data-theme='dark'])
   :is(.gallery-filter[aria-pressed='true'], .contact-radio:checked + label) {
-  box-shadow: 0 8px 20px rgba(2, 132, 199, 0.18);
+  box-shadow: 0 8px 20px rgba(29, 95, 224, 0.18);
 }
 
 /* Match the shared CTA specificity so the opacity crossfade stays visible. */
 :root:not([data-theme='dark'])
   a.instagram-cta:not(:disabled):not([aria-disabled='true']):is(:hover, :focus-visible) {
-  background: linear-gradient(135deg, #38bdf8, #0284c7);
+  background: linear-gradient(135deg, #3b82f6, #1d5fe0);
   transform: translateY(-2px);
-  box-shadow: 0 10px 24px rgba(2, 132, 199, 0.2);
+  box-shadow: 0 10px 24px rgba(29, 95, 224, 0.2);
 }
 
 @media (prefers-reduced-motion: reduce) {

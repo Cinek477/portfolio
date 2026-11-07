@@ -7,7 +7,11 @@
 - Wspólne fragmenty HTML zamiast siedmiu kopii stopki i sześciu skrótów kontaktowych.
 - Zapis pozycji przewijania w historii najwyżej raz na 150 ms podczas ruchu;
   wyjście i nawigacja nadal zapisują ją od razu.
-- Neon: do 30 odrysowań/s i 48 segmentów zamiast 96. Dekoracja nie działa poza widokiem,
+- Tło „aurora”: plamy to gradienty radialne o profilu dawnego rozmycia, bez `filter: blur()` na dużej warstwie.
+- Zdjęcie profilowe w WebP (640 i 1200 px) przez `srcset`; miniatury galerii ładują się leniwie.
+- Każda podstrona ładuje tylko własne treści `pages-data-<strona>.js` zamiast pełnego `pages-data.js`.
+- Neon: 60 odrysowań/s (także na ekranach 120–144 Hz) i 48 segmentów zamiast 96.
+  Obserwator DOM przeszukuje stronę tylko po zmianach dotyczących przycisków. Dekoracja nie działa poza widokiem,
   przy ukrytej karcie, ograniczonym ruchu ani podczas oglądania zdjęć.
 - Jeden pomiar geometrii każdej miniatury przy wybieraniu środkowego zdjęcia.
 - Żądanie galerii przerywane wraz z cyklem życia podstrony.

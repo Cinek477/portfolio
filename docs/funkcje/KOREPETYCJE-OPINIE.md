@@ -73,6 +73,6 @@ Przyciski ofert rozpoczynają kreator zapytania, nie rezerwują zajęć.
 
 `admin-pages.js`, `admin-reviews.js`, `tutoring-offers.js`, `tutoring-reviews.js`, `tutoring.js`,
 `shared/page-content.cjs`. API: `/api/pages/knowledge`, `/api/page-drafts/knowledge`, `/api/reviews` i `/api/reviews/:id`.
-Publiczne opinie, FAQ i oferty trafiają do `pages-data.js`.
+Publiczne opinie, FAQ i oferty trafiają do `pages-data.js` oraz `pages-data-knowledge.js`, który ładuje podstrona Korepetycje.
 Testuj rabat włączony/wyłączony, brak EN, limit FAQ, ocenę 4,5, ukrytą i archiwalną opinię,
 stan z zerem/jedną/wieloma opiniami i przejście z każdego pakietu do kontaktu.

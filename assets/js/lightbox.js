@@ -41,7 +41,13 @@ window.portfolioPages['lightbox.js'] = () => {
   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
   const loader = window.createPortfolioPhotoLoader({
     limit: 3,
-    preferThumbnail: () => mobile.matches || (!dialog.classList.contains('is-focused') && dialog.clientWidth * .5 * Math.min(devicePixelRatio || 1, 1.5) <= 800),
+    // Miniatura (800 px) tylko gdy naprawdę wystarcza: liczymy rozmiar zdjęcia w podglądzie
+    // razy pełną gęstość ekranu (retina 2–3×) z zapasem na kadr. Oszczędzanie danych zawsze wybiera miniaturę.
+    preferThumbnail: () => {
+      if (navigator.connection?.saveData) return true;
+      const size = mobile.matches ? innerWidth - 32 : Math.min(innerHeight * 0.68, 650, dialog.clientWidth * 0.5);
+      return size * (devicePixelRatio || 1) <= 600;
+    },
   });
   let prefetchTimer = 0;
   let renderVersion = 0;
@@ -99,6 +105,12 @@ window.portfolioPages['lightbox.js'] = () => {
       }
     }
   };
+  function updateCropLabel(frame) {
+    const cropped = frame.classList.contains('is-cropped');
+    frame.setAttribute('aria-pressed', String(!cropped));
+    frame.setAttribute('aria-label', cropped ? translate('Pokaż całe zdjęcie', 'Show the whole photo') : translate('Pokaż kadr', 'Show the crop'));
+    frame.dataset.hint = cropped ? translate('Całe zdjęcie', 'Whole photo') : translate('Kadr', 'Crop');
+  }
   function renderReadyPhoto(photo, collection, select, options, prepared) {
     dialog.classList.remove('is-loading-first');
     const previous=dialog.querySelector('.lightbox-prev'), next=dialog.querySelector('.lightbox-next');
@@ -107,13 +119,29 @@ window.portfolioPages['lightbox.js'] = () => {
     dialog.style.setProperty('--dynamic-glow-color', photo.glowColor || 'rgba(98, 115, 220, 0.6)');
     // One decoded image and one frame on both desktop and mobile.
     let frame = carousel.firstElementChild;
-    if (!frame) { frame = document.createElement('div'); frame.className = 'lightbox-image is-active'; carousel.append(frame); }
+    if (!frame) {
+      frame = document.createElement('div'); frame.className = 'lightbox-image is-active'; carousel.append(frame);
+      // Zdjęcie otwiera się w kwadracie (kadr z panelu), kliknięcie pokazuje całość i z powrotem.
+      const toggle = () => { if (frame.getAttribute('role') !== 'button') return; frame.classList.toggle('is-cropped'); updateCropLabel(frame); };
+      frame.addEventListener('click', toggle, { signal: pageScope.signal });
+      frame.addEventListener('keydown', event => {
+        if (event.key !== 'Enter' && event.key !== ' ') return;
+        event.preventDefault(); toggle();
+      }, { signal: pageScope.signal });
+    }
     if (prepared) {
       prepared.alt = local(photo.title); prepared.classList.add('is-ready'); prepared.draggable = false;
       if (frame.firstElementChild !== prepared) frame.replaceChildren(prepared);
+      // Nowe zdjęcie zaczyna od kadru; zmiana języka czy trybu tego samego zdjęcia zachowuje wybór.
+      if (frame.dataset.photoId !== String(photo.id)) { frame.dataset.photoId = String(photo.id); frame.classList.add('is-cropped'); }
+      frame.style.setProperty('--crop-position', `${photo.crop?.x ?? 50}% ${photo.crop?.y ?? 50}%`);
+      frame.setAttribute('role', 'button'); frame.tabIndex = 0;
+      updateCropLabel(frame);
     } else {
       const placeholder = document.createElement('div'); placeholder.className = 'photo-placeholder';
       placeholder.textContent = translate('Miejsce na zdjęcie', 'Photo placeholder'); frame.replaceChildren(placeholder);
+      frame.classList.remove('is-cropped'); delete frame.dataset.photoId;
+      for (const name of ['role', 'tabindex', 'aria-pressed', 'aria-label', 'data-hint']) frame.removeAttribute(name);
     }
     information.replaceChildren();
     const badges = document.createElement('div');

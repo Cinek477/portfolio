@@ -4,6 +4,9 @@ const navbar = document.querySelector('.navbar');
 const menu = document.querySelector('.logo');
 const themeButton = document.querySelector('.theme');
 let language = 'pl';
+// Zapytania tworzone raz; .matches zawsze zwraca aktualny stan.
+const mobileQuery = matchMedia('(max-width: 760px)');
+const reducedMotionQuery = matchMedia('(prefers-reduced-motion: reduce)');
 function readPreference(key) {
   try {
     return localStorage.getItem(key);
@@ -33,7 +36,7 @@ function applyLanguage(value) {
   themeButton.setAttribute('aria-label', language === 'pl' ? 'Zmień motyw' : 'Change theme');
   const pageTitle = document.querySelector('[data-page-title]');
   document.title = `${pageTitle ? pageTitle.dataset[language] : 'Portfolio'} — Marcin Podyma`;
-  savePreference('portfolio-language', language);
+  if (readPreference('portfolio-language') !== language) savePreference('portfolio-language', language);
   updateLogoLabel();
   document.dispatchEvent(new CustomEvent('portfolio-language-change'));
 }
@@ -41,7 +44,7 @@ document.querySelector('.language').addEventListener('click', async () => {
   if (root.dataset.languageTransition || root.dataset.pageTransition) return;
   const next = language === 'pl' ? 'en' : 'pl';
   const targets = [...document.querySelectorAll('main, .navigation, footer')];
-  if (matchMedia('(prefers-reduced-motion: reduce)').matches || !targets.every(element => element.animate)) {
+  if (reducedMotionQuery.matches || !targets.every(element => element.animate)) {
     applyLanguage(next);
     return;
   }
@@ -76,7 +79,7 @@ document.querySelector('.language').addEventListener('click', async () => {
 });
 applyLanguage(readPreference('portfolio-language') || 'pl');
 function updateLogoLabel() {
-  const mobile = matchMedia('(max-width: 760px)').matches;
+  const mobile = mobileQuery.matches;
   const label = language === 'pl' ? 'Otwórz menu' : 'Open menu';
   menu.setAttribute('aria-label', label);
   menu.title = label;
@@ -88,7 +91,7 @@ function closeMenu() {
   updateLogoLabel();
 }
 menu.addEventListener('click', () => {
-  if (!matchMedia('(max-width: 760px)').matches) return;
+  if (!mobileQuery.matches) return;
   const open = navbar.classList.toggle('menu-open');
   menu.setAttribute('aria-expanded', String(open));
 });
@@ -107,7 +110,7 @@ function updateScroll() {
   const compact = navbar.classList.contains('scrolled');
   const nextCompact = scrollY > (compact ? 70 : 100);
   if (compact === nextCompact) return;
-  const animate = !matchMedia('(max-width: 760px)').matches && !matchMedia('(prefers-reduced-motion: reduce)').matches && typeof navbar.animate === 'function';
+  const animate = !mobileQuery.matches && !reducedMotionQuery.matches && typeof navbar.animate === 'function';
   const elements = animate ? [...navbar.querySelectorAll('.brand-link, .navigation > a, .controls > button')] : [];
   const before = elements.map(element => element.getBoundingClientRect());
   const oldBounds = animate ? navbar.getBoundingClientRect() : null;
@@ -137,7 +140,7 @@ addEventListener('scroll', () => {
   navbarScrollFrame = requestAnimationFrame(() => { navbarScrollFrame = 0; updateScroll(); });
 }, { passive: true });
 updateScroll();
-matchMedia('(max-width: 760px)').addEventListener('change', closeMenu);
+mobileQuery.addEventListener('change', closeMenu);
 window.refreshPortfolioPage = () => {
   applyLanguage(language);
   updateScroll();

@@ -16,7 +16,7 @@ test('Saved theme is set before styles, with system fallback and blocked-storage
     });
     assert.equal(root.dataset.theme, expected);
     assert.equal(root.style.colorScheme, expected);
-    assert.equal(root.style.backgroundColor, expected === 'dark' ? '#091526' : '#edf6ff');
+    assert.equal(root.style.backgroundColor, expected === 'dark' ? '#091526' : '#eef4fc');
     assert.equal(meta.content, root.style.backgroundColor);
   }
 });
