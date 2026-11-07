@@ -1,8 +1,9 @@
 // Dekoracyjny obrys przycisków; jeden cykl animacji tylko dla widocznych elementów.
 (() => {
-  // Obejmujemy również drugorzędne CTA poza hero (CV, pakiety, Spotify).
+  // Obejmujemy również drugorzędne CTA poza hero (CV, pakiety).
   // Zwykłe linki tekstowe i statyczny panel administratora pozostają bez smugi.
-  const selector = 'main a.primary, main a.secondary, .hero-actions a, .instagram-cta, .course-preview, .contact-submit, .lightbox-instagram';
+  // Link do Spotify (.music-link) jest celowo bez smugi — wygląda jak zwykły link z ikoną, nie przycisk.
+  const selector = 'main a.primary, main a.secondary:not(.music-link), .hero-actions a, .instagram-cta, .course-preview, .contact-submit, .lightbox-instagram';
   const tracked = new Map();
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   const epoch = performance.now();
