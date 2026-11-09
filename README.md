@@ -64,9 +64,15 @@ Dawne adresy HTML przekierowują na nowe. Pliki źródłowe zachowują nazwy. Na
 | `.local/` | Lokalny Node, logi i narzędzia robocze |
 | `docs/POMYSLY.md` | Pomysły na rozwój |
 
-[Mapa folderów](docs/FOLDERY.md).
+Szczegóły: [mapa folderów](docs/FOLDERY.md) · [zasady wyglądu](docs/DESIGN.md).
 
-[Zasady wyglądu](docs/DESIGN.md).
+## Dostępność
+
+- Link „Przejdź do treści” na każdej podstronie (pierwsze naciśnięcie Tab).
+- Widoczny fokus klawiatury w nawigacji, przyciskach i polach formularza.
+- Kontrast tekstu zgodny z WCAG AA w obu motywach.
+- Atrybut `lang` przełączany razem z językiem PL/EN, opisy `alt` przy zdjęciach.
+- Animacje ograniczone przy `prefers-reduced-motion`.
 
 ## Panel i dane
 
@@ -77,8 +83,6 @@ Lokalna baza: `data/gallery.sqlite`. Dane, hasła, tokeny Spotify, `.env` i kopi
 - [Dane, galeria i kopie](docs/LOCAL-GALLERY.md)
 - [Wiadomości i konfiguracja poczty](docs/CONTACT-MESSAGES.md)
 
-Bez npm można uruchomić serwer przez `node server.cjs`, kontrole przez `node scripts/check-project.cjs`, testy przez `node --test --test-concurrency=1 tests/*.test.cjs`, a eksport przez `node scripts/prepare-pages.cjs`.
-
 ## Sprawdzanie
 
 ```sh
@@ -88,11 +92,16 @@ npm test
 
 Kontrole sprawdzają składnię, zasoby i działanie backendu na odizolowanych danych. Nie zastępują sprawdzenia wyglądu na rzeczywistym telefonie.
 
+| Polecenie npm | Odpowiednik bez npm |
+| --- | --- |
+| `npm start` | `node server.cjs` |
+| `npm run check` | `node scripts/check-project.cjs` |
+| `npm test` | `node --test --test-concurrency=1 tests/*.test.cjs` |
+| `npm run pages:prepare` | `node scripts/prepare-pages.cjs` |
+
 ## Dokumentacja
 
 [Spis dokumentacji](docs/README.md): opisy podstron, designu, funkcji, architektury i wydajności.
-
-Katalog `sites/` i polecenia `sites:*` zostały na razie usunięte. Pozostają lokalny serwer i eksport GitHub Pages. Usunięcie plików lokalnych nie zmienia opublikowanej witryny.
 
 ## GitHub Pages
 
