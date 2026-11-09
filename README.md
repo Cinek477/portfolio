@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="assets/images/brand/cinek-wordmark.png" alt="Cinek" height="64">
+<img src="docs/images/cinek-wordmark-blue.png" alt="Cinek" height="72">
 
 # Marcin Podyma — portfolio
 
