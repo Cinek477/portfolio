@@ -1927,3 +1927,39 @@ html {
 ::-webkit-scrollbar-button {
   display: none;
 }
+
+/* Dostępność: link „Przejdź do treści”, czytelniejsze drobne teksty, wyraźniejsze karty. */
+.skip-link {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 1000;
+  padding: 12px 18px;
+  border-radius: 12px;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 700;
+  text-decoration: none;
+  transform: translateY(-200%);
+  transition: transform 0.2s ease;
+}
+.skip-link:focus-visible {
+  transform: none;
+  outline: 2px solid var(--text);
+  outline-offset: 3px;
+}
+main:focus { outline: none; }
+@media (prefers-reduced-motion: reduce) { .skip-link { transition: none; } }
+
+.tags span { font-size: 13px; }
+.section-heading small,
+.card-summary,
+.card-details p,
+.card-details a { font-size: 14px; }
+.hero-bio p { line-height: 1.7; }
+
+:root:not([data-theme='dark']) .projects-grid > .card,
+:root:not([data-theme='dark']) .path-card {
+  border-color: color-mix(in srgb, var(--accent) 22%, var(--line));
+  box-shadow: 0 12px 32px #163e7018;
+}

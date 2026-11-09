@@ -26,12 +26,13 @@
       <script src="assets/js/content-editor.js" defer></script>
   </head>
   <body class="aurora-page">
+    <a class="skip-link" href="#main" data-pl="Przejdź do treści" data-en="Skip to content">Przejdź do treści</a>
     <div class="aurora-bg" aria-hidden="true">
       <div class="aurora-blob blob-1"></div>
       <div class="aurora-blob blob-2"></div>
     </div>
     <!-- component:navbar -->
-    <main data-cms-page="home" data-editable-page="home">
+    <main id="main" tabindex="-1" data-cms-page="home" data-editable-page="home">
       <section class="hero" id="about" aria-labelledby="hero-title">
         <div class="hero-heading">
           <p class="eyebrow" data-pl="Cześć, jestem" data-en="Hi, I'm">Cześć, jestem</p>

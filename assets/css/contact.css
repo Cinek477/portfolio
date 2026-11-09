@@ -441,3 +441,30 @@
   :root .chat-wizard-container .wizard-actions .contact-submit { min-width:0; width:100%; padding:12px 10px; margin-left:0; font-size:13px; }
   :root .chat-wizard-container .wizard-actions>button:only-child { width:auto; min-width:130px; }
 }
+
+/* Wyraźny fokus klawiatury (różny od hovera). */
+.contact-field input:focus-visible,
+.contact-field textarea:focus-visible,
+.contact-field select:focus-visible {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent);
+}
+
+/* Lista tematów wysuwa się nad treścią zamiast rozciągać kartę. */
+.chat-wizard-container .section-picker-popup {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 30;
+  background: var(--card);
+  box-shadow: 0 18px 40px #163e7026;
+}
+.chat-wizard-container .section-picker-popup input:focus,
+.chat-wizard-container .section-picker-popup input:focus-visible {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent);
+}
+.chat-wizard-container .page-section-picker summary:focus-visible { outline-offset: 0; }
