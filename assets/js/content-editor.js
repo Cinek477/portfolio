@@ -38,7 +38,8 @@ window.portfolioPages['content-editor.js'] = () => {
     }
     const value = main.querySelector('.review-rating-value');
     if (value) {
-      const rating = Math.max(0, Math.min(5, parseFloat(value.dataset.pl.replace(',', '.'))));
+      // Po wyrenderowaniu prawdziwej opinii element oceny nie ma już data-pl — wtedy czytamy jego tekst.
+      const rating = Math.max(0, Math.min(5, parseFloat((value.dataset.pl ?? value.textContent ?? '').replace(',', '.'))));
       if (Number.isFinite(rating)) {
         const ratingBox = main.querySelector('.review-rating');
         if (ratingBox) {

@@ -453,8 +453,19 @@ window.portfolioPageContent = {
           "en": "How long is a lesson?"
         },
         "answer": {
-          "pl": "Długość spotkania ustalamy indywidualnie, dopasowując ją do zakresu materiału i Twoich potrzeb.",
-          "en": "We agree on session length individually, based on the topics and your needs."
+          "pl": "Zajęcia trwają 60 lub 90 minut. Krótsze sprawdzają się przy jednym temacie, dłuższe przy większej porcji materiału albo zadaniach maturalnych.",
+          "en": "Lessons last 60 or 90 minutes. The shorter one works for a single topic, the longer one for more material or Matura practice."
+        },
+        "visible": true
+      },
+      {
+        "question": {
+          "pl": "Gdzie odbywają się zajęcia?",
+          "en": "Where do lessons take place?"
+        },
+        "answer": {
+          "pl": "Wyłącznie online — wystarczy komputer lub tablet z internetem. Link do spotkania wysyłam przed zajęciami.",
+          "en": "Online only — all you need is a computer or tablet with internet access. I send the meeting link before each lesson."
         },
         "visible": true
       },
@@ -475,8 +486,8 @@ window.portfolioPageContent = {
           "en": "How do we agree on timing and price?"
         },
         "answer": {
-          "pl": "Terminy dopasowujemy do wspólnej dostępności. Cenę ustalamy indywidualnie — zależy od terminu, regularności spotkań, poziomu i długości zajęć.",
-          "en": "We choose times that work for both of us. Pricing is agreed individually and depends on timing, lesson frequency, level and session length."
+          "pl": "Terminy dopasowujemy do wspólnej dostępności. Poziom podstawowy i bieżąca nauka kosztują od 60 zł, poziom rozszerzony od 80 zł; dokładna cena zależy od długości i regularności zajęć.",
+          "en": "We schedule lessons around our availability. Basic level and school support start at PLN 60, advanced level at PLN 80; the exact price depends on length and frequency."
         },
         "visible": true
       }
@@ -595,8 +606,8 @@ window.portfolioPageContent = {
               "id": "text-0",
               "label": "W przygotowaniu",
               "value": {
-                "pl": "W przygotowaniu",
-                "en": "In development"
+                "pl": "Start w roku szkolnym 2027/28",
+                "en": "Launching in the 2027/28 school year"
               }
             },
             {
@@ -611,16 +622,16 @@ window.portfolioPageContent = {
               "id": "text-2",
               "label": "Pracuję nad kursem przygotowującym do matury na poziomie podstawowym. ",
               "value": {
-                "pl": "Pracuję nad kursem przygotowującym do matury na poziomie podstawowym. Tutaj pojawią się materiały, z których będzie można korzystać w trakcie nauki.",
-                "en": "I’m working on a course for the basic mathematics Matura exam. Learning materials will become available here."
+                "pl": "Przygotowuję kurs do matury z matematyki na poziomie podstawowym. Wystartuje w roku szkolnym 2027/28 — tutaj pojawią się materiały, z których będzie można korzystać w trakcie nauki.",
+                "en": "I’m preparing a basic-level Matura maths course. It launches in the 2027/28 school year — this is where you’ll find materials to use while you study."
               }
             },
             {
               "id": "text-3",
               "label": "Zobacz dostępne materiały",
               "value": {
-                "pl": "Zobacz dostępne materiały",
-                "en": "View available materials"
+                "pl": "Materiały od roku 2027/28",
+                "en": "Materials from 2027/28"
               }
             }
           ],
@@ -787,8 +798,8 @@ window.portfolioPageContent = {
               "id": "text-2",
               "label": "Czas pojedynczego spotkania ustalamy indywidualnie — w zależności od z",
               "value": {
-                "pl": "Czas pojedynczego spotkania ustalamy indywidualnie — w zależności od zakresu materiału i Twoich potrzeb.",
-                "en": "We agree on the length of each session individually, depending on the topics and your needs."
+                "pl": "Zajęcia trwają 60 lub 90 minut — wybierasz wariant pasujący do zakresu materiału. Spotykamy się wyłącznie online.",
+                "en": "Lessons last 60 or 90 minutes — you choose what suits the material. All lessons are online."
               }
             },
             {
@@ -819,8 +830,8 @@ window.portfolioPageContent = {
               "id": "text-6",
               "label": "Cenę ustalamy indywidualnie. Zależy od:",
               "value": {
-                "pl": "Cenę ustalamy indywidualnie. Zależy od:",
-                "en": "Pricing is agreed individually and depends on:"
+                "pl": "Poziom podstawowy i bieżąca nauka od 60 zł, poziom rozszerzony od 80 zł. Dokładna cena zależy od:",
+                "en": "Basic level and school support from PLN 60, advanced level from PLN 80. The exact price depends on:"
               }
             },
             {
@@ -995,8 +1006,8 @@ window.portfolioPageContent = {
               "id": "text-2",
               "label": "To propozycje współpracy, nie sztywne pakiety godzin. Czas, częstotliw",
               "value": {
-                "pl": "To propozycje współpracy, nie sztywne pakiety godzin. Czas, częstotliwość i cenę ustalamy indywidualnie.",
-                "en": "These are suggested ways to work together, not fixed bundles of hours. Duration, frequency and pricing are agreed individually."
+                "pl": "To propozycje współpracy, nie sztywne pakiety godzin. Ceny od 60 zł (podstawa) i od 80 zł (rozszerzenie); długość zajęć (60 lub 90 minut) i częstotliwość ustalamy razem.",
+                "en": "These are suggested ways to work together, not fixed bundles. Prices from PLN 60 (basic) and PLN 80 (advanced); we agree on length (60 or 90 minutes) and frequency together."
               }
             }
           ],
@@ -1130,8 +1141,8 @@ window.portfolioPageContent = {
               "id": "text-5",
               "label": "Wycena indywidualna",
               "value": {
-                "pl": "Wycena indywidualna",
-                "en": "Individual quote"
+                "pl": "Od 60 zł · 60 lub 90 min",
+                "en": "From PLN 60 · 60 or 90 min"
               }
             },
             {
@@ -1201,8 +1212,8 @@ window.portfolioPageContent = {
               "id": "text-5",
               "label": "Wycena indywidualna",
               "value": {
-                "pl": "Wycena indywidualna",
-                "en": "Individual quote"
+                "pl": "Od 60 zł za zajęcia",
+                "en": "From PLN 60 per lesson"
               }
             },
             {
@@ -1272,8 +1283,8 @@ window.portfolioPageContent = {
               "id": "text-5",
               "label": "Wycena indywidualna",
               "value": {
-                "pl": "Wycena indywidualna",
-                "en": "Individual quote"
+                "pl": "Od 60 zł (podstawa) · od 80 zł (rozszerzenie)",
+                "en": "From PLN 60 (basic) · from PLN 80 (advanced)"
               }
             },
             {
@@ -1320,7 +1331,19 @@ window.portfolioPageContent = {
         }
       ]
     },
-    "reviews": []
+    "reviews": [
+      {
+        "id": "95f0e1f5-53b8-47b8-8df2-81b17274584b",
+        "author": "Klaudyna",
+        "text": "W końcu zaczęłam rozumieć matematykę! 🎉 Marcin tłumaczy spokojnie, krok po kroku, a gdy coś nie wchodzi — szuka innego sposobu. Zadania, których wcześniej się bałam, teraz robię sama 💪",
+        "context": "Matematyka — liceum",
+        "textEn": "I finally started to understand maths! 🎉 Marcin explains calmly, step by step, and when something doesn’t click, he finds another way. Problems I used to dread, I now solve on my own 💪",
+        "contextEn": "Maths — secondary school",
+        "rating": 4.5,
+        "visible": true,
+        "archived": false
+      }
+    ]
   },
   "projects": {
     "editor": {

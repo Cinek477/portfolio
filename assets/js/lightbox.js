@@ -105,12 +105,72 @@ window.portfolioPages['lightbox.js'] = () => {
       }
     }
   };
+  // Przycisk kadru leży na zdjęciu (prawy dolny róg). Kliknięcie w samo zdjęcie otwiera pełny ekran.
+  const cropButton = document.createElement('button');
+  cropButton.type = 'button';
+  cropButton.className = 'lightbox-crop-toggle';
+  cropButton.hidden = true;
+  cropButton.addEventListener('click', event => {
+    // Przycisk jest wewnątrz ramki zdjęcia — bez tego ramka przełączyłaby widok drugi raz.
+    event.stopPropagation();
+    toggleCrop();
+  }, { signal: pageScope.signal });
+  cropButton.addEventListener('keydown', event => event.stopPropagation(), { signal: pageScope.signal });
+  function toggleCrop() {
+    const frame = carousel.firstElementChild;
+    if (!frame || frame.getAttribute('role') !== 'button') return;
+    frame.classList.toggle('is-cropped');
+    updateCropLabel(frame);
+  }
   function updateCropLabel(frame) {
     const cropped = frame.classList.contains('is-cropped');
-    frame.setAttribute('aria-pressed', String(!cropped));
-    frame.setAttribute('aria-label', cropped ? translate('Pokaż całe zdjęcie', 'Show the whole photo') : translate('Pokaż kadr', 'Show the crop'));
-    frame.dataset.hint = cropped ? translate('Całe zdjęcie', 'Whole photo') : translate('Kadr', 'Crop');
+    const label = cropped ? translate('Pokaż całe zdjęcie', 'Show the whole photo') : translate('Pokaż kadr', 'Show the crop');
+    frame.setAttribute('aria-label', translate('Pokaż zdjęcie na pełnym ekranie', 'Show the photo full screen'));
+    cropButton.hidden = false;
+    cropButton.setAttribute('aria-pressed', String(!cropped));
+    cropButton.setAttribute('aria-label', label);
+    cropButton.textContent = cropped ? translate('⤢ Całe zdjęcie', '⤢ Whole photo') : translate('⤡ Kadr', '⤡ Crop');
   }
+  // Powiększenie: zdjęcie w całości na czarnym tle, w pełnej rozdzielczości, w obrębie okna strony
+  // (bez trybu pełnoekranowego przeglądarki). Zamyka je kliknięcie, przycisk × lub Escape.
+  const viewer = document.createElement('dialog');
+  viewer.className = 'lightbox-fullscreen';
+  const viewerImage = document.createElement('img');
+  viewerImage.decoding = 'async';
+  const viewerClose = document.createElement('button');
+  viewerClose.type = 'button';
+  viewerClose.className = 'lightbox-fullscreen-close';
+  viewerClose.textContent = '×';
+  viewer.append(viewerImage, viewerClose);
+  let viewerReturn = null;
+  function openViewer(frame) {
+    const source = frame.dataset.fullSrc;
+    if (!source) return;
+    // Okno powiększenia trafia do strony dopiero przy pierwszym użyciu i znika razem z podstroną.
+    if (!viewer.isConnected) {
+      document.body.append(viewer);
+      pageScope.cleanup?.(() => viewer.remove());
+    }
+    const preview = frame.querySelector('img');
+    // Najpierw wczytany już podgląd, a po pobraniu pełna rozdzielczość.
+    viewerImage.src = preview?.currentSrc || source;
+    viewerImage.alt = preview?.alt || '';
+    const full = new Image();
+    full.onload = () => { if (viewer.open && viewerReturn === frame) viewerImage.src = full.src; };
+    full.src = source;
+    viewerClose.setAttribute('aria-label', translate('Zamknij pełny ekran', 'Close full screen'));
+    viewerReturn = frame;
+    if (!viewer.open) viewer.showModal();
+    viewerClose.focus({ preventScroll: true });
+  }
+  function closeViewer() {
+    if (viewer.open) viewer.close();
+  }
+  viewer.addEventListener('close', () => {
+    viewerReturn?.focus({ preventScroll: true });
+  }, { signal: pageScope.signal });
+  viewer.addEventListener('click', closeViewer, { signal: pageScope.signal });
+  dialog.addEventListener('close', closeViewer, { signal: pageScope.signal });
   function renderReadyPhoto(photo, collection, select, options, prepared) {
     dialog.classList.remove('is-loading-first');
     const previous=dialog.querySelector('.lightbox-prev'), next=dialog.querySelector('.lightbox-next');
@@ -121,27 +181,33 @@ window.portfolioPages['lightbox.js'] = () => {
     let frame = carousel.firstElementChild;
     if (!frame) {
       frame = document.createElement('div'); frame.className = 'lightbox-image is-active'; carousel.append(frame);
-      // Zdjęcie otwiera się w kwadracie (kadr z panelu), kliknięcie pokazuje całość i z powrotem.
-      const toggle = () => { if (frame.getAttribute('role') !== 'button') return; frame.classList.toggle('is-cropped'); updateCropLabel(frame); };
-      frame.addEventListener('click', toggle, { signal: pageScope.signal });
+      // Zdjęcie otwiera się w kwadracie (kadr z panelu); kliknięcie pokazuje je na pełnym ekranie.
+      const open = () => { if (frame.getAttribute('role') === 'button') openViewer(frame); };
+      frame.addEventListener('click', open, { signal: pageScope.signal });
       frame.addEventListener('keydown', event => {
         if (event.key !== 'Enter' && event.key !== ' ') return;
-        event.preventDefault(); toggle();
+        event.preventDefault(); open();
       }, { signal: pageScope.signal });
     }
     if (prepared) {
       prepared.alt = local(photo.title); prepared.classList.add('is-ready'); prepared.draggable = false;
       if (frame.firstElementChild !== prepared) frame.replaceChildren(prepared);
+      if (cropButton.parentElement !== frame) frame.append(cropButton);
       // Nowe zdjęcie zaczyna od kadru; zmiana języka czy trybu tego samego zdjęcia zachowuje wybór.
       if (frame.dataset.photoId !== String(photo.id)) { frame.dataset.photoId = String(photo.id); frame.classList.add('is-cropped'); }
       frame.style.setProperty('--crop-position', `${photo.crop?.x ?? 50}% ${photo.crop?.y ?? 50}%`);
+      // Ramka dostaje szerokość z proporcji zdjęcia — inaczej rozciąga się na całą kolumnę
+      // (pełna szerokość pliku) i plakietka kadru wychodzi poza zdjęcie.
+      if (prepared.naturalWidth && prepared.naturalHeight) frame.style.setProperty('--photo-ratio', String(prepared.naturalWidth / prepared.naturalHeight));
+      frame.dataset.fullSrc = photo.src;
       frame.setAttribute('role', 'button'); frame.tabIndex = 0;
       updateCropLabel(frame);
     } else {
       const placeholder = document.createElement('div'); placeholder.className = 'photo-placeholder';
       placeholder.textContent = translate('Miejsce na zdjęcie', 'Photo placeholder'); frame.replaceChildren(placeholder);
       frame.classList.remove('is-cropped'); delete frame.dataset.photoId;
-      for (const name of ['role', 'tabindex', 'aria-pressed', 'aria-label', 'data-hint']) frame.removeAttribute(name);
+      for (const name of ['role', 'tabindex', 'aria-pressed', 'aria-label', 'data-full-src']) frame.removeAttribute(name);
+      cropButton.hidden = true;
     }
     information.replaceChildren();
     const badges = document.createElement('div');
@@ -167,10 +233,12 @@ window.portfolioPages['lightbox.js'] = () => {
     const heading = document.createElement('h2');
     heading.id = 'lightbox-title';
     const concert = photo.category === 'concerts';
-    if (!concert) heading.className = 'visually-hidden';
+    // Poza koncertami tytułem jest nazwa fotografii; bez niej nagłówek zostaje tylko dla czytników (miejsce).
+    const photoTitle = local(photo.title);
+    if (!concert && !photoTitle) heading.className = 'visually-hidden';
     heading.textContent = concert
-      ? local(photo.artist) || local(photo.title)
-      : local(photo.place) || local(photo.venue);
+      ? local(photo.artist) || photoTitle
+      : photoTitle || local(photo.place) || local(photo.venue);
     const grid = document.createElement('dl');
     grid.className = 'lightbox-info-grid';
     if (!concert) grid.classList.add('is-simple');
@@ -208,7 +276,8 @@ window.portfolioPages['lightbox.js'] = () => {
     description.append(icon('info'), sentence);
     if (concert) information.append(badges, heading, grid, description);
     else {
-      information.append(badges, heading, grid);
+      // Miejsce na górze, pod nim nazwa zdjęcia i reszta (CSS wyśrodkowuje tę część w pionie).
+      information.append(badges, grid, heading);
       if (photo.category === 'people' && /^[a-zA-Z0-9._]{1,30}$/.test(photo.instagram || '')) {
         const instagram = document.createElement('a');
         instagram.className = 'lightbox-instagram';

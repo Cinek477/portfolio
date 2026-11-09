@@ -8,7 +8,7 @@
 Publiczne menu oznacza bieżący odnośnik. Opis projektu zaznacza dział Projekty, a 404 nie zaznacza żadnej pozycji.
 Na telefonie logo/przycisk menu rozwija nawigację; Escape, kliknięcie poza menu lub wybór odnośnika ją zamyka.
 Przy przejściu do szerokiego układu menu jest resetowane.
-Stopka ma odnośniki społecznościowe, znak marki i informację o otwartości na projekty.
+Stopka ma odnośniki społecznościowe, znak marki i informację o prawach autorskich.
 Wygląd nieaktywnego odnośnika nie oznacza gotowej integracji z danym serwisem.
 
 ## 2. Nawigacja bez pełnego przeładowania

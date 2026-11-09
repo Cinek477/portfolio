@@ -85,6 +85,101 @@
     });
     loaded.add(source);
   }
+  // Wcześniejsze pobieranie: po najechaniu, fokusie lub dotknięciu linku strona pobiera się w tle,
+  // więc po kliknięciu przejście rusza od razu. Wpis żyje 30 s; oszczędzanie danych wyłącza mechanizm.
+  const prefetched = new Map();
+  const pageKey = (url) => { const key = new URL(url); key.hash = ''; return key.href; };
+  function fetchPage(url, signal) {
+    return fetch(url.href, { signal, headers: { Accept: 'text/html' } }).then(async (response) => ({
+      ok: response.ok && Boolean(response.headers.get('content-type')?.includes('text/html')),
+      url: response.url,
+      text: await response.text(),
+    }));
+  }
+  function prefetch(link) {
+    if (navigator.connection?.saveData) return;
+    const url = new URL(link.href);
+    if (!publicPage(url) || (url.pathname === current.pathname && url.search === current.search)) return;
+    const key = pageKey(url);
+    const cached = prefetched.get(key);
+    if (cached && Date.now() - cached.time < 30000) return;
+    const page = fetchPage(url, AbortSignal.timeout(10000));
+    prefetched.set(key, { time: Date.now(), page });
+    page.then(({ ok, text, url: finalUrl }) => {
+      if (!ok) return prefetched.delete(key);
+      // Style i skrypty nowej strony trafiają do pamięci przeglądarki, zanim będą potrzebne.
+      const next = new DOMParser().parseFromString(text, 'text/html');
+      const base = new URL(next.querySelector('base')?.getAttribute?.('href') || document.baseURI || finalUrl, finalUrl);
+      for (const asset of next.querySelectorAll('link[rel="stylesheet"][href], script[src]')) {
+        const href = new URL(asset.getAttribute('href') || asset.getAttribute('src'), base).href;
+        if (loaded.has(href) || document.querySelector(`link[rel="prefetch"][href="${CSS.escape(href)}"]`)) continue;
+        if ([...document.styleSheets].some((sheet) => sheet.href === href)) continue;
+        const hint = document.createElement('link');
+        hint.rel = 'prefetch';
+        hint.href = href;
+        document.head.append(hint);
+      }
+    }).catch(() => prefetched.delete(key));
+  }
+  let hoverTimer = 0;
+  document.addEventListener('mouseover', (event) => {
+    const link = event.target.closest?.('a[href]');
+    clearTimeout(hoverTimer);
+    // Krótka zwłoka: przejechanie kursorem przez menu nie pobiera wszystkich stron naraz.
+    if (link) hoverTimer = setTimeout(() => prefetch(link), 65);
+  }, { passive: true });
+  document.addEventListener('focusin', (event) => {
+    const link = event.target.closest?.('a[href]');
+    if (link) prefetch(link);
+  });
+  document.addEventListener('touchstart', (event) => {
+    const link = event.target.closest?.('a[href]');
+    if (link) prefetch(link);
+  }, { passive: true });
+
+  // Pasek ładowania u góry: pojawia się dopiero, gdy przejście trwa dłużej niż 150 ms.
+  // Przy dłuższym ładowaniu (ponad 600 ms) dochodzi nakładka z logo i paskiem — szybkie przejścia jej nie pokazują.
+  // Oba elementy tworzone są przy pierwszym przejściu; to dekoracja, więc ich brak nie blokuje nawigacji.
+  let progress = null;
+  let loader = null;
+  let progressTimer = 0;
+  let loaderTimer = 0;
+  function startProgress() {
+    if (!progress) {
+      try {
+        progress = document.createElement('div');
+        progress.className = 'route-progress';
+        progress.setAttribute('aria-hidden', 'true');
+        loader = document.createElement('div');
+        loader.className = 'route-loader';
+        loader.setAttribute('aria-hidden', 'true');
+        const logo = document.createElement('span');
+        logo.className = 'brand-wordmark';
+        const bar = document.createElement('span');
+        bar.className = 'route-loader-bar';
+        loader.append(logo, bar);
+        document.body.append(progress, loader);
+      } catch { progress = loader = null; return; }
+    }
+    clearTimeout(progressTimer);
+    clearTimeout(loaderTimer);
+    progress.classList.remove('is-done');
+    progressTimer = setTimeout(() => progress.classList.add('is-active'), 150);
+    loaderTimer = setTimeout(() => loader.classList.add('is-active'), 600);
+  }
+  // Nakładka znika, zanim przeglądarka zrobi zrzuty do animacji przejścia.
+  function hideLoader() {
+    clearTimeout(loaderTimer);
+    loader?.classList.remove('is-active');
+  }
+  function finishProgress() {
+    hideLoader();
+    clearTimeout(progressTimer);
+    if (!progress?.classList.contains('is-active')) return;
+    progress.classList.add('is-done');
+    progressTimer = setTimeout(() => progress.classList.remove('is-active', 'is-done'), 350);
+  }
+
   async function navigate(url, pop = false, scroll = 0) {
     stopRestore();
     if (updating) {
@@ -95,16 +190,19 @@
     const controller = new AbortController();
     request = controller;
     transition?.skipTransition();
+    startProgress();
     try {
-      const response = await fetch(url.href, {
-        signal: AbortSignal.any([controller.signal, AbortSignal.timeout(10000)]),
-        headers: { Accept: 'text/html' },
-      });
-      if (!response.ok || !response.headers.get('content-type')?.includes('text/html'))
-        throw new Error('Nie udało się pobrać strony.');
+      const key = pageKey(url);
+      const cached = prefetched.get(key);
+      prefetched.delete(key);
+      const page = cached && Date.now() - cached.time < 30000
+        ? await cached.page.catch(() => fetchPage(url, AbortSignal.any([controller.signal, AbortSignal.timeout(10000)])))
+        : await fetchPage(url, AbortSignal.any([controller.signal, AbortSignal.timeout(10000)]));
+      if (controller.signal.aborted) return;
+      if (!page.ok) throw new Error('Nie udało się pobrać strony.');
       const requestedHash = url.hash;
-      if (response.url) { url = new URL(response.url); url.hash = requestedHash; }
-      const next = new DOMParser().parseFromString(await response.text(), 'text/html');
+      if (page.url) { url = new URL(page.url); url.hash = requestedHash; }
+      const next = new DOMParser().parseFromString(page.text, 'text/html');
       const main = next.querySelector('main');
       if (!main || !next.querySelector('.navbar')) throw new Error('Brak zawartości strony.');
       const documentBase = new URL(next.querySelector('base')?.getAttribute?.('href') || document.baseURI || url.href, url.href);
@@ -176,6 +274,7 @@
         main.setAttribute('tabindex', '-1');
         main.focus({ preventScroll: true });
       };
+      hideLoader();
       if (document.startViewTransition && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
         root.dataset.pageTransition = 'true';
         transition = document.startViewTransition(update);
@@ -188,6 +287,7 @@
         request = null;
         transition = null;
         delete root.dataset.pageTransition;
+        finishProgress();
       }
       updating = false;
       if (pending) {
