@@ -1,4 +1,6 @@
-# Architektura i dane
+# 🏗️ Architektura i dane
+
+[← Dokumentacja](../README.md)
 
 ## Stos
 

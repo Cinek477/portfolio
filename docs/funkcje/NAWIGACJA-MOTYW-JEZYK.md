@@ -1,6 +1,6 @@
-# Nawigacja, motyw, język i zachowania wspólne
+# ⚙️ Nawigacja, motyw, język i zachowania wspólne
 
-[Spis funkcji](README.md) · [Design](../design/README.md)
+[← Dokumentacja](../README.md) · [Spis funkcji](README.md) · [Design](../design/README.md)
 
 ## 1. Wspólne menu i stopka
 

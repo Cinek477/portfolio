@@ -1,6 +1,6 @@
-# Kreator kontaktu
+# ⚙️ Kreator kontaktu
 
-[Spis funkcji](README.md) · [Podstrona Kontakt](../podstrony/KONTAKT.md) · [Skrzynka](SKRZYNKA.md)
+[← Dokumentacja](../README.md) · [Spis funkcji](README.md) · [Podstrona Kontakt](../podstrony/KONTAKT.md) · [Skrzynka](SKRZYNKA.md)
 
 ## 1. Wybór tematu
 

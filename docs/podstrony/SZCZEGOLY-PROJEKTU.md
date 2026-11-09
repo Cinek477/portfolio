@@ -1,6 +1,6 @@
-# Szczegóły pojedynczego projektu
+# 📄 Szczegóły pojedynczego projektu
 
-[Spis podstron](README.md) · [Edycja projektów](../funkcje/PROJEKTY.md)
+[← Dokumentacja](../README.md) · [Spis podstron](README.md) · [Edycja projektów](../funkcje/PROJEKTY.md)
 
 ## Adresowanie
 

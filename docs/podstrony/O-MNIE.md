@@ -1,6 +1,6 @@
-# O mnie
+# 📄 O mnie
 
-[Spis podstron](README.md) · [Pełna edycja](../funkcje/ADMIN-FULL-EDIT.md)
+[← Dokumentacja](../README.md) · [Spis podstron](README.md) · [Pełna edycja](../funkcje/ADMIN-FULL-EDIT.md)
 
 ## Adres i cel
 

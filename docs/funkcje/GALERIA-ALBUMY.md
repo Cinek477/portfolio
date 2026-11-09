@@ -1,6 +1,6 @@
-# Galeria, fotografie i albumy
+# ⚙️ Galeria, fotografie i albumy
 
-[Spis funkcji](README.md) · [Po godzinach](../podstrony/PO-GODZINACH.md) · [Album z linku](../podstrony/ALBUM.md)
+[← Dokumentacja](../README.md) · [Spis funkcji](README.md) · [Po godzinach](../podstrony/PO-GODZINACH.md) · [Album z linku](../podstrony/ALBUM.md)
 
 ## 1. Dwie strony tej samej funkcji
 

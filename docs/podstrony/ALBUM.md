@@ -1,6 +1,6 @@
-# Album otwierany z linku
+# 📄 Album otwierany z linku
 
-[Spis podstron](README.md) · [Obsługa galerii i albumów](../funkcje/GALERIA-ALBUMY.md)
+[← Dokumentacja](../README.md) · [Spis podstron](README.md) · [Obsługa galerii i albumów](../funkcje/GALERIA-ALBUMY.md)
 
 ## Adres i model danych
 

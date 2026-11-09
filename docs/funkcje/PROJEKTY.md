@@ -1,6 +1,6 @@
-# Zarządzanie projektami i osiągnięciami
+# ⚙️ Zarządzanie projektami i osiągnięciami
 
-[Spis funkcji](README.md) · [Lista projektów](../podstrony/PROJEKTY.md) · [Szczegóły realizacji](../podstrony/SZCZEGOLY-PROJEKTU.md)
+[← Dokumentacja](../README.md) · [Spis funkcji](README.md) · [Lista projektów](../podstrony/PROJEKTY.md) · [Szczegóły realizacji](../podstrony/SZCZEGOLY-PROJEKTU.md)
 
 ## 1. Lista i wybór rodzaju
 

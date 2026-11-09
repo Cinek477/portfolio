@@ -1,6 +1,6 @@
-# Kontrola treści i publikacja
+# ⚙️ Kontrola treści i publikacja
 
-[Spis funkcji](README.md) · [Pełna edycja](ADMIN-FULL-EDIT.md) · [GitHub Pages](../GITHUB-PAGES.md)
+[← Dokumentacja](../README.md) · [Spis funkcji](README.md) · [Pełna edycja](ADMIN-FULL-EDIT.md) · [GitHub Pages](../GITHUB-PAGES.md)
 
 ## 1. Trzy poziomy zapisu
 

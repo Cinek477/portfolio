@@ -1,6 +1,6 @@
-# Kontakt
+# 📄 Kontakt
 
-[Spis podstron](README.md) · [Kreator krok po kroku](../funkcje/KONTAKT-KREATOR.md) · [Skrzynka](../funkcje/SKRZYNKA.md)
+[← Dokumentacja](../README.md) · [Spis podstron](README.md) · [Kreator krok po kroku](../funkcje/KONTAKT-KREATOR.md) · [Skrzynka](../funkcje/SKRZYNKA.md)
 
 ## Adres i przeznaczenie
 

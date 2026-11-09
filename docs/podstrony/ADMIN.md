@@ -1,6 +1,6 @@
-# Panel administratora
+# 📄 Panel administratora
 
-[Spis podstron](README.md) · [Pełna edycja treści](../funkcje/ADMIN-FULL-EDIT.md)
+[← Dokumentacja](../README.md) · [Spis podstron](README.md) · [Pełna edycja treści](../funkcje/ADMIN-FULL-EDIT.md)
 
 ## Adres i dostęp
 

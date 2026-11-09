@@ -1,43 +1,55 @@
-# GitHub Pages
+# 🌐 GitHub Pages
 
-Kod pozostaje na gałęzi `main`. Workflow `.github/workflows/github-pages.yml` buduje osobny artefakt zawierający wyłącznie publiczną stronę. Nie potrzeba gałęzi `gh-pages` i nie należy publikować całego katalogu repozytorium.
+[← Dokumentacja](README.md) · [Publikacja i kontrola](funkcje/PUBLIKACJA-KONTROLA.md)
 
-## Pierwsze uruchomienie
+> Kod zostaje na `main`. Workflow `.github/workflows/github-pages.yml` buduje osobny artefakt tylko z publiczną stroną — bez gałęzi `gh-pages` i bez publikowania całego repozytorium.
+
+**Adres strony:** https://cinek477.github.io/portfolio/
+
+## 🚀 Pierwsze uruchomienie
 
 1. W repozytorium otwórz **Settings → Pages**.
-2. Pole **Custom domain** pozostaw puste, chyba że masz własną, poprawnie skonfigurowaną domenę. Samo `portfolio` nie jest domeną.
+2. **Custom domain** zostaw puste, chyba że masz własną, skonfigurowaną domenę (samo `portfolio` nie jest domeną).
 3. W **Build and deployment → Source** wybierz **GitHub Actions**.
-4. W **Actions → Publish portfolio to GitHub Pages** uruchom **Run workflow**, jeśli nie rozpoczął się automatycznie po wysłaniu kodu.
-5. Po udanej publikacji użyj adresu wskazanego w zakończonym zadaniu `deploy`.
+4. W **Actions → Publish portfolio to GitHub Pages** kliknij **Run workflow**, jeśli nie ruszył sam po pushu.
+5. Po publikacji użyj adresu z zakończonego zadania `deploy`.
 
-Dla repozytorium `Cinek477/portfolio` domyślny adres to `https://cinek477.github.io/portfolio/`. Repozytorium prywatne wymaga planu GitHub umożliwiającego Pages z prywatnych repozytoriów.
+> [!NOTE]
+> Repozytorium prywatne wymaga planu GitHub z Pages dla prywatnych repozytoriów.
 
-## Kolejne aktualizacje
+## 🔁 Kolejne aktualizacje
 
-Edytuj kod i treści lokalnie, a następnie świadomie wyślij zmiany oraz publiczne eksporty do `main`. Workflow wykonuje kontrolę projektu, testy i eksport. Nowy eksport zastępuje poprzednią wersję strony. Sam zapis w panelu lokalnym nie publikuje zmian.
+Edytuj kod i treści lokalnie, a potem świadomie wypchnij zmiany i publiczne eksporty na `main`. Workflow robi kontrolę projektu, testy i eksport; nowa wersja zastępuje poprzednią.
 
-## Co działa
+> [!IMPORTANT]
+> Sam zapis w panelu lokalnym niczego nie publikuje — potrzebny jest commit i push.
 
-- Publiczne podstrony, języki, motywy i animacje.
-- Zapisane projekty, fotografie, albumy, opinie, pakiety i FAQ.
-- Kreator kontaktu przygotowujący szkic przez `mailto:`. Użytkownik wysyła wiadomość ze swojego programu pocztowego; strona nie deklaruje dostarczenia jej do skrzynki panelu. Konieczny jest skonfigurowany klient poczty; adres e-mail pozostaje widoczny jako alternatywa.
-- Tradycyjne adresy HTML oraz katalogowe aliasy, np. `o-mnie/` i `projekty/swoja-droga/`.
+## ✅ Co działa / ❌ czego nie ma
 
-## Ograniczenia
+| ✅ Działa | ❌ Ograniczenia |
+| --- | --- |
+| Podstrony, języki, motywy i animacje | Brak panelu zapisu, prywatnej skrzynki i bazy — pod adresem panelu jest informacja o edycji lokalnej |
+| Projekty, fotografie, albumy, opinie, pakiety i FAQ | Treści to migawka ostatniego eksportu, nie połączenie z bazą |
+| Kreator kontaktu otwiera szkic przez `mailto:` (adres e-mail widoczny jako alternatywa) | Wiadomość wysyła użytkownik ze swojej poczty; strona nie deklaruje dostarczenia |
+| Dawne adresy HTML i aliasy katalogowe, np. `o-mnie/`, `projekty/swoja-droga/` | Spotify bez danych na żywo — zostaje link do profilu i nieruchoma dekoracja |
 
-- Brak panelu zapisu, prywatnej skrzynki i bazy na Pages. Pod adresem panelu wyświetlana jest informacja o edycji lokalnej.
-- Brak Spotify na żywo; pozostaje link do profilu i nieruchoma dekoracja.
-- Publiczne treści są migawką ostatniego eksportu, nie połączeniem z lokalną bazą.
-- Lokalna strona zachowuje swoje działanie; adaptacje dotyczą wyłącznie wygenerowanych plików Pages.
+Lokalna strona działa bez zmian — adaptacje dotyczą wyłącznie wygenerowanych plików Pages.
 
-## Eksport na komputerze
+## 💻 Eksport na komputerze
 
 ```sh
 npm run pages:prepare
 ```
 
-Wynik: `dist/github-pages/`, ignorowany przez Git. Domyślny prefiks to `/portfolio/`; workflow otrzymuje właściwy prefiks z ustawień Pages. Dla domeny głównej ustaw `PAGES_BASE_PATH=/` w środowisku przed uruchomieniem eksportu.
+| | |
+| --- | --- |
+| **Wynik** | `dist/github-pages/` (ignorowany przez Git) |
+| **Prefiks** | Domyślnie `/portfolio/`; workflow bierze właściwy z ustawień Pages. Dla domeny głównej ustaw `PAGES_BASE_PATH=/` |
+| **Kopiowane** | Tylko źródła publicznych stron i `assets/` |
+| **Pomijane** | `data/`, `backups/`, `.env`, historia Git, kod serwera |
+| **API** | Zapisy zastąpione odczytem plików JSON w `static-api/` — to nie są działające endpointy |
+| **Filtrowanie** | Ukryte i zarchiwizowane zdjęcia, projekty i opinie nie trafiają do list |
+| **Testy** | `tests/github-pages.test.cjs` |
 
-Eksporter kopiuje tylko źródła publicznych stron i `assets/`. Nie kopiuje `data/`, `backups/`, `.env`, historii Git ani kodu serwera. Zapisy API w publicznych modułach są zastępowane odczytem jawnych plików JSON w `static-api/`; nie są to działające endpointy serwera. Niewidoczne i zarchiwizowane zdjęcia, projekty i opinie są odfiltrowane z eksportowanych list. Pliki zdjęć obecne w `assets/` pozostają publiczne, nawet jeśli wpis usunięto z listy.
-
-Nie przechowuj prywatnych plików w `assets/`. Nie edytuj ręcznie wygenerowanego folderu. Kontrole eksportu znajdują się w `tests/github-pages.test.cjs`.
+> [!WARNING]
+> Pliki zdjęć w `assets/` pozostają publiczne, nawet gdy wpis usunięto z listy. Nie trzymaj tam prywatnych plików i nie edytuj ręcznie wygenerowanego folderu.

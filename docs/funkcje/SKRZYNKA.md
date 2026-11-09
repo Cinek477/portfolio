@@ -1,6 +1,6 @@
-# Prywatna skrzynka i obsługa spraw
+# ⚙️ Prywatna skrzynka i obsługa spraw
 
-[Spis funkcji](README.md) · [Kreator kontaktu](KONTAKT-KREATOR.md) · [Konfiguracja poczty](../CONTACT-MESSAGES.md)
+[← Dokumentacja](../README.md) · [Spis funkcji](README.md) · [Kreator kontaktu](KONTAKT-KREATOR.md) · [Konfiguracja poczty](../CONTACT-MESSAGES.md)
 
 ## 1. Zakres i dostęp
 

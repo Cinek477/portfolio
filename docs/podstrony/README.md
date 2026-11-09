@@ -1,4 +1,6 @@
-# Podstrony
+# 📄 Podstrony
+
+[← Dokumentacja](../README.md)
 
 Dokumentacja jest rozpisana na osobne rozdziały, nie tylko na listę adresów.
 Każdy rozdział opisuje zawartość, interakcje, zakres edycji, ograniczenia i weryfikację.

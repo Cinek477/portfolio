@@ -1,26 +1,63 @@
+<div align="center">
+
+<img src="assets/images/brand/cinek-wordmark.png" alt="Cinek" height="64">
+
 # Marcin Podyma — portfolio
 
-Portfolio z projektami, fotografią, korepetycjami i kreatorem kontaktowym. Panel zarządza treścią PL/EN, zdjęciami, opiniami i wiadomościami.
+Projekty, fotografia, korepetycje i kreator kontaktu w jednym miejscu.<br>
+Własny panel do zarządzania treścią PL/EN, zdjęciami, opiniami i wiadomościami.
 
-## Uruchomienie lokalne
+[**Zobacz stronę →**](https://cinek477.github.io/portfolio/)
 
-Wymagany Node.js 24+. Lokalny serwer używa wbudowanego SQLite i nie wymaga instalowania pakietów npm.
+![Node.js 24+](https://img.shields.io/badge/Node.js-24%2B-339933?logo=node.js&logoColor=white)
+![SQLite](https://img.shields.io/badge/SQLite-wbudowany-003B57?logo=sqlite&logoColor=white)
+![Bez zależności npm](https://img.shields.io/badge/zale%C5%BCno%C5%9Bci_npm-0-1769e8)
+![GitHub Pages](https://img.shields.io/badge/hosting-GitHub_Pages-222?logo=github)
+
+</div>
+
+<table>
+  <tr>
+    <td><img src="docs/images/home-light.jpg" alt="Strona główna w jasnym motywie"></td>
+    <td><img src="docs/images/home-dark.jpg" alt="Strona główna w ciemnym motywie"></td>
+  </tr>
+  <tr>
+    <td align="center"><sub>Jasny motyw</sub></td>
+    <td align="center"><sub>Ciemny motyw</sub></td>
+  </tr>
+</table>
+
+## ✨ Funkcje
+
+| | |
+| --- | --- |
+| 🧩 **Edycja treści** | Sekcje podstron, szkice, porównanie z opublikowaną wersją i kontrola przed publikacją. |
+| 💻 **Projekty** | Projekty i osiągnięcia z osobnymi opisami realizacji. |
+| 📸 **Galeria** | Filtry, albumy, okładki, kadr miniatur i udostępnianie. Podgląd w kwadracie, po kliknięciu całe zdjęcie z poświatą w jego kolorze. |
+| 🎓 **Korepetycje** | Oferta, promocje, opinie z oceną i FAQ. |
+| ✉️ **Kontakt** | Kreator dopasowany do tematu. Prywatna skrzynka ze statusami, notatkami, spamem i koszem. |
+| 💾 **Kopie** | Ręczne i automatyczne przed większymi zmianami (pięć najnowszych automatycznych). |
+| 🎧 **Spotify** | Opcjonalnie: bieżący utwór i najczęściej słuchane, bez odtwarzania muzyki. |
+
+## 🚀 Uruchomienie lokalne
+
+Wymagany **Node.js 24+**. Serwer używa wbudowanego SQLite, więc nie trzeba instalować pakietów npm.
 
 ```sh
 npm start
 ```
 
-Windows z lokalnym Node w `.local/`:
+Na Windows z lokalnym Node w `.local/`:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\start-gallery.ps1
 ```
 
 Strona: http://127.0.0.1:3000/ · Panel: http://127.0.0.1:3000/admin
+Serwer nasłuchuje wyłącznie lokalnie. Zatrzymanie: <kbd>Ctrl</kbd>+<kbd>C</kbd>.
 
-Zatrzymanie serwera uruchomionego w oknie: Ctrl+C. Serwer nasłuchuje wyłącznie lokalnie.
-
-## Adresy lokalne
+<details>
+<summary><b>Adresy podstron</b></summary>
 
 | Widok | Adres |
 | --- | --- |
@@ -34,20 +71,54 @@ Zatrzymanie serwera uruchomionego w oknie: Ctrl+C. Serwer nasłuchuje wyłączni
 | AI KrakHack | `/projekty/krakhack` |
 | Album | `/album/IDENTYFIKATOR_ZDJECIA` |
 
-Dawne adresy HTML przekierowują na nowe. Pliki źródłowe zachowują nazwy. Na innym hostingu obsługę nowych adresów trzeba skonfigurować osobno.
+Dawne adresy `.html` przekierowują na nowe; pliki źródłowe zachowują nazwy. Na innym hostingu obsługę nowych adresów trzeba skonfigurować osobno.
 
-## Funkcje
+</details>
 
-- Edycja sekcji podstron, szkice i porównanie z opublikowaną treścią.
-- Projekty i osiągnięcia z osobnymi opisami realizacji.
-- Galeria z filtrami, albumami, okładkami, kadrem miniatur i udostępnianiem. Podgląd pokazuje kwadratowy kadr, a po kliknięciu całe zdjęcie z poświatą w jego kolorze; na telefonie zdjęcia zmienia się przyciskami.
-- Oferta korepetycji, promocje, opinie z oceną i FAQ.
-- Kreator kontaktu dopasowany do tematu. Prywatna skrzynka ze statusami spraw, notatkami, spamem i koszem.
-- Kopie ręczne oraz automatyczne przed wybranymi większymi zmianami; pięć najnowszych kopii automatycznych.
-- Kontrola treści przed publikacją.
-- Opcjonalne Spotify: bieżący utwór i najczęściej słuchane utwory, bez odtwarzania muzyki.
+## ♿ Dostępność
 
-## Struktura
+- Link „Przejdź do treści” na każdej podstronie (pierwsze naciśnięcie <kbd>Tab</kbd>).
+- Widoczny fokus klawiatury w nawigacji, przyciskach i polach formularza.
+- Kontrast tekstu zgodny z WCAG AA w obu motywach.
+- Atrybut `lang` przełączany razem z językiem PL/EN, opisy `alt` przy zdjęciach.
+- Animacje ograniczone przy `prefers-reduced-motion`.
+
+## 🔐 Panel i dane
+
+Panel wymaga logowania; przy pierwszym uruchomieniu bez konta można je utworzyć. Zapis wymaga sesji administratora i sprawdzenia pochodzenia żądania.
+
+- Lokalna baza: `data/gallery.sqlite`.
+- **Prywatne** (ignorowane przez Git): dane, hasła, tokeny Spotify, `.env`, kopie bezpieczeństwa.
+- **Publiczne**: eksporty `gallery-data.js`, `projects-data.js`, `home-data.js`, `pages-data.js` i zdjęcia.
+
+Więcej: [dane, galeria i kopie](docs/LOCAL-GALLERY.md) · [wiadomości i poczta](docs/CONTACT-MESSAGES.md)
+
+## ✅ Sprawdzanie
+
+```sh
+npm run check
+npm test
+```
+
+Kontrole sprawdzają składnię, zasoby i backend na odizolowanych danych. Nie zastępują sprawdzenia wyglądu na prawdziwym telefonie.
+
+| npm | bez npm |
+| --- | --- |
+| `npm start` | `node server.cjs` |
+| `npm run check` | `node scripts/check-project.cjs` |
+| `npm test` | `node --test --test-concurrency=1 tests/*.test.cjs` |
+| `npm run pages:prepare` | `node scripts/prepare-pages.cjs` |
+
+## 🌐 GitHub Pages
+
+Wersja statyczna jest budowana przez GitHub Actions z gałęzi `main` (Settings → Pages → Source: **GitHub Actions**). Panel i backend zostają lokalnie, a kreator kontaktu otwiera szkic w programie pocztowym.
+
+[Instrukcja GitHub Pages](docs/GITHUB-PAGES.md)
+
+## 📁 Struktura
+
+<details>
+<summary><b>Foldery projektu</b></summary>
 
 | Folder | Przeznaczenie |
 | --- | --- |
@@ -56,55 +127,12 @@ Dawne adresy HTML przekierowują na nowe. Pliki źródłowe zachowują nazwy. Na
 | `assets/` | Style, skrypty, zdjęcia i publiczne eksporty |
 | `components/`, `shared/` | Wspólne elementy, walidacja i treści domyślne |
 | `scripts/`, `tests/` | Uruchamianie i kontrole |
-| `docs/` | Instrukcje |
+| `docs/` | Dokumentacja i zrzuty do README |
 | `data/`, `backups/` | Prywatne dane i kopie bezpieczeństwa |
-| `outputs/checklista-portfolio/` | Gotowa checklista XLSX |
-| `outputs/previews/` | Zrzuty wcześniejszych podglądów |
+| `outputs/` | Checklista XLSX i dawne podglądy |
 | `work/checklist/` | Źródła generatora checklisty |
 | `.local/` | Lokalny Node, logi i narzędzia robocze |
-| `docs/POMYSLY.md` | Pomysły na rozwój |
 
-Szczegóły: [mapa folderów](docs/FOLDERY.md) · [zasady wyglądu](docs/DESIGN.md).
+</details>
 
-## Dostępność
-
-- Link „Przejdź do treści” na każdej podstronie (pierwsze naciśnięcie Tab).
-- Widoczny fokus klawiatury w nawigacji, przyciskach i polach formularza.
-- Kontrast tekstu zgodny z WCAG AA w obu motywach.
-- Atrybut `lang` przełączany razem z językiem PL/EN, opisy `alt` przy zdjęciach.
-- Animacje ograniczone przy `prefers-reduced-motion`.
-
-## Panel i dane
-
-Panel wymaga logowania. Pierwsze uruchomienie bez konta pozwala je utworzyć. Operacje zapisu wymagają sesji administratora i sprawdzenia pochodzenia żądania.
-
-Lokalna baza: `data/gallery.sqlite`. Dane, hasła, tokeny Spotify, `.env` i kopie bezpieczeństwa są prywatne i ignorowane przez Git. Publiczne eksporty `gallery-data.js`, `projects-data.js`, `home-data.js`, `pages-data.js` oraz zdjęcia są przeznaczone do publikacji.
-
-- [Dane, galeria i kopie](docs/LOCAL-GALLERY.md)
-- [Wiadomości i konfiguracja poczty](docs/CONTACT-MESSAGES.md)
-
-## Sprawdzanie
-
-```sh
-npm run check
-npm test
-```
-
-Kontrole sprawdzają składnię, zasoby i działanie backendu na odizolowanych danych. Nie zastępują sprawdzenia wyglądu na rzeczywistym telefonie.
-
-| Polecenie npm | Odpowiednik bez npm |
-| --- | --- |
-| `npm start` | `node server.cjs` |
-| `npm run check` | `node scripts/check-project.cjs` |
-| `npm test` | `node --test --test-concurrency=1 tests/*.test.cjs` |
-| `npm run pages:prepare` | `node scripts/prepare-pages.cjs` |
-
-## Dokumentacja
-
-[Spis dokumentacji](docs/README.md): opisy podstron, designu, funkcji, architektury i wydajności.
-
-## GitHub Pages
-
-Publiczna wersja statyczna jest przygotowywana przez GitHub Actions z gałęzi main. W ustawieniach Pages wybierz Source: GitHub Actions. Panel i backend pozostają lokalnie; kreator kontaktu otwiera szkic w programie pocztowym.
-
-[Instrukcja uruchomienia GitHub Pages](docs/GITHUB-PAGES.md).
+📚 [Spis dokumentacji](docs/README.md) · [mapa folderów](docs/FOLDERY.md) · [zasady wyglądu](docs/DESIGN.md) · [pomysły](docs/POMYSLY.md)

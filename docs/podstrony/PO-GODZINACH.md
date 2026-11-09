@@ -1,6 +1,6 @@
-# Po godzinach
+# 📄 Po godzinach
 
-[Spis podstron](README.md) · [Galeria i albumy](../funkcje/GALERIA-ALBUMY.md) · [Spotify](../funkcje/SPOTIFY.md)
+[← Dokumentacja](../README.md) · [Spis podstron](README.md) · [Galeria i albumy](../funkcje/GALERIA-ALBUMY.md) · [Spotify](../funkcje/SPOTIFY.md)
 
 ## Adres i zawartość
 

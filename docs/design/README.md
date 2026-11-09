@@ -1,4 +1,6 @@
-# Design
+# 🎨 Design
+
+[← Dokumentacja](../README.md)
 
 Nadrzędne zasady znajdują się w [DESIGN.md](../DESIGN.md). Porządki kodu nie są redesignem.
 

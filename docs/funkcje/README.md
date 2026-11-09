@@ -1,4 +1,6 @@
-# Dodatkowe funkcje
+# ⚙️ Dodatkowe funkcje
+
+[← Dokumentacja](../README.md)
 
 To spis pełnych instrukcji działania, nie tylko skrót funkcji. Każdy rozdział obejmuje
 obsługę, warianty, zapis, błędy, ograniczenia oraz powiązane pliki.

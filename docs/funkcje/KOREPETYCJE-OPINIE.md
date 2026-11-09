@@ -1,6 +1,6 @@
-# Pakiety korepetycji, rabaty, FAQ i opinie
+# ⚙️ Pakiety korepetycji, rabaty, FAQ i opinie
 
-[Spis funkcji](README.md) · [Podstrona Korepetycje](../podstrony/KOREPETYCJE.md)
+[← Dokumentacja](../README.md) · [Spis funkcji](README.md) · [Podstrona Korepetycje](../podstrony/KOREPETYCJE.md)
 
 ## 1. Treści i stałe identyfikatory ofert
 

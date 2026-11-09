@@ -1,4 +1,6 @@
-# Porządki — 6 listopada 2026
+# 🏗️ Porządki — 6 listopada 2026
+
+[← Dokumentacja](../README.md)
 
 ## Usunięte i uproszczone
 

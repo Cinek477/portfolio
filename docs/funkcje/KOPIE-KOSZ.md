@@ -1,6 +1,6 @@
-# Kosze, archiwum i kopie bezpieczeństwa
+# ⚙️ Kosze, archiwum i kopie bezpieczeństwa
 
-[Spis funkcji](README.md) · [Skrzynka](SKRZYNKA.md) · [Edycja podstron](ADMIN-FULL-EDIT.md)
+[← Dokumentacja](../README.md) · [Spis funkcji](README.md) · [Skrzynka](SKRZYNKA.md) · [Edycja podstron](ADMIN-FULL-EDIT.md)
 
 ## 1. Cztery różne mechanizmy odzyskiwania
 

@@ -1,6 +1,6 @@
-# Projekty i osiągnięcia
+# 📄 Projekty i osiągnięcia
 
-[Spis podstron](README.md) · [Zarządzanie realizacjami](../funkcje/PROJEKTY.md)
+[← Dokumentacja](../README.md) · [Spis podstron](README.md) · [Zarządzanie realizacjami](../funkcje/PROJEKTY.md)
 
 ## Adres i zawartość
 

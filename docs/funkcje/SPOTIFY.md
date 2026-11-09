@@ -1,6 +1,6 @@
-# Integracja Spotify
+# ⚙️ Integracja Spotify
 
-[Spis funkcji](README.md) · [Po godzinach](../podstrony/PO-GODZINACH.md)
+[← Dokumentacja](../README.md) · [Spis funkcji](README.md) · [Po godzinach](../podstrony/PO-GODZINACH.md)
 
 ## 1. Zakres
 

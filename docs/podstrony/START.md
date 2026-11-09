@@ -1,6 +1,6 @@
-# Start
+# 📄 Start
 
-[Spis podstron](README.md) · [Pełna edycja w panelu](../funkcje/ADMIN-FULL-EDIT.md)
+[← Dokumentacja](../README.md) · [Spis podstron](README.md) · [Pełna edycja w panelu](../funkcje/ADMIN-FULL-EDIT.md)
 
 ## Adres i przeznaczenie
 

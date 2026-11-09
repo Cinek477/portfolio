@@ -1,12 +1,19 @@
-# Wygląd portfolio
+# 🎨 Wygląd portfolio
 
-Dokument opisuje obecny kierunek wizualny i zasady kolejnych zmian. Źródłem konkretnych wartości są arkusze w `assets/css/`.
+[← Dokumentacja](README.md) · [Design w praktyce](design/README.md)
 
-## Charakter
+> Kierunek wizualny i zasady kolejnych zmian. Źródłem konkretnych wartości są arkusze w `assets/css/`.
 
-Niebieskie portfolio łączące programowanie, fotografię i matematykę. Jasny motyw opiera się na chłodnej, prawie białej bazie z błękitno-lawendową poświatą, białych kartach i gradiencie na nazwisku; ciemny na granacie z cyjanową poświatą. Szklane panele, zaokrąglenia i subtelne animacje mają wspierać treść, a nie konkurować z nią.
+## ✨ Charakter
 
-## Kolory
+Niebieskie portfolio łączące programowanie, fotografię i matematykę.
+
+- **Jasny motyw** — chłodna, prawie biała baza z błękitno-lawendową poświatą, białe karty i gradient na nazwisku.
+- **Ciemny motyw** — granat z cyjanową poświatą.
+
+Szklane panele, zaokrąglenia i subtelne animacje mają wspierać treść, a nie z nią konkurować.
+
+## 🎨 Kolory
 
 Podstawowe zmienne z `assets/css/portfolio.css`:
 
@@ -20,51 +27,70 @@ Podstawowe zmienne z `assets/css/portfolio.css`:
 | `--accent` | `#1d5fe0` | `#7bb5ff` |
 | `--card` | `#f5faff` | `#102039` |
 
-Wartości jasnego motywu nadpisuje blok „Jasny motyw” w `portfolio.css`. W ciemnym motywie karty z ilustracjami mają ten sam układ co w jasnym, ale kolor projektu jest przyciemniony: ten sam odcień, nasycenie ×0,9, jasność ×0,3 (`hsl(from …)` w CSS). Ilustracje mają ciemne warianty `*-dark.svg` z tym samym tłem — po zmianie ilustracji uruchom `node scripts/make-dark-illustrations.cjs`. Dekoracje tła (miękkie plamy, pierścień, kropki w kolorach pochodnych od tła) dodaje `node scripts/decorate-illustrations.cjs` — skrypt podmienia poprzednią grupę dekoracji, więc można go uruchamiać wielokrotnie; potem wygeneruj ciemne warianty. W ciemnym motywie plamy są ciemnym pastelem jaśniejszym od tła, a kropki i pierścień stonowanym jasnym pastelem. Przełączanie wariantu przy zmianie motywu obsługuje `window.portfolioThemedImage` w `theme.js`.
+> [!TIP]
+> Używaj zmiennych zamiast wpisywać osobne kolory dla kolejnych sekcji. Niebieskie akcenty zostają niebieskie również w jasnym motywie.
 
-Używaj zmiennych zamiast wpisywać osobne kolory dla kolejnych sekcji. Niebieskie akcenty pozostają niebieskie również w jasnym motywie. Ilustracje projektów mają własne pastelowe tła i ciemne podpisy.
+- Wartości jasnego motywu nadpisuje blok „Jasny motyw” w `portfolio.css`.
+- W ciemnym motywie karty z ilustracjami mają ten sam układ, ale kolor projektu jest przyciemniony: ten sam odcień, nasycenie ×0,9, jasność ×0,3 (`hsl(from …)`).
+- Ilustracje projektów mają własne pastelowe tła i ciemne podpisy.
 
-## Typografia
+### Ilustracje
 
-- Nagłówki: Bricolage Grotesque, przez `--font-display`.
-- Tekst: Plus Jakarta Sans, przez `--font-body`.
-- Fonty są dostarczane lokalnie w WOFF2, z obsługą polskich znaków i `font-display: swap`.
-- Długie tytuły muszą zawijać się naturalnie. Nie rozbijaj nazw w środku słowa, jeżeli można zmniejszyć tekst lub zmienić układ.
+| Krok | Polecenie |
+| --- | --- |
+| Dekoracje tła (plamy, pierścień, kropki) — można uruchamiać wielokrotnie | `node scripts/decorate-illustrations.cjs` |
+| Ciemne warianty `*-dark.svg` — po każdej zmianie ilustracji | `node scripts/make-dark-illustrations.cjs` |
+
+W ciemnym motywie plamy są ciemnym pastelem jaśniejszym od tła, a kropki i pierścień stonowanym jasnym pastelem. Przełączanie wariantu przy zmianie motywu obsługuje `window.portfolioThemedImage` w `theme.js`.
+
+## 🔤 Typografia
+
+| Rola | Font | Zmienna |
+| --- | --- | --- |
+| Nagłówki | Bricolage Grotesque | `--font-display` |
+| Tekst | Plus Jakarta Sans | `--font-body` |
+
+- Fonty są lokalne (WOFF2), z polskimi znakami i `font-display: swap`.
+- Długie tytuły zawijają się naturalnie — nie rozbijaj nazw w środku słowa, jeśli można zmniejszyć tekst lub zmienić układ.
 - Układ musi pomieścić zarówno polskie, jak i angielskie teksty.
 
-## Panele, karty i przyciski
+## 🧱 Panele, karty i przyciski
 
-- Podstawowe promienie: karta 22 px, panel 24 px. Kapsułki mają pełne zaokrąglenie.
-- Wspólne kontrolki znajdują się w `assets/css/controls.css`; rozmiary i układ należą do stylów podstron.
-- Stan aktywny, hover i fokus powinny być rozpoznawalne w obu motywach. Obsługa nie może zależeć wyłącznie od najechania myszą.
-- Kafelki projektów muszą zostawiać miejsce na rok, symbol, ilustrację i podpis. W sąsiednich kartach wyrównuj obszary ilustracji i nagłówków; sprawdzaj tytuły jedno- i dwuwierszowe.
-- Nie dodawaj kolejnych końcowych nadpisań CSS dla każdej drobnej korekty. Przy większej zmianie połącz reguły komponentu i usuń nieaktualne wyjątki.
+- Promienie: karta **22 px**, panel **24 px**, kapsułki w pełni zaokrąglone.
+- Wspólne kontrolki są w `assets/css/controls.css`; rozmiary i układ należą do stylów podstron.
+- Stany aktywny, hover i fokus muszą być rozpoznawalne w obu motywach. Obsługa nie może zależeć wyłącznie od myszy.
+- Kafelki projektów zostawiają miejsce na rok, symbol, ilustrację i podpis. W sąsiednich kartach wyrównuj ilustracje i nagłówki; sprawdzaj tytuły jedno- i dwuwierszowe.
 
-## Fotografia
+> [!WARNING]
+> Nie dodawaj kolejnych końcowych nadpisań CSS dla każdej drobnej korekty. Przy większej zmianie połącz reguły komponentu i usuń nieaktualne wyjątki.
 
-- Miniatury mogą mieć kadr ustawiony w panelu. Podgląd otwiera zdjęcie w kwadracie wykadrowanym tym samym punktem; kliknięcie (lub Enter/Spacja) pokazuje całe zdjęcie w oryginalnych proporcjach, bez rozciągania. Podpowiedź w rogu mówi, co pokaże kliknięcie.
-- Wokół zdjęcia w podglądzie jest poświata w kolorze wyliczonym z fotografii w panelu (`glowColor`). Ramka zdjęcia nie może mieć `overflow: hidden`, bo przycięłaby poświatę.
-- Mobilny podgląd jest kartą z zamknięciem i przyciskami zmiany zdjęcia. Kolejne zdjęcie pojawia się dopiero po załadowaniu; nie zastępuj poprzedniego czarnym ekranem.
-- Tytuł, opis i przyciski albumu nie powinny zasłaniać fotografii. Informacje w podglądzie to zwarta siatka (ikona, podpis, wartość), opis jest cytatem z akcentem w kolorze poświaty, a „więcej zdjęć z wydarzenia” jest główną akcją. Podgląd ładuje pełną rozdzielczość, chyba że miniatura wystarcza dla gęstości ekranu albo włączono oszczędzanie danych.
+## 📸 Fotografia
+
+- **Kadr** — miniatury mogą mieć kadr ustawiony w panelu. Podgląd otwiera zdjęcie w kwadracie wykadrowanym tym samym punktem; kliknięcie (lub <kbd>Enter</kbd>/<kbd>Spacja</kbd>) pokazuje całe zdjęcie bez rozciągania. Podpowiedź w rogu mówi, co pokaże kliknięcie.
+- **Poświata** — kolor wyliczany z fotografii w panelu (`glowColor`). Ramka zdjęcia nie może mieć `overflow: hidden`, bo przycięłaby poświatę.
+- **Telefon** — podgląd jest kartą z zamknięciem i przyciskami zmiany zdjęcia. Kolejne zdjęcie pojawia się dopiero po załadowaniu, bez czarnego ekranu.
+- **Informacje** — tytuł, opis i przyciski nie zasłaniają fotografii. Metryczka to zwarta siatka (ikona, podpis, wartość), opis jest cytatem z akcentem w kolorze poświaty, a „więcej zdjęć z wydarzenia” to główna akcja.
+- **Jakość** — podgląd ładuje pełną rozdzielczość, chyba że miniatura wystarcza dla gęstości ekranu albo włączono oszczędzanie danych.
 - Nie sugeruj obróbki ani historii zdjęcia, których autor nie potwierdził.
 
-## Ruch i wydajność
+## 🌀 Ruch i wydajność
 
 - Dekoracje są związane z treścią: matematyka przy korepetycjach, krajobraz w hobby, winyl przy Spotify.
-- Preferuj animowanie `transform` i `opacity`. Unikaj ciężkich filtrów, dużych rozmyć i animowania wymiarów na telefonie.
-- Animacje uwzględniają `prefers-reduced-motion` i powinny zatrzymywać się poza ekranem, gdy jest to możliwe.
+- Animuj `transform` i `opacity`. Unikaj ciężkich filtrów, dużych rozmyć i animowania wymiarów na telefonie.
+- Animacje uwzględniają `prefers-reduced-motion` i zatrzymują się poza ekranem, gdy to możliwe.
 - Panel administratora używa spokojnych, statycznych kontrolek.
-- Dekoracyjny winyl obraca się podczas aktywnego słuchania. Okładka Spotify pozostaje osobno i nie obraca się. Przy zmianach integracji trzeba ponownie sprawdzić aktualne wytyczne Spotify.
+- Winyl obraca się podczas słuchania; okładka Spotify jest osobno i się nie obraca. Przy zmianach integracji sprawdź aktualne wytyczne Spotify.
 
-## Telefon i dostępność
+## 📱 Telefon i dostępność
 
-- Projekty na wąskim ekranie układaj w jednej kolumnie. Nie zmniejszaj całych kart tylko po to, by zachować układ komputerowy.
-- Kontroluj szerokość animacji, menu i formularzy; nie mogą wychodzić poza ekran.
-- Podstawowe cele dotykowe projektuj na co najmniej 44 × 44 px. Zapewnij widoczny fokus i czytelne podpisy.
-- Zachowuj semantyczne przyciski i odnośniki, obsługę Escape w dialogach oraz powrót fokusu po zamknięciu.
-- Sprawdzaj obie orientacje ekranu, oba motywy, oba języki i długie treści. Testy automatyczne nie zastępują oceny wizualnej na telefonie.
+- Na wąskim ekranie projekty w jednej kolumnie — nie zmniejszaj kart, żeby zachować układ komputerowy.
+- Animacje, menu i formularze nie mogą wychodzić poza ekran.
+- Cele dotykowe co najmniej **44 × 44 px**, widoczny fokus, czytelne podpisy.
+- Link „Przejdź do treści” na każdej podstronie; tekst zgodny z kontrastem WCAG AA.
+- Semantyczne przyciski i odnośniki, <kbd>Esc</kbd> w dialogach i powrót fokusu po zamknięciu.
+- Sprawdzaj obie orientacje, oba motywy, oba języki i długie treści. Testy automatyczne nie zastępują oceny na telefonie.
 
-## Gdzie zmieniać wygląd
+## 🛠️ Gdzie zmieniać wygląd
 
 | Miejsce | Zakres |
 | --- | --- |
@@ -72,7 +98,8 @@ Używaj zmiennych zamiast wpisywać osobne kolory dla kolejnych sekcji. Niebiesk
 | `components/navbar.html` | Wspólne menu |
 | `assets/css/portfolio.css` | Zmienne, typografia i wspólny układ |
 | `assets/css/controls.css` | Wygląd kontrolek |
-| Pozostałe pliki w `assets/css/` | Konkretne podstrony i komponenty |
+| Pozostałe `assets/css/` | Konkretne podstrony i komponenty |
 | `assets/js/` | Interakcje, animacje i renderowanie treści |
 
-Po zmianie wykonaj kontrolę projektu i sprawdź zmieniony komponent na komputerze oraz telefonie. Eksport Pages generuje się ze źródeł; nie poprawiaj ręcznie `dist/github-pages/`.
+> [!IMPORTANT]
+> Po zmianie uruchom `npm run check` i sprawdź komponent na komputerze oraz telefonie. Eksport Pages generuje się ze źródeł — nie poprawiaj ręcznie `dist/github-pages/`.

@@ -1,33 +1,65 @@
-# Wiadomości z formularza
+# ✉️ Wiadomości z formularza
 
-Formularz na `contact.html` zapisuje wiadomości przez `POST /api/contact` w lokalnej bazie SQLite. Po zalogowaniu otwórz zakładkę **Wiadomości** w panelu: zobaczysz treść, e-mail, temat, datę, stan przeczytania i status powiadomienia pocztowego. Skrzynka odświeża się co 30 sekund; przycisk „Odśwież” pobiera wiadomości od razu. Link „Odpowiedz” otwiera aplikację pocztową.
+[← Dokumentacja](README.md) · [Kreator kontaktu](funkcje/KONTAKT-KREATOR.md) · [Skrzynka](funkcje/SKRZYNKA.md)
 
-Wiadomości są prywatne: API wymaga zalogowania do odczytu, a eksporty galerii i projektów ich nie zawierają. Nie trafiają na GitHub. Kopia folderu `data/` po zatrzymaniu serwera obejmuje również skrzynkę.
+> Formularz na stronie kontaktu zapisuje wiadomości przez `POST /api/contact` w lokalnej bazie SQLite.
 
-## Powiadomienia na pocztę
+## 📥 Skrzynka w panelu
+
+Po zalogowaniu otwórz zakładkę **Wiadomości**. Zobaczysz treść, e-mail, temat, datę, stan przeczytania i status powiadomienia pocztowego.
+
+- Skrzynka odświeża się co **30 sekund**; „Odśwież” pobiera wiadomości od razu.
+- „Odpowiedz” otwiera aplikację pocztową.
+
+> [!NOTE]
+> Wiadomości są prywatne: odczyt wymaga zalogowania, eksporty ich nie zawierają i nie trafiają na GitHub. Kopia folderu `data/` (po zatrzymaniu serwera) obejmuje też skrzynkę.
+
+## 🔔 Powiadomienia na pocztę
 
 Integracja korzysta z [API Resend](https://resend.com/docs/api-reference/emails/send-email), bez dodatkowych pakietów npm.
 
 1. Utwórz konto Resend i klucz API z uprawnieniem wysyłania.
 2. Skopiuj `.env.example` do `.env` w katalogu projektu.
-3. Wpisz klucz do `RESEND_API_KEY` oraz zaakceptowany przez Resend adres nadawcy do `CONTACT_MAIL_FROM`. Dla własnej domeny nadawcy wymagana jest jej weryfikacja w Resend. Przy testowym nadawcy `onboarding@resend.dev` obowiązują ograniczenia usługi, w tym wysyłka do adresu konta Resend.
-4. Odbiorca `CONTACT_MAIL_TO` jest ustawiony na `podyma.marcin33@gmail.com`.
-5. Zrestartuj lokalny serwer. Panel pokaże, czy konfiguracja poczty jest obecna.
+3. Uzupełnij zmienne:
 
-Klucza nie wpisuj do HTML/JS przeglądarki ani na czacie. `.env` jest wykluczony z Git i niedostępny przez lokalny serwer.
+   | Zmienna | Wartość |
+   | --- | --- |
+   | `RESEND_API_KEY` | Klucz API z Resend |
+   | `CONTACT_MAIL_FROM` | Adres nadawcy zaakceptowany przez Resend (własna domena wymaga weryfikacji) |
+   | `CONTACT_MAIL_TO` | Odbiorca powiadomień — ustawiony na `podyma.marcin33@gmail.com` |
 
-Wiadomość zapisuje się także wtedy, gdy powiadomienie pocztowe się nie powiedzie. Panel pokazuje błąd i pozwala ponowić powiadomienie. Status „przyjęte przez pocztę” oznacza przyjęcie przez usługę wysyłającą, a nie potwierdzenie dostarczenia do skrzynki. Adres nadawcy formularza jest ustawiany jako Reply-To; odbiorca powiadomienia jest zawsze brany z konfiguracji serwera.
+4. Zrestartuj serwer. Panel pokaże, czy konfiguracja poczty jest obecna.
 
-## Zakres lokalny
+> [!WARNING]
+> Klucza nie wpisuj do HTML/JS przeglądarki ani na czacie. `.env` jest wykluczony z Git i niedostępny przez lokalny serwer. Testowy nadawca `onboarding@resend.dev` wysyła tylko na adres konta Resend.
 
-Wysyłanie działa przez lokalny serwer, np. `http://localhost:3000/contact.html`. GitHub Pages nie uruchamia tego API. Publiczne przyjmowanie wiadomości wymaga osobnego wdrożenia backendu. Formularz ogranicza rozmiar danych i liczbę nowych zgłoszeń do 5 na 15 minut z jednego adresu; ponowienie identycznego żądania z tym samym identyfikatorem nie tworzy duplikatu.
+**Jak to działa:**
 
-## Foldery wiadomości w panelu
+- Wiadomość zapisuje się nawet wtedy, gdy powiadomienie się nie powiedzie — panel pokazuje błąd i pozwala ponowić wysyłkę.
+- „Przyjęte przez pocztę” oznacza przyjęcie przez usługę, nie dostarczenie do skrzynki.
+- Adres nadawcy formularza trafia do `Reply-To`; odbiorca zawsze pochodzi z konfiguracji serwera.
 
-Zakładka Wiadomości ma foldery Odebrane, Spam i Kosz wiadomości. Oznaczenie jako spam jest ręczne i przenosi konkretne zgłoszenie; nie blokuje przyszłych zgłoszeń nadawcy. Licznik nowych wiadomości obejmuje tylko nieprzeczytane w Odebranych. Spam i kosz można przywrócić do Odebranych bez utraty treści i danych nadawcy.
+## 🏠 Zakres lokalny
 
-„Do kosza” wymaga potwierdzenia. Trwałe usunięcie jest dostępne tylko w koszu, po dodatkowym wpisaniu `USUŃ`. Kosz nie opróżnia się automatycznie. Foldery i usuwanie dotyczą lokalnej/online bazy panelu — nie przenoszą ani nie usuwają powiadomień, które dotarły już do Gmaila. Dostęp do wszystkich folderów i zmian wymaga administratora. Dane nie są eksportowane do publicznych plików.
+Wysyłanie działa przez lokalny serwer, np. `http://localhost:3000/kontakt`. GitHub Pages nie uruchamia tego API — publiczne przyjmowanie wiadomości wymaga osobnego backendu.
 
-Lokalnie istniejące wiadomości otrzymują folder Odebrane przy uruchomieniu serwera. Dawna integracja Sites została usunięta z projektu.
+- Limit: **5 zgłoszeń na 15 minut** z jednego adresu, z ograniczonym rozmiarem danych.
+- Ponowienie identycznego żądania z tym samym identyfikatorem nie tworzy duplikatu.
 
-Przenoszenie do kosza używa okna w panelu zamiast okna przeglądarki. „Nie pytaj ponownie” dotyczy wyłącznie przenoszenia pojedynczych wiadomości do kosza, w tej przeglądarce i pod tym adresem strony. „Przywróć potwierdzenia” włącza je ponownie. Trwałe usuwanie i przycisk „Opróżnij kosz” zawsze wymagają potwierdzenia przez wpisanie `USUŃ`. Opróżnienie obejmuje cały kosz, również wiadomości spoza listy ostatnich 100; zmiana zawartości od momentu wyświetlenia powoduje konieczność ponownego sprawdzenia i potwierdzenia. Odebrane i Spam pozostają bez zmian.
+## 🗃️ Foldery wiadomości
+
+| Folder | Zachowanie |
+| --- | --- |
+| **Odebrane** | Licznik nowych obejmuje tylko nieprzeczytane w tym folderze |
+| **Spam** | Oznaczenie ręczne, dotyczy jednego zgłoszenia — nie blokuje nadawcy |
+| **Kosz** | Nie opróżnia się automatycznie; trwałe usunięcie tylko stąd |
+
+- Spam i kosz można przywrócić do Odebranych bez utraty treści i danych nadawcy.
+- Foldery dotyczą bazy panelu — nie zmieniają powiadomień, które dotarły już do Gmaila.
+- Dostęp do folderów i zmian wymaga administratora. Wiadomości bez folderu dostają Odebrane przy starcie serwera.
+
+### Usuwanie
+
+- „Do kosza” wymaga potwierdzenia w oknie panelu. Opcja „Nie pytaj ponownie” dotyczy tylko pojedynczych wiadomości, w tej przeglądarce i pod tym adresem; „Przywróć potwierdzenia” włącza je ponownie.
+- Trwałe usunięcie i „Opróżnij kosz” zawsze wymagają wpisania `USUŃ`.
+- Opróżnienie obejmuje cały kosz, także wiadomości spoza ostatnich 100. Jeśli zawartość zmieniła się od wyświetlenia, trzeba ją sprawdzić i potwierdzić ponownie. Odebrane i Spam pozostają bez zmian.

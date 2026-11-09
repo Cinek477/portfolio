@@ -1,6 +1,6 @@
-# Korepetycje
+# 📄 Korepetycje
 
-[Spis podstron](README.md) · [Pakiety, rabaty, FAQ i opinie](../funkcje/KOREPETYCJE-OPINIE.md)
+[← Dokumentacja](../README.md) · [Spis podstron](README.md) · [Pakiety, rabaty, FAQ i opinie](../funkcje/KOREPETYCJE-OPINIE.md)
 
 ## Adres i sekcje
 

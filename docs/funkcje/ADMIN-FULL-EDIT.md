@@ -1,6 +1,6 @@
-# Pełna edycja treści w panelu
+# ⚙️ Pełna edycja treści w panelu
 
-[Spis funkcji](README.md) · [Panel administratora](../podstrony/ADMIN.md) · [Katalog pól CMS](POLA-CMS.md)
+[← Dokumentacja](../README.md) · [Spis funkcji](README.md) · [Panel administratora](../podstrony/ADMIN.md) · [Katalog pól CMS](POLA-CMS.md)
 
 ## 1. Co oznacza pełna edycja
 

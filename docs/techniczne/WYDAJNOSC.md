@@ -1,4 +1,6 @@
-# Wydajność i weryfikacja
+# 🏗️ Wydajność i weryfikacja
+
+[← Dokumentacja](../README.md)
 
 ## Zastosowane usprawnienia
 

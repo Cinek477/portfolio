@@ -1,6 +1,6 @@
-# Katalog pól i grup CMS
+# ⚙️ Katalog pól i grup CMS
 
-[Spis funkcji](README.md) · [Instrukcja pełnej edycji](ADMIN-FULL-EDIT.md)
+[← Dokumentacja](../README.md) · [Spis funkcji](README.md) · [Instrukcja pełnej edycji](ADMIN-FULL-EDIT.md)
 
 Ten rozdział dokumentuje schemat `shared/page-defaults.json`, nie prywatne wartości z lokalnej bazy. Podpisy pokazane jako przykłady służą rozpoznaniu pola. Identyfikatory są kontraktem kodu; nie należy ich zmieniać przy zwykłej edycji tekstu. Po zmianie schematu zaktualizuj ten katalog.
 
