@@ -275,7 +275,8 @@
         main.focus({ preventScroll: true });
       };
       hideLoader();
-      if (document.startViewTransition && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      // Ukryta karta odrzuca animację przejścia (InvalidStateError) i strona by się nie podmieniła.
+      if (document.startViewTransition && !document.hidden && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
         root.dataset.pageTransition = 'true';
         transition = document.startViewTransition(update);
         await transition.finished;

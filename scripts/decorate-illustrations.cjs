@@ -47,15 +47,22 @@ function decor({ background, top, bottom }) {
   for (let row = 0; row < 3; row++) for (let column = 0; column < 4; column++) {
     dots.push(`<circle data-tone="accent" cx="${46 + column * 18}" cy="${y(0.36) + row * 18}" r="3.2" fill="${accent}" opacity=".55"/>`);
   }
-  // Plama z rozmyciem sięga ok. 3 × stdDeviation poza promień. Cała musi zmieścić się w grafice,
-  // inaczej krawędź obrazka ucina ją prostokątem.
-  const blobRadius = 120, blur = 34, blobMargin = blobRadius + blur * 3 + 6;
+  // Miękkie plamy to koła z gradientem radialnym o profilu rozmytego koła (promień 120, rozmycie ~34).
+  // Filtr feGaussianBlur dawał ten sam efekt, ale przeliczanie go przy wczytaniu pięciu grafik
+  // powodowało ścinkę przy wejściu na Projekty. Plama musi zmieścić się w grafice (inaczej ją ucina).
+  const blobRadius = 120, blur = 34, glowRadius = blobRadius + blur * 2, blobMargin = blobRadius + blur * 3 + 6;
+  const glow = (id, color) => `<radialGradient id="${id}">`
+    + `<stop data-tone="blob" offset="0" stop-color="${color}"/>`
+    + `<stop data-tone="blob" offset=".28" stop-color="${color}"/>`
+    + `<stop data-tone="blob" offset=".46" stop-color="${color}" stop-opacity=".84"/>`
+    + `<stop data-tone="blob" offset=".64" stop-color="${color}" stop-opacity=".5"/>`
+    + `<stop data-tone="blob" offset=".82" stop-color="${color}" stop-opacity=".16"/>`
+    + `<stop data-tone="blob" offset="1" stop-color="${color}" stop-opacity="0"/>`
+    + `</radialGradient>`;
   return `<g data-decor="">
-<defs><filter id="decor-soft" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="${blur}"/></filter></defs>
-<g filter="url(#decor-soft)">
-<circle data-tone="blob" cx="${1200 - blobMargin}" cy="${top + blobMargin}" r="${blobRadius}" fill="${light}" opacity=".85"/>
-<circle data-tone="blob" cx="${blobMargin}" cy="${bottom - blobMargin}" r="${blobRadius}" fill="${neighbour}" opacity=".7"/>
-</g>
+<defs>${glow('decor-glow-a', light)}${glow('decor-glow-b', neighbour)}</defs>
+<circle cx="${1200 - blobMargin}" cy="${top + blobMargin}" r="${glowRadius}" fill="url(#decor-glow-a)" opacity=".85"/>
+<circle cx="${blobMargin}" cy="${bottom - blobMargin}" r="${glowRadius}" fill="url(#decor-glow-b)" opacity=".7"/>
 <circle data-tone="accent" cx="1108" cy="${y(0.8)}" r="44" fill="none" stroke="${accent}" stroke-width="3" opacity=".45"/>
 <circle data-tone="accent" cx="1108" cy="${y(0.8)}" r="7" fill="${accent}" opacity=".5"/>
 ${dots.join('\n')}

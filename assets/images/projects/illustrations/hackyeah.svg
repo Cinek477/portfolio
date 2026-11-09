@@ -6,11 +6,9 @@
 </defs>
 <rect width="1200" height="740" fill="#c6d6f5"/>
 <g data-decor="">
-<defs><filter id="decor-soft" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="34"/></filter></defs>
-<g filter="url(#decor-soft)">
-<circle data-tone="blob" cx="972" cy="228" r="120" fill="#e8effc" opacity=".85"/>
-<circle data-tone="blob" cx="228" cy="512" r="120" fill="#d3c4f7" opacity=".7"/>
-</g>
+<defs><radialGradient id="decor-glow-a"><stop data-tone="blob" offset="0" stop-color="#e8effc"/><stop data-tone="blob" offset=".28" stop-color="#e8effc"/><stop data-tone="blob" offset=".46" stop-color="#e8effc" stop-opacity=".84"/><stop data-tone="blob" offset=".64" stop-color="#e8effc" stop-opacity=".5"/><stop data-tone="blob" offset=".82" stop-color="#e8effc" stop-opacity=".16"/><stop data-tone="blob" offset="1" stop-color="#e8effc" stop-opacity="0"/></radialGradient><radialGradient id="decor-glow-b"><stop data-tone="blob" offset="0" stop-color="#d3c4f7"/><stop data-tone="blob" offset=".28" stop-color="#d3c4f7"/><stop data-tone="blob" offset=".46" stop-color="#d3c4f7" stop-opacity=".84"/><stop data-tone="blob" offset=".64" stop-color="#d3c4f7" stop-opacity=".5"/><stop data-tone="blob" offset=".82" stop-color="#d3c4f7" stop-opacity=".16"/><stop data-tone="blob" offset="1" stop-color="#d3c4f7" stop-opacity="0"/></radialGradient></defs>
+<circle cx="972" cy="228" r="188" fill="url(#decor-glow-a)" opacity=".85"/>
+<circle cx="228" cy="512" r="188" fill="url(#decor-glow-b)" opacity=".7"/>
 <circle data-tone="accent" cx="1108" cy="592" r="44" fill="none" stroke="#356ede" stroke-width="3" opacity=".45"/>
 <circle data-tone="accent" cx="1108" cy="592" r="7" fill="#356ede" opacity=".5"/>
 <circle data-tone="accent" cx="46" cy="266" r="3.2" fill="#356ede" opacity=".55"/>

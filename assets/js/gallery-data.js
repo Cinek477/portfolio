@@ -7,8 +7,8 @@ window.portfolioPhotos = [
     "src": "assets/images/gallery/2400px/quebonafide-warszawa-2025-06-28.jpg",
     "glowColor": "rgba(54, 22, 220, 0.65)",
     "title": {
-      "pl": "Bańki nad sceną",
-      "en": "Bubbles over the stage"
+      "pl": "Ostatni Koncert Quebonafide - Warszawa PGE Narodowy",
+      "en": "Quebonafide Final Concert - Warsaw PGE Narodowy"
     },
     "artist": "Quebonafide",
     "event": {
@@ -39,8 +39,8 @@ window.portfolioPhotos = [
     "src": "assets/images/gallery/2400px/mata-warszawa-2026-05-16.jpg",
     "glowColor": "rgba(220, 18, 64, 0.65)",
     "title": {
-      "pl": "Czerwień i jeden reflektor",
-      "en": "Red light and a single spotlight"
+      "pl": "Mata - Finał Mata2040 - PGE Narodowy - Warszawa",
+      "en": "Mata - Mata2040 Finale - PGE Narodowy - Warsaw"
     },
     "artist": "Mata",
     "event": {
@@ -68,8 +68,8 @@ window.portfolioPhotos = [
     "category": "nature",
     "shape": "regular",
     "title": {
-      "pl": "Zima pod Promykiem",
-      "en": "Winter outside Promyk"
+      "pl": "Miasteczko Studenckie",
+      "en": "Miasteczko Studenckie"
     },
     "artist": "",
     "event": {
@@ -99,8 +99,8 @@ window.portfolioPhotos = [
     "category": "concerts",
     "shape": "tall",
     "title": {
-      "pl": "Mata w błękicie",
-      "en": "Mata in blue"
+      "pl": "The Best of Mata :)",
+      "en": "The Best of Mata :)"
     },
     "artist": "Mata",
     "event": {
@@ -162,8 +162,8 @@ window.portfolioPhotos = [
     "category": "concerts",
     "shape": "tall",
     "title": {
-      "pl": "Oki spod sceny",
-      "en": "Oki from the front row"
+      "pl": "Oki - Finał ERA47",
+      "en": "Oki - Finał ERA47"
     },
     "artist": "Oki",
     "event": {
@@ -197,8 +197,8 @@ window.portfolioPhotos = [
     "src": "assets/images/gallery/2400px/quebonafide-warszawa-2025-06-28-02.jpg",
     "glowColor": "rgba(25, 53, 220, 0.65)",
     "title": {
-      "pl": "Cały Narodowy w tle",
-      "en": "The whole stadium behind him"
+      "pl": "Quebonafide — Ostatni Koncert, kadr ze sceny",
+      "en": "Quebonafide — Final Concert, a frame from the stage"
     },
     "artist": "Quebonafide",
     "event": {

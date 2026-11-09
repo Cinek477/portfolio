@@ -1,15 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="740" viewBox="0 160 1200 740" role="img" aria-label="Ilustracja bazy danych — schemat tabel i relacji">
  <defs><clipPath id="edge"><rect x="0" y="0" width="1200" height="900" rx="64" fill="white" /></clipPath><filter id="shadow" x="-30%" y="-30%" width="170%" height="180%"><feDropShadow dx="0" dy="18" stdDeviation="20" flood-color="#203257" flood-opacity=".13"/></filter><linearGradient id="paper" x2="0" y2="1"><stop stop-color="#fff"/><stop offset="1" stop-color="#f7f8fc"/></linearGradient></defs>
  <g clip-path="url(#edge)"><rect x="0" y="0" width="1200" height="900" rx="64" fill="#274d4c" />
-
-
-
+ 
+ 
+ 
  <g data-decor="">
-<defs><filter id="decor-soft" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="34"/></filter></defs>
-<g filter="url(#decor-soft)">
-<circle data-tone="blob" cx="972" cy="388" r="120" fill="#368380" opacity=".85"/>
-<circle data-tone="blob" cx="228" cy="672" r="120" fill="#334a70" opacity=".7"/>
-</g>
+<defs><radialGradient id="decor-glow-a"><stop data-tone="blob" offset="0" stop-color="#368380"/><stop data-tone="blob" offset=".28" stop-color="#368380"/><stop data-tone="blob" offset=".46" stop-color="#368380" stop-opacity=".84"/><stop data-tone="blob" offset=".64" stop-color="#368380" stop-opacity=".5"/><stop data-tone="blob" offset=".82" stop-color="#368380" stop-opacity=".16"/><stop data-tone="blob" offset="1" stop-color="#368380" stop-opacity="0"/></radialGradient><radialGradient id="decor-glow-b"><stop data-tone="blob" offset="0" stop-color="#334a70"/><stop data-tone="blob" offset=".28" stop-color="#334a70"/><stop data-tone="blob" offset=".46" stop-color="#334a70" stop-opacity=".84"/><stop data-tone="blob" offset=".64" stop-color="#334a70" stop-opacity=".5"/><stop data-tone="blob" offset=".82" stop-color="#334a70" stop-opacity=".16"/><stop data-tone="blob" offset="1" stop-color="#334a70" stop-opacity="0"/></radialGradient></defs>
+<circle cx="972" cy="388" r="188" fill="url(#decor-glow-a)" opacity=".85"/>
+<circle cx="228" cy="672" r="188" fill="url(#decor-glow-b)" opacity=".7"/>
 <circle data-tone="accent" cx="1108" cy="752" r="44" fill="none" stroke="#87cac8" stroke-width="3" opacity=".45"/>
 <circle data-tone="accent" cx="1108" cy="752" r="7" fill="#87cac8" opacity=".5"/>
 <circle data-tone="accent" cx="46" cy="426" r="3.2" fill="#87cac8" opacity=".55"/>

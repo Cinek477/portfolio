@@ -29,6 +29,35 @@
   const hoverFilledSelector = ':is(.hero-actions a, .contact-submit, .instagram-cta):is(:hover, :focus-visible)';
   const isFilled = button => Boolean(button.matches?.(filledSelector) || button.matches?.(hoverFilledSelector));
   let frame = 0, scheduled = false;
+  // Punkty obrysu zaokrąglonego prostokąta liczone wzorem, równo co do długości, zgodnie z ruchem wskazówek
+  // zegara od lewego górnego rogu. Wcześniej robiło to SVG getPointAtLength: ok. 200 ms na przycisk,
+  // co przy kilku przyciskach blokowało stronę na ponad sekundę w trakcie przejścia.
+  function outlinePoints(w, h, r) {
+    const straightX = Math.max(0, w - 2 * r), straightY = Math.max(0, h - 2 * r), arc = Math.PI * r / 2;
+    // Odcinki: góra, róg, prawo, róg, dół, róg, lewo, róg (przesunięte o 1 px jak dawna ścieżka).
+    const segments = [
+      { length: straightX, at: t => [1 + r + straightX * t, 1] },
+      { length: arc, at: t => [1 + w - r + r * Math.sin(t * Math.PI / 2), 1 + r - r * Math.cos(t * Math.PI / 2)] },
+      { length: straightY, at: t => [1 + w, 1 + r + straightY * t] },
+      { length: arc, at: t => [1 + w - r + r * Math.cos(t * Math.PI / 2), 1 + h - r + r * Math.sin(t * Math.PI / 2)] },
+      { length: straightX, at: t => [1 + w - r - straightX * t, 1 + h] },
+      { length: arc, at: t => [1 + r - r * Math.sin(t * Math.PI / 2), 1 + h - r + r * Math.cos(t * Math.PI / 2)] },
+      { length: straightY, at: t => [1, 1 + h - r - straightY * t] },
+      { length: arc, at: t => [1 + r - r * Math.cos(t * Math.PI / 2), 1 + r - r * Math.sin(t * Math.PI / 2)] },
+    ];
+    const total = segments.reduce((sum, segment) => sum + segment.length, 0) || 1;
+    const points = new Float32Array(sampleCount * 2);
+    let segment = 0, start = 0;
+    for (let i = 0; i < sampleCount; i++) {
+      const distance = total * i / sampleCount;
+      while (segment < segments.length - 1 && distance > start + segments[segment].length) start += segments[segment++].length;
+      const current = segments[segment];
+      const [x, y] = current.at(current.length ? (distance - start) / current.length : 0);
+      points[i * 2] = x;
+      points[i * 2 + 1] = y;
+    }
+    return points;
+  }
   function resize(button) {
     const item = tracked.get(button);
     if (!item || button.clientWidth < 3 || button.clientHeight < 3) return;
@@ -38,15 +67,7 @@
     const key = `${width}:${height}:${radius}:${ratio}`;
     if (item.key === key) return;
     item.key = key;
-    const w = width - 2, h = height - 2, r = Math.max(0.1, radius);
-    item.guide.setAttribute('d', `M ${1+r} 1 H ${1+w-r} A ${r} ${r} 0 0 1 ${1+w} ${1+r} V ${1+h-r} A ${r} ${r} 0 0 1 ${1+w-r} ${1+h} H ${1+r} A ${r} ${r} 0 0 1 1 ${1+h-r} V ${1+r} A ${r} ${r} 0 0 1 ${1+r} 1 Z`);
-    const length = item.guide.getTotalLength();
-    item.points = new Float32Array(sampleCount * 2);
-    for (let i = 0; i < sampleCount; i++) {
-      const point = item.guide.getPointAtLength(length * i / sampleCount);
-      item.points[i * 2] = point.x;
-      item.points[i * 2 + 1] = point.y;
-    }
+    item.points = outlinePoints(width - 2, height - 2, Math.max(0.1, radius));
     item.width = width; item.height = height;
     item.canvas.width = Math.round(width * ratio);
     item.canvas.height = Math.round(height * ratio);
@@ -121,10 +142,9 @@
       if (!context) return;
       canvases.add(canvas);
       button.append(canvas);
-      const guide = document.createElementNS('http://www.w3.org/2000/svg', 'path');
       // Zmiana tekstu PL/EN może usunąć canvas bez usuwania samego przycisku.
       // Zachowaj jego widoczność: obserwator nie musi ponownie zgłosić tego samego elementu.
-      tracked.set(button, { canvas, context, guide, visible: previous?.visible ?? false });
+      tracked.set(button, { canvas, context, visible: previous?.visible ?? false });
       if (!previous) { sizes.observe(button); visibility.observe(button); }
       resize(button);
     });

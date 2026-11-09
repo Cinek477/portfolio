@@ -258,7 +258,7 @@
 .afterhours-cloud path:nth-child(2) { animation-duration:13s; animation-delay:-4s; }
 .afterhours-sunset { animation:afterhours-sunset 18s linear infinite; animation-delay:12s; }
 .afterhours-sun { stroke:var(--accent); fill:color-mix(in srgb,var(--accent) 14%,transparent); }
-@keyframes afterhours-cycle { 0% { opacity:0; transform:translateY(8px) scale(.98); filter:blur(4px); } 3%,30% { opacity:1; transform:translateY(0) scale(1); filter:blur(0); } 33.333%,100% { opacity:0; transform:translateY(-8px) scale(1.02); filter:blur(4px); } }
+@keyframes afterhours-cycle { 0% { opacity:0; transform:translateY(8px) scale(.98); } 3%,30% { opacity:1; transform:translateY(0) scale(1); } 33.333%,100% { opacity:0; transform:translateY(-8px) scale(1.02); } }
 @keyframes afterhours-sway { 0%,100% { transform:translateY(0) rotate(-5deg); } 50% { transform:translateY(-7px) rotate(-2deg); } }
 @keyframes afterhours-spark { 0%,100% { transform:rotate(-10deg) translateY(0); } 50% { transform:rotate(10deg) translateY(-5px); } }
 @keyframes afterhours-aperture { to { transform:rotate(360deg); } }

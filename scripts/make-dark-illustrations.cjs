@@ -65,7 +65,8 @@ for (const name of ['oop', 'database', 'matura', 'hackyeah', 'krakhack']) {
     return toHex(h, Math.min(s * 0.9, 0.45), 0.66);
   };
   const background = source.slice(0, split).replace(
-    /<(?:rect|circle)\b[^>]*>/gi,
+    // stop: kolory w gradientach miękkich plam (data-tone="blob") też przechodzą na ciemne pastele.
+    /<(?:rect|circle|stop)\b[^>]*>/gi,
     element => {
       const kind = element.match(/\bdata-tone="(\w+)"/)?.[1];
       if (kind) return element.replace(/#[0-9a-f]{6}/gi, color => tone(kind, color));
