@@ -90,7 +90,7 @@
   const prefetched = new Map();
   const pageKey = (url) => { const key = new URL(url); key.hash = ''; return key.href; };
   function fetchPage(url, signal) {
-    return fetch(url.href, { signal, headers: { Accept: 'text/html' } }).then(async (response) => ({
+    return fetch(url.href, { signal, cache: 'no-store', headers: { Accept: 'text/html' } }).then(async (response) => ({
       ok: response.ok && Boolean(response.headers.get('content-type')?.includes('text/html')),
       url: response.url,
       text: await response.text(),

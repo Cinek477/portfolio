@@ -52,6 +52,7 @@ W ciemnym motywie plamy są ciemnym pastelem jaśniejszym od tła, a kropki i pi
 
 - Fonty są lokalne (WOFF2), z polskimi znakami i `font-display: swap`.
 - Długie tytuły zawijają się naturalnie — nie rozbijaj nazw w środku słowa, jeśli można zmniejszyć tekst lub zmienić układ.
+- Technologie w opisie projektu są osobnymi kafelkami z lokalnymi ikonami SVG. Na telefonie ikona stoi nad nazwą, aby nie rozcinać nazw narzędzi.
 - Układ musi pomieścić zarówno polskie, jak i angielskie teksty.
 
 ## 🧱 Panele, karty i przyciski

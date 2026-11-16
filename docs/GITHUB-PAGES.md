@@ -21,6 +21,12 @@
 
 Edytuj kod i treści lokalnie, a potem świadomie wypchnij zmiany i publiczne eksporty na `main`. Workflow robi kontrolę projektu, testy i eksport; nowa wersja zastępuje poprzednią.
 
+Eksport nadaje adresom CSS, JS, obrazów (także `srcset`) i danych `static-api/` wersję wyliczoną
+z zawartości pliku. Dotyczy to również jasnych i ciemnych ilustracji projektów. Dzięki temu stare
+zdjęcie lub odpowiedź JSON z pamięci przeglądarki nie powinny zastąpić nowych treści.
+Nawigacja pobiera HTML bez używania lokalnej pamięci podręcznej. Jeśli stara strona była już
+otwarta w chwili publikacji, odśwież ją raz przez **Ctrl+F5**.
+
 > [!IMPORTANT]
 > Sam zapis w panelu lokalnym niczego nie publikuje — potrzebny jest commit i push.
 

@@ -109,10 +109,42 @@ window.portfolioPages['project-detail.js'] = async () => {
       section.hidden = !local(value).trim();
       text(section.querySelector('.project-story-text'), value);
     }
-    // Technologie jako jedna linia tekstu.
+    // Osobne kafelki z lokalnymi ikonami — bez zewnętrznych bibliotek i obrazów.
     const tags = main.querySelector('#project-detail-tags');
-    tags.textContent = (project.technologies || '').split(',').map(item => item.trim()).filter(Boolean).join(' · ');
-    main.querySelector('.project-detail-tech').hidden = !tags.textContent;
+    tags.replaceChildren();
+    const techIcons = {
+      python: '<path d="M12 3H8a4 4 0 0 0-4 4v5h8V7h5V6a3 3 0 0 0-3-3h-2ZM12 21h4a4 4 0 0 0 4-4v-5h-8v5H7v1a3 3 0 0 0 3 3h2Z"/><circle cx="8" cy="6" r=".65" fill="currentColor"/><circle cx="16" cy="18" r=".65" fill="currentColor"/>',
+      fastapi: '<circle cx="12" cy="12" r="9"/><path d="m13 4-7 10h6l-1 6 7-10h-6l1-6Z"/>',
+      react: '<circle cx="12" cy="12" r="1.6" fill="currentColor"/><ellipse cx="12" cy="12" rx="10" ry="4"/><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(120 12 12)"/>',
+      typescript: '<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M6 10h6m-3 0v8m9-7c-3-2-5 1-2 3s1 5-2 3"/>',
+      sqlite: '<ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 4 16 4 16 0V5M4 12c0 4 16 4 16 0"/>',
+      ai: '<rect x="6" y="6" width="12" height="12" rx="3"/><path d="M9 2v4m6-4v4M9 18v4m6-4v4M2 9h4m-4 6h4m12-6h4m-4 6h4m-8-4h4m-4 3h4"/>',
+      matsim: '<circle cx="5" cy="6" r="2"/><circle cx="19" cy="6" r="2"/><circle cx="12" cy="19" r="2"/><path d="m7 6 10 0M6 8l5 9m7-9-5 9"/>',
+      dash: '<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M10 9v12m4-8h4m-4 4h4"/>',
+      plotly: '<path d="M3 3v18h18M7 16v-4m5 4V7m5 9v-6"/>',
+      geopandas: '<circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="4" ry="9"/><path d="M3 12h18M5 7h14M5 17h14"/>',
+      openstreetmap: '<path d="m3 5 6-2 6 2 6-2v16l-6 2-6-2-6 2V5Zm6-2v16m6-14v16"/><path d="m6 10 5 3 7-5"/>',
+    };
+    for (const name of [...new Set((project.technologies || '').split(',').map(item => item.trim()).filter(Boolean))]) {
+      const tile = document.createElement('li');
+      const key = name.toLowerCase();
+      tile.className = 'project-tech-tile';
+      tile.dataset.technology = key;
+      const graphic = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      graphic.setAttribute('viewBox', '0 0 24 24');
+      graphic.setAttribute('aria-hidden', 'true');
+      graphic.setAttribute('fill', 'none');
+      graphic.setAttribute('stroke', 'currentColor');
+      graphic.setAttribute('stroke-width', '1.6');
+      graphic.setAttribute('stroke-linecap', 'round');
+      graphic.setAttribute('stroke-linejoin', 'round');
+      graphic.innerHTML = techIcons[key] || '<path d="m8 7-5 5 5 5m8-10 5 5-5 5m-3-13-2 20"/>';
+      const label = document.createElement('span');
+      label.textContent = name;
+      tile.append(graphic, label);
+      tags.append(tile);
+    }
+    main.querySelector('.project-detail-tech').hidden = !tags.children.length;
     // Film z działania zastępuje ilustrację na górze strony i przycisk demo w nagłówku.
     const ytMatch = (project.demoUrl || '').match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([A-Za-z0-9_-]{11})/);
     const embedUrl = ytMatch ? `https://www.youtube-nocookie.com/embed/${ytMatch[1]}?rel=0` : '';

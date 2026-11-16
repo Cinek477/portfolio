@@ -13,11 +13,14 @@
       : 'light';
   // Ilustracje projektów mają ciemne warianty (*-dark.svg, scripts/make-dark-illustrations.cjs).
   // Moduły ustawiają obraz przez portfolioThemedImage, a zmiana motywu podmienia src.
-  const darkVariant = source => /illustrations\/(?:oop|database|matura|hackyeah|krakhack)\.svg$/.test(source || '')
-    ? source.replace(/\.svg$/, '-dark.svg') : '';
+  const versioned = source => window.portfolioImageUrl?.(source) || source;
+  const darkVariant = source => /illustrations\/(?:oop|database|matura|hackyeah|krakhack)\.svg(?:\?|$)/.test(source || '')
+    ? source.replace(/\.svg(?:\?[^#]*)?$/, '-dark.svg') : '';
   const preloaded = new Set();
   window.portfolioThemedImage = (image, source) => {
-    const dark = darkVariant(source);
+    const variant = darkVariant(source);
+    source = versioned(source);
+    const dark = variant ? versioned(variant) : '';
     if (!dark) {
       delete image.dataset.lightSrc; delete image.dataset.darkSrc;
       if (image.getAttribute('src') !== source) image.src = source;

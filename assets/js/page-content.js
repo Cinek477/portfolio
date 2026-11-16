@@ -190,9 +190,10 @@ window.portfolioPages['page-content.js'] = () => {
     frame.hidden = !content.photo.visible;
     // srcset w HTML opisuje domyślne zdjęcie; inne źródło nie może dziedziczyć jego wariantów.
     // Serwer zapisuje src jako /assets/..., a dane jako assets/... — porównujemy pełne adresy.
-    if (image.src !== new URL(content.photo.src, document.baseURI).href) {
+    const photoSource = window.portfolioImageUrl?.(content.photo.src) || content.photo.src;
+    if (image.src !== new URL(photoSource, document.baseURI).href) {
       image.removeAttribute('srcset');
-      image.src = content.photo.src;
+      image.src = photoSource;
     }
     photoAlt = content.photo.alt;
     updateAlt();

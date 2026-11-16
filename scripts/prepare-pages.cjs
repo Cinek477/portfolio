@@ -28,6 +28,32 @@ function preparePages({ base = process.env.PAGES_BASE_PATH || '/portfolio/', out
   fs.rmSync(output, { recursive: true, force: true });
   fs.mkdirSync(path.join(output, 'assets'), { recursive: true });
   copyAssets(path.join(root, 'assets'), path.join(output, 'assets'));
+  const versions = new Map();
+  const imageVersions = {};
+  function collectImages(directory) {
+    for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
+      const file = path.join(directory, entry.name);
+      if (entry.isDirectory()) collectImages(file);
+      else if (/\.(?:svg|png|jpe?g|webp|avif|gif)$/i.test(entry.name)) {
+        const relative = path.relative(output, file).split(path.sep).join('/');
+        imageVersions[relative] = assetVersion(relative);
+      }
+    }
+  }
+  collectImages(path.join(output, 'assets'));
+  fs.writeFileSync(path.join(output, 'assets/js/image-versions.js'), `(() => {
+    const versions = ${JSON.stringify(imageVersions)};
+    window.portfolioImageUrl = source => {
+      try {
+        const base = new URL(document.baseURI), url = new URL(source, base);
+        if (url.origin !== base.origin || !url.pathname.startsWith(base.pathname)) return source;
+        const key = decodeURIComponent(url.pathname.slice(base.pathname.length));
+        if (!versions[key]) return source;
+        url.searchParams.set('v', versions[key]);
+        return url.href;
+      } catch { return source; }
+    };
+  })();\n`);
   const data = { window: {} };
   for (const file of ['gallery-data.js', 'projects-data.js', 'home-data.js', 'pages-data.js']) {
     vm.runInNewContext(fs.readFileSync(path.join(root, 'assets/js', file), 'utf8'), data, { timeout: 1000 });
@@ -75,9 +101,11 @@ function preparePages({ base = process.env.PAGES_BASE_PATH || '/portfolio/', out
     if (!entry.endsWith('.js')) continue;
     const file = path.join(output, 'assets/js', entry);
     let source = fs.readFileSync(file, 'utf8');
-    source = source.replace(/(['"])\/api\/(photos|projects|reviews|pages\/contact|pages\/knowledge)\1/g, (_, quote, endpoint) => `new URL('static-api/${endpoint}.json', document.baseURI).href`);
-    source = source.replace("'/api/pages/' + page", "new URL('static-api/pages/' + page + '.json', document.baseURI).href");
-    source = source.replace('`/api/pages/${page}`', 'new URL(`static-api/pages/${page}.json`, document.baseURI).href');
+    source = source.replace(/(['"])\/api\/(photos|projects|reviews|pages\/contact|pages\/knowledge)\1/g, (_, quote, endpoint) => `new URL('static-api/${endpoint}.json?v=${assetVersion('static-api/' + endpoint + '.json')}', document.baseURI).href`);
+    const pageVersions = Object.fromEntries(Object.keys(snapshots).filter(name => name.startsWith('pages/')).map(name => [name.slice(6), assetVersion('static-api/' + name + '.json')]));
+    const pageUrl = "new URL('static-api/pages/' + page + '.json?v=' + (" + JSON.stringify(pageVersions) + ")[page], document.baseURI).href";
+    source = source.replace("'/api/pages/' + page", pageUrl);
+    source = source.replace('`/api/pages/${page}`', pageUrl);
     if (entry === 'gallery.js') source = source.replace("new URL('/po-godzinach',location.origin)", "new URL('hobby.html',document.baseURI)");
     if (entry === 'project-detail.js') source = source.replace("new URL(location.href).searchParams.get('id') ||", "new URL(location.href).searchParams.get('id') || window.portfolioStaticProjectId ||");
     if (entry === 'gallery.js') source = source.replace("new URL(location.href).searchParams.get('album') ||", "new URL(location.href).searchParams.get('album') || window.portfolioStaticAlbumId ||");
@@ -98,14 +126,16 @@ function preparePages({ base = process.env.PAGES_BASE_PATH || '/portfolio/', out
     let source = renderPage(fs.readFileSync(path.join(root, 'pages', page), 'utf8'), page);
     if (page === 'hobby.html') source = source.replace('</head>', '<style>.spotify-current,.spotify-live{display:none!important}.music-record{animation-play-state:paused!important}</style></head>');
     source = source.replace(/href="(#[^"]*|\/(?!\/)[^"]*)"/g, (_, href) => `href="${localLink(href, page)}"`);
-    source = source.replace(/<head([^>]*)>/i, `<head$1><base href="${base}">${extra}`);
+    source = source.replace(/<head([^>]*)>/i, `<head$1><base href="${base}"><script src="assets/js/image-versions.js" defer></script>${extra}`);
+    source = source.replace(/\b(src|poster)="(assets\/[^"?#]+\.(?:svg|png|jpe?g|webp|avif|gif))"/gi,
+      (_, attribute, asset) => `${attribute}="${asset}?v=${assetVersion(asset)}"`);
+    source = source.replace(/\bsrcset="([^"]+)"/g, (_, candidates) => 'srcset="' + candidates.replace(/assets\/[^\s,?#]+\.(?:svg|png|jpe?g|webp|avif|gif)/gi, asset => `${asset}?v=${assetVersion(asset)}`) + '"');
     // GitHub Pages pozwala przeglądarce trzymać pliki 10 minut. Skrót zawartości w adresie
     // sprawia, że po publikacji zmienione CSS/JS są pobierane od razu, a niezmienione zostają w cache.
-    source = source.replace(/(\b(?:src|href)=")(assets\/(?:css|js)\/[^"?#]+\.(?:css|js))(")/g,
+    source = source.replace(/(\b(?:src|href)=")(assets\/(?:css|js)\/[^"?#]+\.(?:css|js))(?:\?[^"#]*)?(")/g,
       (_, start, asset, end) => `${start}${asset}?v=${assetVersion(asset)}${end}`);
     return source;
   }
-  const versions = new Map();
   function assetVersion(asset) {
     if (!versions.has(asset)) {
       const file = path.join(output, asset);
