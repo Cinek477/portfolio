@@ -14,6 +14,7 @@
     <script src="assets/js/admin-search.js" defer></script>
     <script src="assets/js/admin-unsaved.js" defer></script>
     <script src="assets/js/admin.js" defer></script>
+    <script src="assets/js/admin-gallery-settings.js" defer></script>
     <script src="assets/js/admin-projects.js" defer></script>
     <script src="assets/js/admin-pages.js" defer></script>
     <script src="assets/js/admin-messages.js" defer></script>
@@ -120,6 +121,7 @@
         <button type="button" data-panel="messages" aria-pressed="false">
           Wiadomości <span id="messages-badge"></span>
         </button>
+        <button type="button" data-panel="gallery-settings" aria-pressed="false">Ustawienia</button>
         <button type="button" data-panel="spotify" aria-pressed="false">Spotify</button>
         <button type="button" data-panel="preflight" aria-pressed="false">Przed publikacją</button>
         <button type="button" data-panel="backups" aria-pressed="false">Kopie zapasowe</button>
@@ -167,6 +169,7 @@
             </div>
             <label>Album (opcjonalnie)<input name="album" maxlength="160" list="photo-albums" placeholder="Wybierz istniejący lub wpisz nowy album" /><datalist id="photo-albums"></datalist><small>Ta sama nazwa łączy zdjęcia w album. Puste pole oznacza pojedyncze zdjęcie.</small></label>
             <label>Artysta<input name="artist" maxlength="500" placeholder="Mata" /></label>
+            <label>Znak wodny — napis przy tym zdjęciu<input name="watermarkText" maxlength="80" placeholder="Np. KLAUDYNA" /><small class="admin-hint">Własny pionowy napis obok tego zdjęcia. Puste pole używa ustawień ogólnych, a następnie artysty lub tytułu zdjęcia. Widoczny w podglądzie na komputerze; nie zmienia pliku fotografii.</small></label>
             <label hidden
               >Model (opcjonalnie)<input
                 name="instagram"
@@ -341,6 +344,18 @@
         </nav>
         <p class="admin-hint">Foldery dotyczą zgłoszeń w panelu. Nie przenoszą e-maili w Gmailu ani nie blokują automatycznie nadawcy. Wiadomości w koszu pozostają do przywrócenia, dopóki nie usuniesz ich trwale.</p>
         <div id="messages-list"></div>
+      </section>
+      <section id="gallery-settings-panel" class="admin-panel" hidden aria-labelledby="gallery-settings-title">
+        <h2 id="gallery-settings-title">Ustawienia — znak wodny</h2>
+        <p class="admin-hint">Pionowy, dekoracyjny napis obok zdjęcia. Nie jest nanoszony na plik fotografii. Ustawienie dotyczy całej galerii.</p>
+        <form id="gallery-settings-form">
+          <label><input name="watermarkEnabled" type="checkbox" checked /> Pokazuj znak wodny</label>
+          <label>Własny napis<input name="watermarkText" type="text" maxlength="80" placeholder="Automatycznie: artysta lub tytuł zdjęcia" /></label>
+          <p class="admin-hint">Zostaw puste pole, aby używać nazwy artysty lub tytułu oglądanego zdjęcia. Napis jest widoczny tylko na komputerze.</p>
+          <p>Podgląd: <output id="watermark-preview">Nazwa artysty / tytuł zdjęcia</output></p>
+          <button type="submit">Zapisz ustawienia</button>
+          <p id="gallery-settings-status" role="status" aria-live="polite"></p>
+        </form>
       </section>
     </main>
   </body>

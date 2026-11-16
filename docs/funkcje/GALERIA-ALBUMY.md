@@ -96,7 +96,7 @@ Kliknięcie poza powierzchnią dialogu również może go zamknąć. Po zamknię
 Brak wyników filtra daje komunikat pustej kategorii.
 
 Metadane zależą od kategorii. Koncert pokazuje dane wydarzenia, inne kategorie skupiają się na miejscu,
-opisie i ewentualnym Instagramie. „Samo zdjęcie” ukrywa metadane.
+opisie i ewentualnym Instagramie. Kliknięcie w zdjęcie otwiera je na pełnym ekranie; przycisk w rogu przełącza kadr i całe zdjęcie.
 „Zobacz więcej zdjęć” otwiera kolekcję albumu; „Wróć do wszystkich zdjęć” przywraca kolekcję galerii.
 
 ## 10. Ładowanie i błędy
@@ -117,6 +117,20 @@ Szczegóły: [kosz i kopie](KOPIE-KOSZ.md).
 
 ## 12. Pliki, API i kontrola
 
+### Ustawienia znaku wodnego
+
+W **Bazy danych → Galeria zdjęć → Edytuj** pole **Znak wodny — napis przy tym zdjęciu** pozwala
+ustawić osobny tekst dla fotografii (do 80 znaków). Jest też dostępne przy dodawaniu zdjęcia.
+Własny napis zdjęcia ma pierwszeństwo przed tekstem ogólnym; wyczyszczenie pola przywraca ustawienie ogólne.
+Ogólne wyłączenie znaku wodnego ukrywa wszystkie napisy, również te przypisane do zdjęć.
+
+W panelu **Ustawienia → Znak wodny** można zmienić pionowy napis obok fotografii lub go wyłączyć.
+Puste pole przy włączonym napisie zachowuje automatyczną nazwę artysty albo tytuł zdjęcia.
+Własny tekst (do 80 znaków) dotyczy całej galerii. Napis jest dekoracją podglądu na komputerze,
+nie jest nanoszony na pliki zdjęć. Leży między przyciskiem poprzedniego zdjęcia a fotografią.
+Zapis trafia do SQLite i `assets/js/gallery-settings-data.js`; publikacja wymaga commit i push.
+API `/api/gallery-settings` wymaga administratora; zapis również lokalnego pochodzenia żądania.
+
 Publicznie: `gallery.js`, `lightbox.js`, `photo-loader.js`, `gallery-data.js`, `hobby.css`, `lightbox.css`.
 Panel: `admin.js`; walidacja: `shared/normalize.cjs`; dane: `photos` w SQLite.
 API: `/api/photos`, `/api/photos/:id`, `/api/photo-management`, `/api/photo-order`, `/api/album-cover`.
@@ -125,3 +139,8 @@ Fotografie trafiają do `assets/images/gallery/2400px/` i `800px/`; nie są pryw
 Sprawdź każdą kategorię, oba języki, pion/poziom/kwadrat, skrajny kadr, pusty filtr,
 album z jednym i wieloma zdjęciami, okładkę, zdjęcie tylko albumowe, kopiowanie linku bez schowka,
 szybkie zmiany zdjęć, zamknięcie podczas pobierania i przywrócenie wpisu z kosza.
+
+„Kopiuj link do albumu” kopiuje link bez pokazywania pola do ręcznego zaznaczania.
+Gdy Clipboard API jest niedostępne (np. lokalny adres IP przez HTTP), używane jest zastępcze
+kopiowanie z tymczasowego pola wewnątrz dialogu. Jeśli przeglądarka zablokuje oba sposoby,
+pojawia się komunikat błędu zamiast nieprawdziwego potwierdzenia skopiowania.

@@ -16,7 +16,7 @@
   padding: 60px 65px 35px;
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: var(--radius-modal);
-  background: rgba(7, 17, 37, 0.92);
+  background: #071125;
   backdrop-filter: none; /* avoid-ai-design-ignore: K3 */
   -webkit-backdrop-filter: none; /* avoid-ai-design-ignore: K3 */
   color: #f3f6ff;
@@ -154,67 +154,6 @@
 
 /* Jasny motyw: pełne, jasne tło karty (bez prześwitującej strony), mocniejsze przyciemnienie
    wokół i białe kafelki z niebieskim akcentem — zdjęcie i jego poświata zostają bez zmian. */
-:root[data-theme='light'] .photo-lightbox {
-  color-scheme: light;
-  background: linear-gradient(160deg, #ffffff 0%, #f3f7fe 55%, #eef1ff 100%);
-  border-color: rgba(29, 95, 224, 0.12);
-  color: var(--text);
-  box-shadow: 0 40px 120px rgba(11, 26, 51, 0.3);
-}
-:root[data-theme='light'] .photo-lightbox::backdrop {
-  background: rgba(11, 26, 51, 0.55);
-}
-:root[data-theme='light'] .lightbox-badges span {
-  background: #fff;
-  border-color: rgba(29, 95, 224, 0.2);
-  color: var(--accent);
-  box-shadow: 0 2px 8px rgba(29, 78, 216, 0.06);
-}
-:root[data-theme='light'] .lightbox-info-tile {
-  background: #fff;
-  border: 1px solid rgba(29, 95, 224, 0.12);
-  box-shadow: 0 2px 6px rgba(29, 78, 216, 0.04), 0 12px 28px rgba(29, 78, 216, 0.07);
-}
-:root[data-theme='light'] .lightbox-info-tile:hover {
-  background: #fff;
-  border-color: rgba(29, 95, 224, 0.3);
-  box-shadow: 0 4px 10px rgba(29, 78, 216, 0.06), 0 18px 36px rgba(29, 78, 216, 0.12);
-}
-:root[data-theme='light'] .lightbox-info-tile dt {
-  color: var(--muted);
-}
-:root[data-theme='light'] .lightbox-info-tile .lightbox-value {
-  color: var(--text);
-  text-shadow: none;
-}
-:root[data-theme='light'] .lightbox-info-tile .lightbox-icon {
-  color: var(--accent);
-  filter: none;
-}
-:root[data-theme='light'] .lightbox-icon {
-  color: var(--muted);
-}
-:root[data-theme='light'] .lightbox-description {
-  background: rgba(29, 95, 224, 0.05);
-  border-color: rgba(29, 95, 224, 0.1);
-}
-:root[data-theme='light'] .lightbox-description p,
-:root[data-theme='light'] .lightbox-counter {
-  color: var(--muted);
-}
-:root[data-theme='light'] .lightbox-dot::before {
-  background: rgba(11, 26, 51, 0.22);
-}
-:root[data-theme='light'] .lightbox-dot[aria-pressed='true']::before {
-  background: var(--accent);
-  box-shadow: 0 0 12px rgba(29, 95, 224, 0.25);
-}
-:root[data-theme='light'] .photo-lightbox :is(.lightbox-arrow, .lightbox-close, .lightbox-focus) {
-  background: #fff;
-  border: 1px solid rgba(29, 95, 224, 0.16);
-  color: var(--accent);
-  box-shadow: 0 4px 14px rgba(29, 78, 216, 0.12);
-}
 .lightbox-info-tile:hover {
   background-image: linear-gradient(
     135deg,
@@ -301,37 +240,10 @@
   color: #9cacc8;
   white-space: nowrap;
 }
-.lightbox-dots {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-  gap: 2px;
-}
-.lightbox-dot {
-  display: grid;
-  place-items: center;
-  width: 24px;
-  height: 24px;
-  background: transparent;
-  border: 0;
-  padding: 0;
-}
-.lightbox-dot::before {
-  content: '';
-  width: 5px;
-  height: 5px;
-  background: #ffffff40;
-  border-radius: 50%;
-  transition:
-    background 0.2s,
-    box-shadow 0.2s,
-    transform 0.2s;
-}
-.lightbox-dot[aria-pressed='true']::before {
-  background: #a3c5ff;
-  box-shadow: 0 0 12px rgba(137, 183, 255, 0.2);
-  transform: scale(1.4);
-}
+
+
+
+
 .photo-lightbox .lightbox-arrow,
 .photo-lightbox .lightbox-close {
   display: grid;
@@ -497,7 +409,7 @@
   .photo-lightbox .lightbox-carousel .lightbox-image.is-active { display:block; }
   .photo-lightbox .lightbox-image img { object-fit:contain; opacity:1; transition:none; }
   .photo-lightbox .lightbox-pagination { margin:16px 0 22px; justify-content:center; }
-  .photo-lightbox .lightbox-dots { display:none; }
+
   .photo-lightbox :is(.lightbox-arrow,.lightbox-close) { position:fixed; z-index:5; top:calc(12px + env(safe-area-inset-top)); bottom:auto; width:44px; height:44px; transform:none; margin:0; }
   .photo-lightbox .lightbox-arrow { display:inline-flex; }
   .photo-lightbox .lightbox-prev { left:16px; right:auto; }
@@ -537,7 +449,7 @@
   .photo-lightbox .lightbox-carousel .lightbox-image img { box-shadow:none; filter:none; border:0; outline:0; }
 }
 
-.lightbox-share-status { color:var(--muted); font-size:12px; line-height:1.5; margin:8px 0; }
+.lightbox-share-status { order:-1; flex:0 0 100%; grid-column:1 / -1; color:var(--muted); font-size:12px; line-height:1.5; margin:0 0 8px; }
 .lightbox-share-status:empty { display:none; }
 .lightbox-share-url { box-sizing:border-box; width:100%; min-width:0; padding:12px; font-size:16px; border-radius:10px; border:1px solid var(--line); background:var(--bg); color:var(--text); }
 
@@ -546,13 +458,12 @@
 .lightbox-album-actions .lightbox-album-action { margin:0; min-height:44px; justify-content:center; line-height:1.4; text-align:center; }
 @media(max-width:768px) { .lightbox-album-actions { display:grid; grid-template-columns:minmax(0,1fr); gap:10px; } .lightbox-album-actions .lightbox-album-action { width:100%; min-width:0; padding:12px 16px; } }
 
-.lightbox-focus { position:absolute; top:14px; left:20px; min-height:36px; padding:8px 14px; border:1px solid var(--control-border,var(--line)); border-radius:12px; background:var(--control-bg); color:var(--accent); font:inherit; font-size:12px; cursor:pointer; }
-.lightbox-focus:focus-visible { outline:2px solid var(--accent); outline-offset:3px; }
-.photo-lightbox.is-focused .lightbox-metadata { display:none; }
-.photo-lightbox.is-focused .lightbox-content { flex-direction:column; gap:16px; }
-.photo-lightbox.is-focused .lightbox-carousel { width:100%; flex:auto; }
-.photo-lightbox.is-focused .lightbox-details { width:100%; flex:auto; }
-@media(max-width:768px) { .lightbox-focus { top:10px; left:16px; font-size:12px; } }
+
+
+
+
+
+
 
 /* Podgląd zdjęcia: najpierw kwadrat z kadrem ustawionym w panelu, kliknięcie pokazuje całe
    zdjęcie w oryginalnych proporcjach. Poświata ma kolor zdjęcia (glowColor liczony w panelu).
@@ -633,28 +544,8 @@
 .lightbox-crop-toggle[hidden] {
   display: none;
 }
-/* „Samo zdjęcie” stoi w prawym górnym rogu, tuż obok zamykania (44 px + odstęp). */
-.photo-lightbox .lightbox-focus {
-  top: 12px;
-  left: auto;
-  right: 68px;
-  min-height: 44px;
-  padding: 0 16px;
-  border-radius: 999px;
-  font-size: 13px;
-  font-weight: 600;
-}
-@media (max-width: 768px) {
-  /* Na telefonie zamykanie ma 36 px i stoi 10 px od krawędzi. */
-  .photo-lightbox .lightbox-focus {
-    top: 10px;
-    left: auto;
-    right: 54px;
-    min-height: 36px;
-    padding: 0 12px;
-    font-size: 12px;
-  }
-}
+
+
 @media(max-width:768px) {
   .photo-lightbox {
     --lightbox-photo-size: var(--mobile-photo-height, 55svh);
@@ -778,15 +669,6 @@ body.photo-view-open main *, body.photo-view-open .aurora-blob { animation-play-
   gap: 10px;
   margin-top: 24px;
 }
-/* Ostatni przycisk (więcej zdjęć z wydarzenia) jest główną akcją, gdy jest ich kilka. */
-.photo-lightbox .lightbox-album-actions .lightbox-album-action:last-child:not(:first-child) {
-  background: linear-gradient(135deg, #3b82f6, #1d5fe0);
-  border-color: #1d5fe0;
-  color: #fff;
-}
-.photo-lightbox .lightbox-album-actions .lightbox-album-action:last-child:not(:first-child):hover {
-  background: linear-gradient(135deg, #1d5fe0, #1e40af);
-}
 .photo-lightbox .lightbox-pagination {
   margin-top: 26px;
   padding-top: 16px;
@@ -794,22 +676,6 @@ body.photo-view-open main *, body.photo-view-open .aurora-blob { animation-play-
 }
 
 /* Jasny motyw tego układu. */
-:root[data-theme='light'] .photo-lightbox .lightbox-info-tile {
-  background: #fff;
-  border-color: rgba(29, 95, 224, 0.12);
-}
-:root[data-theme='light'] .photo-lightbox .lightbox-info-tile .lightbox-icon {
-  background: rgba(29, 95, 224, 0.08);
-}
-:root[data-theme='light'] .photo-lightbox .lightbox-description {
-  background: none;
-}
-:root[data-theme='light'] .photo-lightbox .lightbox-description p {
-  color: var(--text);
-}
-:root[data-theme='light'] .photo-lightbox .lightbox-pagination {
-  border-top-color: rgba(29, 95, 224, 0.1);
-}
 
 @media (max-width: 768px) {
   .photo-lightbox .lightbox-info-tile {
@@ -1046,8 +912,158 @@ body.photo-view-open main *, body.photo-view-open .aurora-blob { animation-play-
     overscroll-behavior: contain;
     scrollbar-width: thin;
   }
-  /* Tryb „Samo zdjęcie” ukrywa opis — kolumna nie potrzebuje wtedy stałej wysokości. */
-  .photo-lightbox.is-focused .lightbox-details {
-    height: auto;
-  }
+
 }
+
+/* Podgląd jest ciemny w obu motywach: zdjęcia koncertowe są ciemne i na jasnym panelu ginęły.
+   W jasnym motywie okno dostaje zmienne ciemnego motywu, więc wszystkie elementy w środku je dziedziczą. */
+:root:not([data-theme='dark']) .photo-lightbox {
+  --bg: #091526; --panel: #10243e; --glass: rgba(16, 36, 62, 0.85); --text: #e2efff; --muted: #98aec8;
+  --line: #233d5b; --accent: #7bb5ff; --card: #102039;
+  --control-bg: linear-gradient(135deg, rgba(125, 211, 252, 0.12), rgba(23, 105, 232, 0.18));
+  --control-border: rgba(125, 211, 252, 0.4); --control-glow: rgba(56, 189, 248, 0.22);
+}
+:root:not([data-theme='dark']) .photo-lightbox::backdrop { background: rgba(11, 26, 51, 0.6); }
+/* Zdjęcie dostaje większą część okna. */
+@media (min-width: 769px) {
+  .photo-lightbox .lightbox-carousel { flex: 1 1 58%; }
+  .photo-lightbox .lightbox-details { flex: 1 1 42%; min-width: 0; }
+}
+/* Metryczka: jedna linia faktów zamiast czterech pudełek. Selektory z .lightbox-details mają
+   pierwszeństwo przed starszymi regułami kafli (siatka, zapytania kontenerowe). */
+.photo-lightbox .lightbox-details .lightbox-info-grid { display: flex; flex-wrap: wrap; gap: 6px 0; margin: 0 0 18px; }
+.photo-lightbox .lightbox-details .lightbox-info-tile,
+.photo-lightbox .lightbox-details .lightbox-info-tile:hover { display: inline-flex; flex: 0 0 auto; align-items: center; width: auto; min-height: 0; padding: 0; border: 0; border-radius: 0; background: none; container-type: normal; flex-direction: row; height: auto; gap: 0; }
+.photo-lightbox .lightbox-details .lightbox-info-tile .lightbox-icon { display: none; }
+.photo-lightbox .lightbox-details .lightbox-info-tile dt { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.photo-lightbox .lightbox-details .lightbox-info-tile .lightbox-value { margin: 0; font-size: 16px; font-weight: 600; color: var(--muted); }
+.photo-lightbox .lightbox-details .lightbox-info-tile + .lightbox-info-tile::before { content: '·'; margin: 0 10px; color: var(--accent); }
+
+/* Główna akcja albumu jest wypełniona, kopiowanie linku zostaje drugorzędne. */
+.lightbox-album-actions .lightbox-album-action:not(.lightbox-share) { background: linear-gradient(135deg, #3b82f6, #1d5fe0); border-color: #1d5fe0; color: #fff; }
+:root .photo-lightbox .lightbox-album-actions .lightbox-share { background: transparent; border-color: rgba(125, 211, 252, 0.4); color: #e2efff; box-shadow: none; }
+
+/* Nastrój okna z koloru poświaty zdjęcia (glowColor z panelu, zawsze nasycony): trzy plamy rozłożone
+   po całym oknie, pod spodem stałe ciemne tło, więc kontrast tekstu nie zależy od zdjęcia. Wcześniejsza
+   próba z rozmytym samym zdjęciem dawała szare tło przy jasnych kadrach (śnieg) i ciemne przy ciemnych. */
+.photo-lightbox {
+  background:
+    radial-gradient(60% 85% at 18% 50%, color-mix(in srgb, var(--dynamic-glow-color) 34%, transparent), transparent 72%),
+    radial-gradient(55% 70% at 100% 0%, color-mix(in srgb, var(--dynamic-glow-color) 22%, transparent), transparent 70%),
+    radial-gradient(50% 65% at 82% 100%, color-mix(in srgb, var(--dynamic-glow-color) 18%, transparent), transparent 70%),
+    #071125;
+}
+/* Główna akcja wypełniona, kopiowanie linku z samym obramowaniem. */
+.photo-lightbox .lightbox-album-actions .lightbox-album-action:not(.lightbox-share) { background: linear-gradient(135deg, #3b82f6, #1d5fe0); border-color: #1d5fe0; color: #fff; }
+.photo-lightbox .lightbox-album-actions .lightbox-album-action:not(.lightbox-share):hover { background: linear-gradient(135deg, #1d5fe0, #1e40af); }
+.photo-lightbox .lightbox-album-actions .lightbox-album-action.lightbox-share { background: transparent; border-color: rgba(125, 211, 252, 0.4); color: #e2efff; box-shadow: none; }
+.photo-lightbox .lightbox-album-actions .lightbox-album-action.lightbox-share:hover { border-color: #7bb5ff; background: rgba(125, 211, 252, 0.08); }
+.lightbox-thumbs[hidden] { display: none; }
+/* Mały pasek miniatur na dole kolumny (komputer): licznik po lewej, miniatury w jednym rzędzie przewijanym
+   w bok. Działa przy dowolnej liczbie zdjęć — miniatury ładują się leniwie, bieżąca jest przewijana na środek. */
+@media (min-width: 769px) {
+  .photo-lightbox .lightbox-pagination { display: flex; align-items: center; gap: 16px; }
+  .lightbox-thumbs { display: flex; gap: 8px; min-width: 0; margin-left: auto; padding: 4px 2px 6px; overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x proximity; scrollbar-width: thin; scrollbar-color: rgba(125, 211, 252, 0.35) transparent; }
+}
+.lightbox-thumb { flex: 0 0 auto; display: block; width: 52px; height: 52px; padding: 0; border: 2px solid transparent; border-radius: 10px; overflow: hidden; background: #0b1a33; opacity: 0.55; cursor: pointer; scroll-snap-align: center; transition: opacity 0.2s ease, border-color 0.2s ease, transform 0.2s ease; }
+.lightbox-thumb img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.lightbox-thumb:hover { opacity: 0.85; transform: translateY(-2px); }
+.lightbox-thumb[aria-current='true'] { opacity: 1; border-color: #7bb5ff; }
+.lightbox-thumb:focus-visible { outline: 2px solid #7bb5ff; outline-offset: 2px; opacity: 1; }
+@media (prefers-reduced-motion: reduce) { .lightbox-thumb { transition: none; } .lightbox-thumb:hover { transform: none; } }
+
+/* Ten sam porządek treści co przy koncertach (etykieta, tytuł, miejsce, opis), bez wypychania tytułu
+   na środek kolumny, przez które nad tytułem zostawała pusta dziura. */
+@media (min-width: 769px) {
+  .photo-lightbox .lightbox-metadata:has(.lightbox-info-grid.is-simple)::before,
+  .photo-lightbox .lightbox-metadata:has(.lightbox-info-grid.is-simple)::after { display: none; }
+  .photo-lightbox .lightbox-metadata:has(.lightbox-info-grid.is-simple) > h2 { order: 1; margin: 0 0 12px; }
+  .photo-lightbox .lightbox-metadata:has(.lightbox-info-grid.is-simple) > .lightbox-info-grid { order: 2; }
+}
+/* Akcenty w kolorze zdjęcia: etykiety i bieżąca miniatura. Przycisk bez poświaty. */
+.photo-lightbox .lightbox-badges span { border-color: color-mix(in srgb, var(--dynamic-glow-color) 70%, rgba(255, 255, 255, 0.2)); background: color-mix(in srgb, var(--dynamic-glow-color) 22%, transparent); }
+.lightbox-thumb[aria-current='true'] { border-color: color-mix(in srgb, var(--dynamic-glow-color) 85%, #fff); box-shadow: 0 0 16px var(--dynamic-glow-color); }
+.photo-lightbox .lightbox-album-actions .lightbox-album-action:not(.lightbox-share) { box-shadow: none; }
+
+/* Znaczniki z ikonami: kategoria w kolorze zdjęcia, miejsce i data jako szklane znaczniki. */
+.lightbox-tags { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 16px; padding: 0; list-style: none; }
+.lightbox-tag { display: inline-flex; align-items: center; gap: 7px; padding: 6px 12px 6px 8px; border-radius: 999px; background: rgba(255, 255, 255, 0.07); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.14); color: #eef3ff; font-size: 13px; font-weight: 600; line-height: 1.3; }
+.lightbox-tag .lightbox-icon { display: inline-grid; width: auto; height: auto; padding: 0; border: 0; background: none; box-shadow: none; color: color-mix(in srgb, var(--dynamic-glow-color) 55%, #fff); }
+.lightbox-tag .lightbox-icon svg { width: 15px; height: 15px; }
+.lightbox-tag.is-category { background: color-mix(in srgb, var(--dynamic-glow-color) 40%, transparent); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--dynamic-glow-color) 80%, #fff); }
+.lightbox-tag.is-category .lightbox-icon { color: #fff; }
+.photo-lightbox .lightbox-metadata h2 { margin-bottom: 6px; }
+.lightbox-subtitle { margin: 0 0 18px; color: var(--muted); font-size: 17px; font-weight: 600; }
+.photo-lightbox .lightbox-metadata > .lightbox-description { margin-top: 12px; }
+/* Znak wodny za zdjęciem (komputer): wielki, poziomy, konturowy napis wyśrodkowany w części ze zdjęciem.
+   Zdjęcie przykrywa środek, litery wystają po bokach; napis jest przycinany do tej części, więc nie wchodzi na tekst. */
+.lightbox-watermark { display: none; }
+@media (min-width: 769px) {
+  /* Osobny pas między strzałką a zdjęciem; napis podąża za ramką zdjęcia. */
+  .photo-lightbox { padding-left: 124px; }
+  .lightbox-watermark { position: absolute; top: 0; bottom: 0; right: calc(100% + 12px); left: auto; width: 48px; z-index: 0; display: flex; align-items: center; justify-content: center; overflow: hidden; white-space: nowrap; writing-mode: vertical-rl; transform: rotate(180deg); pointer-events: none; user-select: none; color: color-mix(in srgb, var(--dynamic-glow-color) 60%, rgba(255, 255, 255, 0.4)); filter: url(#lightbox-outline); font: 800 60px / 0.8 var(--font-display, 'Bricolage Grotesque', sans-serif); letter-spacing: 0.02em; text-transform: uppercase; opacity: 0.45; }
+}
+
+/* Telefon: zdjęcie w górnej części ekranu (według kadru z panelu), pod nim wysunięty arkusz z informacjami,
+   który nie zasłania kadru. „Całe zdjęcie” pokazuje kadr bez przycinania. */
+.lightbox-subtitle-date { display: none; }
+.lightbox-sheet-toggle { display: none; }
+@media (max-width: 768px) { .photo-lightbox .lightbox-sheet-toggle { display: block; } }
+/* Na komputerze sama data stoi w znaczniku, więc linijka bez nazwy wydarzenia jest zbędna. */
+@media (min-width: 769px) { .lightbox-subtitle:not(:has(.lightbox-subtitle-event)) { display: none; } }
+@media (max-width: 768px) {
+  .photo-lightbox { inset: 0; width: 100%; height: 100dvh; max-height: 100dvh; margin: 0; padding: 0; border: 0; border-radius: 0; overflow: hidden; background: #000; box-shadow: none; }
+  .photo-lightbox .lightbox-content { position: relative; display: block; height: 100%; }
+  .photo-lightbox .lightbox-carousel { position: absolute; inset: 0 0 auto; height: 58%; display: block; }
+  .photo-lightbox .lightbox-carousel .lightbox-image.is-active { width: 100%; height: 100%; max-width: none; max-height: none; border-radius: 0; box-shadow: none; background: #000; }
+  .photo-lightbox .lightbox-carousel .lightbox-image.is-active img { width: 100%; height: 100%; aspect-ratio: auto; max-width: none; max-height: none; border-radius: 0; box-shadow: none; object-fit: contain; }
+  .photo-lightbox .lightbox-carousel .lightbox-image.is-active.is-cropped img { object-fit: cover; object-position: var(--crop-position, 50% 50%); }
+  .photo-lightbox .lightbox-carousel .lightbox-image .lightbox-crop-toggle { top: calc(14px + env(safe-area-inset-top)); bottom: auto; left: 16px; right: auto; }
+  .photo-lightbox .lightbox-close { position: absolute; z-index: 4; top: calc(14px + env(safe-area-inset-top)); right: 16px; width: 44px; height: 44px; background: rgba(7, 17, 37, 0.55); }
+  .photo-lightbox .lightbox-content .lightbox-details { display: flex; flex-direction: column; position: absolute; left: 0; right: 0; bottom: 0; z-index: 2; height: 46%; overflow-y: auto; padding: 22px 16px calc(12px + env(safe-area-inset-bottom)); border-radius: 26px 26px 0 0; background: #0a1428; box-shadow: 0 -14px 40px rgba(0, 0, 0, 0.45); }
+  /* Uchwyt panelu jest przyciskiem: stuknięcie (albo przesunięcie w dół) chowa opis. */
+  .photo-lightbox .lightbox-sheet-toggle { position: absolute; top: 0; left: 50%; z-index: 3; width: 96px; height: 24px; margin-left: -48px; padding: 0; border: 0; background: none; cursor: pointer; }
+  .photo-lightbox .lightbox-sheet-toggle::before { content: ''; position: absolute; top: 9px; left: 28px; width: 40px; height: 4px; border-radius: 2px; background: rgba(255, 255, 255, 0.32); transition: background 0.2s; }
+  .photo-lightbox .lightbox-sheet-toggle:focus-visible { outline: 2px solid var(--dynamic-glow-color); outline-offset: -2px; border-radius: 12px; }
+  /* Ramka zdjęcia zmienia wysokość od razu (animowana wyglądała jak spłaszczanie kadru); płynność daje krótkie przenikanie w JS. */
+  .photo-lightbox .lightbox-content .lightbox-details { transition: background 0.32s, box-shadow 0.32s; }
+  /* Zwinięty: zdjęcie na cały ekran, na dole przezroczysty pasek z tytułem i strzałką w górę. */
+  .photo-lightbox.is-sheet-collapsed .lightbox-carousel { height: 100%; }
+  .photo-lightbox.is-sheet-collapsed .lightbox-content .lightbox-details { height: auto; overflow: hidden; padding-top: 26px; background: linear-gradient(to top, rgba(4, 9, 20, 0.92), rgba(4, 9, 20, 0.55) 70%, transparent); box-shadow: none; }
+  .photo-lightbox.is-sheet-collapsed .lightbox-metadata > :not(h2, .lightbox-subtitle), .photo-lightbox.is-sheet-collapsed .lightbox-pagination { display: none; }
+  .photo-lightbox.is-sheet-collapsed .lightbox-metadata h2 { font-size: 22px; }
+  .photo-lightbox.is-sheet-collapsed .lightbox-subtitle { margin: 0; }
+  .photo-lightbox.is-sheet-collapsed .lightbox-sheet-toggle { width: 100%; height: 100%; left: 0; margin: 0; }
+  .photo-lightbox.is-sheet-collapsed .lightbox-sheet-toggle::before { top: 6px; left: 50%; width: 12px; height: 12px; margin-left: -6px; border-radius: 0; background: none; border: solid rgba(255, 255, 255, 0.8); border-width: 2px 0 0 2px; transform: rotate(45deg); }
+  .photo-lightbox .lightbox-metadata { display: flex; flex-direction: column; flex: 1 1 auto; margin: 0; }
+  /* Zakładka: kategoria w pełnym kolorze zdjęcia połączona z miejscem; data idzie do linijki pod tytułem. */
+  .photo-lightbox .lightbox-tags { display: flex; flex-wrap: nowrap; gap: 0; margin: 0 0 12px; border-radius: 12px; overflow: hidden; box-shadow: 0 8px 22px color-mix(in srgb, var(--dynamic-glow-color) 40%, transparent); }
+  .photo-lightbox .lightbox-tag { border-radius: 0; box-shadow: none; padding: 10px 12px; background: rgba(255, 255, 255, 0.08); min-width: 0; }
+  .photo-lightbox .lightbox-tag:not(.is-category) { flex: 1 1 auto; }
+  .photo-lightbox .lightbox-tag:not(.is-category) > span:last-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .photo-lightbox .lightbox-tag.is-category { flex: 0 0 auto; background: color-mix(in srgb, var(--dynamic-glow-color) 85%, #1d5fe0); box-shadow: none; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 800; }
+  .photo-lightbox .lightbox-tag:nth-child(3) { display: none; }
+  .photo-lightbox .lightbox-subtitle-date { display: inline; }
+  .photo-lightbox .lightbox-metadata h2 { margin: 0 0 4px; font-size: 28px; }
+  .photo-lightbox .lightbox-subtitle { margin: 0 0 8px; font-size: 14px; }
+  .photo-lightbox .lightbox-metadata > .lightbox-instagram { margin: 0 0 8px; }
+  .photo-lightbox .lightbox-metadata > .lightbox-description { margin: 0; padding: 0; border: 0; background: none; }
+  .photo-lightbox .lightbox-description .lightbox-icon { display: none; }
+  .photo-lightbox .lightbox-description p { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden; font-size: 14px; line-height: 1.5; }
+  /* Główny przycisk na całą szerokość, kopiowanie linku jako ikona obok (pełna nazwa zostaje dla czytników). */
+  .photo-lightbox .lightbox-metadata > .lightbox-album-actions { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; margin-top: auto; padding-top: 12px; }
+  .photo-lightbox .lightbox-album-actions:not(:has(> .lightbox-album-action:not(.lightbox-share))) { grid-template-columns: minmax(0, 1fr); }
+  .photo-lightbox .lightbox-album-actions .lightbox-album-action { min-height: 46px; padding: 8px 14px; font-size: 14px; white-space: normal; }
+  .photo-lightbox .lightbox-album-actions .lightbox-album-action.lightbox-share { width: 46px; padding: 0; font-size: 0; }
+  .photo-lightbox .lightbox-album-actions .lightbox-share::before { content: ''; width: 18px; height: 18px; background: currentColor; -webkit-mask: var(--link-icon) center / contain no-repeat; mask: var(--link-icon) center / contain no-repeat; }
+  .photo-lightbox { --link-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M10 14a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1'/%3E%3Cpath d='M14 10a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1'/%3E%3C/svg%3E"); }
+  .photo-lightbox .lightbox-pagination { margin: 10px 0 0; padding-top: 8px; border-top: 1px solid rgba(255, 255, 255, 0.08); }
+  /* Zdjęcia zmienia się przesunięciem w bok, więc strzałki są schowane wizualnie (zostają dla klawiatury i czytników),
+     a pod panelem zostaje sam licznik. */
+  .photo-lightbox .lightbox-pagination { display: flex; justify-content: center; }
+  .photo-lightbox .lightbox-pagination .lightbox-arrow:not(:focus-visible) { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
+  .photo-lightbox .lightbox-counter::before { content: '‹'; margin-right: 10px; opacity: 0.5; }
+  .photo-lightbox .lightbox-counter::after { content: '›'; margin-left: 10px; opacity: 0.5; }
+}
+/* Pionowe przewijanie zostaje przeglądarce, poziome gesty trafiają do galerii. */
+.photo-lightbox .lightbox-carousel { touch-action: pan-y; }

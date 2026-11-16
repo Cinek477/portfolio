@@ -367,6 +367,8 @@ button.admin-link {
 #review-form { display:grid; gap:16px; max-width:800px; }
 #review-form label { display:grid; gap:8px; }
 #review-form label:has(input[type=checkbox]) { display:flex; align-items:center; }
+#gallery-settings-form label:has(input[type='checkbox']) { display: flex; align-items: center; gap: 10px; min-height: 44px; }
+#gallery-settings-form input[type='checkbox'] { width: 18px; height: 18px; padding: 0; flex: 0 0 18px; accent-color: var(--accent); }
 #review-list { display:grid; gap:16px; margin-top:28px; overflow-wrap:anywhere; }
 
 #photo-crop { min-width:0; border:1px solid var(--line); border-radius:18px; padding:20px; }

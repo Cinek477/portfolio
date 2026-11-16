@@ -93,6 +93,8 @@ function createGalleryServer(options = {}) {
   }
   function readReviews() { return JSON.parse(db.prepare("SELECT value FROM settings WHERE key='tutoring-reviews'").get()?.value || '[]'); }
   function exportGallery() {
+    const gallerySettings = JSON.parse(db.prepare("SELECT value FROM settings WHERE key='gallery-settings'").get()?.value || JSON.stringify(require('./shared/gallery-settings.cjs').defaults));
+    fs.writeFileSync(options.dataDir ? path.join(dataDir, 'gallery-settings-data.js') : path.join(ROOT, 'assets/js/gallery-settings-data.js'), `window.portfolioGallerySettings = ${JSON.stringify(gallerySettings, null, 2)};\n`);
     const home = readHome();
     fs.writeFileSync(options.dataDir ? path.join(dataDir, 'home-data.js') : path.join(ROOT, 'assets/js/home-data.js'), `window.portfolioHome = ${JSON.stringify(home, null, 2)};\n`);
     const pages = { home: home.content, about: readAbout(), knowledge: { ...readOffers(), reviews: readReviews().filter(item=>item.visible && !item.archived) }, projects: readProjectPage(), contact: readContact() };
@@ -332,7 +334,7 @@ function createGalleryServer(options = {}) {
           return json(res,200,{drafts:db.prepare('SELECT COUNT(*) AS n FROM page_drafts').get().n,hiddenPhotos:photos.filter(photo=>photo.visible===false).length,albumOnly:photos.filter(photo=>photo.visible!==false&&photo.galleryVisible===false).length,unread:db.prepare("SELECT COUNT(*) AS n FROM messages WHERE folder='inbox' AND is_read=0").get().n});
         }
         if((options.automaticBackups ?? !options.dataDir) && authenticated(req) && !['GET','HEAD'].includes(req.method) &&
-          (req.method==='DELETE'||/^\/api\/page-drafts\/[^/]+\/publish$/.test(pathname)||/^\/api\/(?:pages\/[^/]+|home|photo-management|photo-order|album-cover|photos(?:\/[^/]+)?|projects(?:\/[^/]+)?)$/.test(pathname))){
+          (req.method==='DELETE'||/^\/api\/page-drafts\/[^/]+\/publish$/.test(pathname)||/^\/api\/(?:pages\/[^/]+|home|gallery-settings|photo-management|photo-order|album-cover|photos(?:\/[^/]+)?|projects(?:\/[^/]+)?)$/.test(pathname))){
           await backups.automatic();
         }
         if(pathname==='/api/preflight'&&req.method==='GET'){
@@ -342,6 +344,14 @@ function createGalleryServer(options = {}) {
         }
         if(await spotify.handle(req,res,pathname))return;
         if (await inbox(req, res, pathname)) return;
+        if (pathname === '/api/gallery-settings') {
+          if (!authenticated(req)) return json(res, 401, { error: 'Zaloguj się do panelu administratora.' });
+          if (req.method === 'GET') return json(res, 200, JSON.parse(db.prepare("SELECT value FROM settings WHERE key='gallery-settings'").get()?.value || JSON.stringify(require('./shared/gallery-settings.cjs').defaults)));
+          if (req.method !== 'PUT') return json(res, 405, { error: 'Niedozwolona metoda.' });
+          const settings = require('./shared/gallery-settings.cjs').normalizeGallerySettings(await body(req));
+          mutateGallery(() => db.prepare('INSERT INTO settings(key,value) VALUES (?,?) ON CONFLICT(key) DO UPDATE SET value=excluded.value').run('gallery-settings', JSON.stringify(settings)));
+          return json(res, 200, settings);
+        }
         if (pathname === '/api/auth/status' && req.method === 'GET') {
           return json(res, 200, {
             authenticated: authenticated(req),

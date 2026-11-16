@@ -10,6 +10,7 @@ function normalize(input, old = {}) {
     throw Object.assign(new Error('Dane zdjęcia muszą być obiektem JSON.'), { status: 400 });
   }
   const photo = { ...old };
+  photo.watermarkText = string(input.watermarkText === undefined ? old.watermarkText ?? '' : input.watermarkText, 'znak wodny', 80);
   photo.category = string(input.category, 'kategoria');
   if (!CATEGORIES.has(photo.category))
     throw Object.assign(new Error('Nieznana kategoria.'), { status: 400 });

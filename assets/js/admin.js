@@ -83,6 +83,7 @@ function edit(photo) {
   for (const key of [
     'title',
     'artist',
+    'watermarkText',
     'instagram',
     'album',
     'event',
@@ -336,11 +337,12 @@ document.querySelectorAll('[data-panel]').forEach((button) =>
       const active = tab === button;
       tab.setAttribute('aria-pressed', String(active));
     });
-    for (const panel of ['gallery', 'projects', 'messages', 'home', 'trash', 'backups', 'reviews', 'preflight', 'spotify'])
+    for (const panel of ['gallery', 'projects', 'messages', 'home', 'trash', 'backups', 'reviews', 'preflight', 'spotify', 'gallery-settings'])
       document.querySelector(`#${panel}-panel`).hidden = panel !== (button.dataset.target || button.dataset.panel);
     if (button.dataset.page) window.selectAdminPage?.(button.dataset.page).catch(error => status(error.message, true));
     if (['projects', 'achievements'].includes(button.dataset.panel))
       window.selectAdminProjectSection?.(button.dataset.panel);
+    if (button.dataset.panel === 'gallery-settings') window.loadAdminGallerySettings?.();
     if (button.dataset.panel === 'spotify') window.loadAdminSpotify?.();
     if (button.dataset.panel === 'preflight') window.runAdminPreflight?.();
     if (button.dataset.panel === 'reviews') window.loadAdminReviews?.().catch(error=>status(error.message,true));
@@ -375,7 +377,9 @@ async function refreshAuth() {
   document.querySelector('#admin-stats').hidden = !auth.authenticated;
   document.querySelector('#backups-panel').hidden = !auth.authenticated || !document.querySelector('[data-panel="backups"][aria-pressed="true"]');
   if(auth.authenticated) window.loadAdminStats?.();
+  document.querySelector('#gallery-settings-panel').hidden = !auth.authenticated || !document.querySelector('[data-panel="gallery-settings"][aria-pressed="true"]');
   if (auth.authenticated) {
+    if (!document.querySelector('#gallery-settings-panel').hidden) await window.loadAdminGallerySettings?.();
     if (!document.querySelector('#home-panel').hidden) await window.loadAdminHome?.();
     if (!document.querySelector('#trash-panel').hidden) await window.loadAdminTrash?.();
     await loadPhotos();
