@@ -88,7 +88,7 @@ test('Neon keeps drawing after translated text replaces its canvas', () => {
   assert.equal(observed, 1, 'The same control stays registered with its original visibility');
 });
 
-test('Neon is white on filled blue buttons in the light theme and blue elsewhere', () => {
+test('Neon is white on hovered (blue) buttons and blue on resting glass buttons', () => {
   const styles = new Map();
   let frame, intersection;
   const makeButton = filled => {
@@ -97,7 +97,7 @@ test('Neon is white on filled blue buttons in the light theme and blue elsewhere
       set strokeStyle(value) { used.add(value); }, stroke() {} };
     return { filled, used, context, clientWidth: 160, clientHeight: 48, isConnected: true,
       querySelector: () => nodes[0], append: node => nodes.push(node), getAttribute() {},
-      matches: selector => filled && !selector.includes(':hover') };
+      matches: selector => filled && selector.includes(':hover') };
   };
   const filled = makeButton(true), outline = makeButton(false);
   const queue = [filled, outline];
@@ -121,6 +121,6 @@ test('Neon is white on filled blue buttons in the light theme and blue elsewhere
   });
   intersection([{ target: filled, isIntersecting: true }, { target: outline, isIntersecting: true }]);
   frame(0);
-  assert.ok([...filled.used].every(color => color.startsWith('rgba(255,255,255,')), 'Filled button uses a white trail');
-  assert.ok(outline.used.size && [...outline.used].every(color => !color.startsWith('rgba(255,255,255,')), 'Outline button keeps the blue trail');
+  assert.ok([...filled.used].every(color => color.startsWith('rgba(255,255,255,')), 'Hovered button uses a white trail');
+  assert.ok(outline.used.size && [...outline.used].every(color => !color.startsWith('rgba(255,255,255,')), 'Resting glass button keeps the blue trail');
 });

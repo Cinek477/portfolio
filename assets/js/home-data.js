@@ -1,12 +1,12 @@
 window.portfolioHome = {
   "bio": {
-    "pl": "Studiuję informatykę na AGH. Programuję, automatyzuję codzienne zadania i pomagam innym w nauce. Rozwijam się w tworzeniu aplikacji, a pomysły sprawdzam na hackathonach — z HackYeah 2026 wróciłem z pierwszym miejscem. Po godzinach łapię koncertowe kadry, słucham muzyki i spędzam czas ze znajomymi.",
-    "en": "I study computer science at AGH University. I code, automate everyday tasks and help others learn. I’m developing my app-building skills and putting ideas to the test at hackathons — I took first place at HackYeah 2026. Outside of coding, I capture concert moments, listen to music and spend time with friends."
+    "pl": "Studiuję informatykę na AGH. Buduję aplikacje, automatyzuję codzienne zadania i pomagam innym w nauce matematyki. Po godzinach łapię koncertowe kadry.",
+    "en": "I study computer science at AGH University. I build apps, automate everyday tasks and help others learn mathematics. After hours I capture concert moments."
   },
   "primary": {
     "target": "projects",
-    "pl": "Zobacz projekty",
-    "en": "Explore projects"
+    "pl": "Wybrane realizacje",
+    "en": "Selected work"
   },
   "secondary": {
     "target": "cv",
@@ -15,8 +15,8 @@ window.portfolioHome = {
   },
   "featured": [
     "achievements-1",
-    "projects-0",
-    "achievements-0"
+    "achievements-0",
+    "projects-2"
   ],
   "currentWork": {
     "visible": true,
@@ -69,8 +69,8 @@ window.portfolioHome = {
     "buttons": [
       {
         "label": {
-          "pl": "Zobacz projekty",
-          "en": "Explore projects"
+          "pl": "Wybrane realizacje",
+          "en": "Selected work"
         },
         "href": "#featured-projects",
         "visible": true,
@@ -101,8 +101,8 @@ window.portfolioHome = {
         "en": "All projects"
       },
       "extra-3": {
-        "pl": "Poznaj mnie",
-        "en": "Get to know me"
+        "pl": "Na skróty",
+        "en": "Shortcuts"
       },
       "extra-4": {
         "pl": "Co Cię interesuje?",
@@ -157,19 +157,19 @@ window.portfolioHome = {
         "en": "Explore the gallery"
       },
       "extra-17": {
-        "pl": "O mnie",
-        "en": "About me"
+        "pl": "Kim jestem",
+        "en": "Who I am"
       },
       "extra-18": {
-        "pl": "Poznaj mnie bliżej.",
-        "en": "Get to know me better."
+        "pl": "O mnie",
+        "en": "About me"
       },
       "extra-19": {
         "pl": "Doświadczenie, edukacja i kompetencje w jednym miejscu.",
         "en": "Experience, education and skills in one place."
       },
       "extra-20": {
-        "pl": "Przejdź do O mnie",
+        "pl": "Poznaj mnie bliżej",
         "en": "More about me"
       }
     },

@@ -38,3 +38,7 @@ wiadomość nie zostaje zapisana do lokalnej skrzynki.
 API konfiguracji: `/api/pages/contact`; szkic: `/api/page-drafts/contact`.
 Sprawdź wszystkie cztery tematy, powrót między krokami, niepoprawny e-mail, błąd wysyłki,
 zachowanie treści po błędzie, oba języki i osobno wersję Pages z klientem poczty.
+
+## Wybór tematu
+
+Tematy są stale widoczne jako kafelki w dwóch kolumnach (na wąskim ekranie w jednej). Kafelki mają to samo szkło co przyciski akcji: po najechaniu robią się niebieskie z białym tekstem, a wybrany temat ma niebieską ramkę i lekki niebieski odcień. „Dalej” (ze strzałką →) jest przyciskiem ze szkła 50 px z niebieską smugą, a „Wstecz” zostaje zwykłym szarym odnośnikiem tekstowym. Element `<details>` jest otwarty od startu, a jego nagłówek jest ukryty. Lista ma jeden punkt zatrzymania Tab (wybrany temat albo pierwszy); strzałki oraz Home/End przechodzą między kafelkami, Enter wybiera temat. „Kontakt” jest małym nadtytułem nad kartą.

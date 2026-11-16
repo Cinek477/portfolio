@@ -50,12 +50,12 @@
   .brand-link .brand-monogram { display: block; }
 }
 @media (max-width: 760px) {
+  /* Logo po lewej, zaraz za przyciskiem menu (wcześniej stało na środku i dotykało PL/EN). */
+  .navbar .logo { order: 0; }
   .brand-link {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
+    order: 1;
     width: 76px;
-    margin: 0;
+    margin: 0 0 0 10px;
   }
   .brand-link .brand-wordmark { width: 76px; height: 36px; }
   .footer-brand { margin: 0; align-self: center; }

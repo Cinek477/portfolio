@@ -39,6 +39,7 @@
 .hobby-note[hidden] {
   display: none;
 }
+.gallery-filter { min-height: 44px; }
 .gallery-filters {
   display: flex;
   gap: 10px;
@@ -415,3 +416,14 @@
 .music-art.has-current-art .music-tonearm { transform:rotate(9deg); }
 .music-tonearm circle { stroke-width:2; }
 @media(prefers-reduced-motion:reduce) { .music-art .music-record { animation:none; } }
+
+/* Mniejsza animacja i ciaśniejszy nagłówek galerii: pierwsze zdjęcia widać bez przewijania. */
+@media (min-width: 761px) {
+  .hobby-hero { grid-template-columns: 280px 1fr; column-gap: 64px; padding-bottom: 28px; }
+  .hobby-hero .afterhours-board { padding: 18px; }
+  .hobby-hero .afterhours-stage { height: 230px; margin-top: 8px; }
+  .photography { padding-top: 32px; }
+  .photography .section-heading { margin-bottom: 18px; }
+  .photography .gallery-filters { margin-bottom: 6px; }
+  .photography .gallery-toolbar { margin-bottom: 6px; }
+}

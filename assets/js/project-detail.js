@@ -27,7 +27,7 @@ window.portfolioPages['project-detail.js'] = async () => {
     const candidates=projects.filter(item=>item.id!==id&&item.visible!==false&&item.caseStudy?.enabled).sort((a,b)=>Number(b.section===project.section)-Number(a.section===project.section)).slice(0,2);
     related.hidden=!candidates.length;
     const illustrations={'projects-0':'assets/images/projects/illustrations/oop.svg','projects-1':'assets/images/projects/illustrations/database.svg','projects-2':'assets/images/projects/illustrations/matura.svg','achievements-1':'assets/images/projects/illustrations/hackyeah.svg','achievements-0':'assets/images/projects/illustrations/krakhack.svg'};
-    const colors={'projects-0':'#c6a2de','projects-1':'#acd8d7','projects-2':'#b6d7f4','achievements-1':'#c6d6f5','achievements-0':'#b9e1e6'};
+    const colors={'projects-0':'#9fb3f4','projects-1':'#93c1f0','projects-2':'#a8d5fb','achievements-1':'#b6cdfb','achievements-0':'#a4cdee'};
     for(const item of candidates){
       const card=document.createElement('article');card.className='card';card.setAttribute('data-project-id',item.id);
       card.addEventListener('pointerenter',e=>{if(e.pointerType==='mouse'||e.pointerType==='pen'){card.classList.remove('is-collapsed');card.classList.add('is-hovered');}});
@@ -109,47 +109,28 @@ window.portfolioPages['project-detail.js'] = async () => {
       section.hidden = !local(value).trim();
       text(section.querySelector('.project-story-text'), value);
     }
-    const tags = main.querySelector('#project-detail-tags'); tags.replaceChildren();
-    for (const technology of (project.technologies || '').split(',').map(s => s.trim()).filter(Boolean)) {
-      const tile = document.createElement('div'); tile.className = 'project-tech-tile';
-      const icon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-      icon.setAttribute('viewBox', '0 0 32 32'); icon.setAttribute('aria-hidden', 'true');
-      const paths = {
-        python: 'M16 4H10a5 5 0 0 0-5 5v7h11v3H8v4a5 5 0 0 0 5 5h9a5 5 0 0 0 5-5V12H16V9h8a5 5 0 0 0-5-5h-3ZM11 8h.01M22 24h.01',
-        fastapi: 'M18 3 6 18h9l-1 11 12-16h-9l1-10Z',
-        react: 'M16 14v4m-2-2h4M29 16c0 4-26 4-26 0s26-4 26 0ZM22.5 27.3c-3.5 2-16.5-20.6-13-22.6s16.5 20.6 13 22.6ZM9.5 27.3c-3.5-2 9.5-24.6 13-22.6s-9.5 24.6-13 22.6Z',
-        sqlite: 'M5 8c0-6 22-6 22 0s-22 6-22 0Zm0 0v16c0 6 22 6 22 0V8M5 16c0 6 22 6 22 0',
-        ai: 'm16 3 3.5 9.5L29 16l-9.5 3.5L16 29l-3.5-9.5L3 16l9.5-3.5L16 3Z',
-        generic: 'm10 8-8 8 8 8m12-16 8 8-8 8M19 4l-6 24'
-      };
-      const key = technology.toLowerCase();
-      if (key === 'typescript') {
-        const label = document.createElementNS(icon.namespaceURI, 'text');
-        label.setAttribute('x', '16'); label.setAttribute('y', '22'); label.setAttribute('text-anchor', 'middle'); label.textContent = 'TS'; icon.append(label);
-      } else {
-        const path = document.createElementNS(icon.namespaceURI, 'path'); path.setAttribute('d', paths[key] || paths.generic); icon.append(path);
-      }
-      const name = document.createElement('span'); name.textContent = technology;
-      tile.append(icon, name); tags.append(tile);
-    }
-    main.querySelector('.project-detail-tech').hidden = !tags.children.length;
+    // Technologie jako jedna linia tekstu.
+    const tags = main.querySelector('#project-detail-tags');
+    tags.textContent = (project.technologies || '').split(',').map(item => item.trim()).filter(Boolean).join(' · ');
+    main.querySelector('.project-detail-tech').hidden = !tags.textContent;
+    // Film z działania zastępuje ilustrację na górze strony i przycisk demo w nagłówku.
+    const ytMatch = (project.demoUrl || '').match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([A-Za-z0-9_-]{11})/);
+    const embedUrl = ytMatch ? `https://www.youtube-nocookie.com/embed/${ytMatch[1]}?rel=0` : '';
     repository.hidden = !/^https?:\/\/[^\s]+$/i.test(project.link || '');
     if (!repository.hidden) repository.href = project.link;
     if (demo) {
-      demo.hidden = !/^https?:\/\/[^\s]+$/i.test(project.demoUrl || '');
+      demo.hidden = Boolean(embedUrl) || !/^https?:\/\/[^\s]+$/i.test(project.demoUrl || '');
       if (!demo.hidden) demo.href = project.demoUrl;
     }
     if (demoSection && demoIframe) {
-      const ytMatch = (project.demoUrl || '').match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([A-Za-z0-9_-]{11})/);
-      const embedUrl = ytMatch ? `https://www.youtube-nocookie.com/embed/${ytMatch[1]}?rel=0` : '';
       demoSection.hidden = !embedUrl;
       if (demoExternal && project.demoUrl) demoExternal.href = project.demoUrl;
       if (embedUrl && demoIframe.getAttribute('src') !== embedUrl) demoIframe.src = embedUrl;
     }
-    const src = project.src || project.thumbUrl;
+    const src = embedUrl && demoSection ? '' : project.src || project.thumbUrl;
     image.closest('figure').hidden = !src;
     main.classList.toggle('without-cover', !src);
-    const artColor = project.src?.includes('hackyeah.svg') ? '#c6d6f5' : project.src?.includes('krakhack.svg') ? '#b9e1e6' : '';
+    const artColor = project.src?.includes('hackyeah.svg') ? '#b6cdfb' : project.src?.includes('krakhack.svg') ? '#a4cdee' : '';
     main.style.setProperty('--case-art-bg', artColor || 'var(--card)');
     main.classList.toggle('has-case-art', Boolean(artColor));
     if (src) {

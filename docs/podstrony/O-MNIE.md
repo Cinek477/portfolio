@@ -42,3 +42,11 @@ Podmiana zdjęcia korzysta ze wspólnego przygotowania obrazów, ale podmiana tr
 
 Długie opisy i daty, kolejność osi czasu, format grup kompetencji, oba języki,
 brak pustych widocznych sekcji, proporcje zdjęcia oraz działanie przycisku CV.
+
+## Zakończenie strony
+
+Pod sekcjami stoi stały blok `.about-next` z przyciskami „Zobacz projekty” i „Napisz do mnie”. Jest wpisany w `pages/about.html` i nie ma pól w panelu.
+Kompetencje to karty w układzie bento: przy pięciu grupach w kolejności z panelu (Programowanie, Grafika, Organizacja, Narzędzia, Języki) pierwsza i trzecia zajmują dwa rzędy po bokach, a ostatnia jest szerokim paskiem pod środkiem. Przy innej liczbie grup siatka układa się sama w trzy kolumny. Na tablecie dwie kolumny, na telefonie jedna.
+Grupa „Języki”/„Languages” z wpisami „Nazwa — poziom” dostaje paski poziomu (`ojczysty`/`native` = pełny, A1–C2 = 1/6–6/6). Inny format zostaje zwykłą listą. W `pages/about.html` ta grupa jest od razu zapisana jako `.about-skill-languages` z `.about-skill-meters` (ta sama struktura, którą tworzy `page-content.js`), więc przy ładowaniu nic nie przeskakuje.
+Tagi i „Pobierz CV” stoją w `.about-story` pod akapitami; `page-content.js` wstawia akapity z panelu przed nimi.
+Zdjęcie ma warianty `marcin-about-400.webp` i `marcin-about-800.webp` (kwadrat w ramce bez przechylenia, z zaokrągleniem 28 px — inaczej niż przechylony portret na Starcie) w `srcset`. Po podmianie zdjęcia w panelu skrypt usuwa `srcset` i ładuje nowy plik; warianty trzeba wtedy przygotować ponownie.

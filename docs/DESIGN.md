@@ -32,7 +32,7 @@ Podstawowe zmienne z `assets/css/portfolio.css`:
 
 - Wartości jasnego motywu nadpisuje blok „Jasny motyw” w `portfolio.css`.
 - W ciemnym motywie karty z ilustracjami mają ten sam układ, ale kolor projektu jest przyciemniony: ten sam odcień, nasycenie ×0,9, jasność ×0,3 (`hsl(from …)`).
-- Ilustracje projektów mają własne pastelowe tła i ciemne podpisy.
+- Ilustracje projektów mają własne pastelowe tła w czystych odcieniach niebieskiego: OOP `#9fb3f4`, bazy danych `#93c1f0`, kurs maturalny `#a8d5fb`, HackYeah `#b6cdfb`, KrakHack `#a4cdee` i ciemne podpisy. Kolor tła karty musi być ten sam w ilustracji, w `scripts/decorate-illustrations.cjs` oraz w mapach kolorów w `projects.js` i `project-detail.js`.
 
 ### Ilustracje
 
@@ -58,6 +58,7 @@ W ciemnym motywie plamy są ciemnym pastelem jaśniejszym od tła, a kropki i pi
 
 - Promienie: karta **22 px**, panel **24 px**, kapsułki w pełni zaokrąglone.
 - Wspólne kontrolki są w `assets/css/controls.css`; rozmiary i układ należą do stylów podstron.
+- **Przyciski akcji** (`a.primary`, `a.secondary`, Instagram, kurs, „Dalej”/„Wyślij”) są ze szkła: półprzezroczyste tło z rozmyciem, ramka i niebieska smuga `neon.js`. Po najechaniu robią się niebieskie (`#1769e8`), a smuga biała, w obu motywach. Dwa rozmiary: **50 px** (tekst 15 px) w sekcjach i **42 px** (14 px) w kartach pakietów i ofert sesji; zaokrąglenie **12 px**. Główny przycisk ma strzałkę „→”, chyba że ma już własną ikonę (`.cta-arrow`). Reguły są na końcu `controls.css` (blok „Przyciski akcji: szkło”).
 - Stany aktywny, hover i fokus muszą być rozpoznawalne w obu motywach. Obsługa nie może zależeć wyłącznie od myszy.
 - Kafelki projektów zostawiają miejsce na rok, symbol, ilustrację i podpis. W sąsiednich kartach wyrównuj ilustracje i nagłówki; sprawdzaj tytuły jedno- i dwuwierszowe.
 
@@ -103,3 +104,9 @@ W ciemnym motywie plamy są ciemnym pastelem jaśniejszym od tła, a kropki i pi
 
 > [!IMPORTANT]
 > Po zmianie uruchom `npm run check` i sprawdź komponent na komputerze oraz telefonie. Eksport Pages generuje się ze źródeł — nie poprawiaj ręcznie `dist/github-pages/`.
+
+## Wspólna powierzchnia kart
+
+Karty z treścią (ścieżki na Starcie, „Teraz tworzę”, kompetencje, karty korepetycji, opinia, oferta fotograficzna, sekcje opisu projektu) używają zmiennych `--surface-bg`, `--surface-border` i `--surface-shadow` z `portfolio.css` oraz promienia `--radius-card`. Nowa karta powinna korzystać z tych samych zmiennych zamiast własnego gradientu. Osobny wygląd zachowują ilustracje, karty projektów w kolorze ilustracji i baner kursu.
+
+Podgląd zdjęcia w galerii jest ciemny w obu motywach (zmienne ciemnego motywu nadpisane na `.photo-lightbox`).

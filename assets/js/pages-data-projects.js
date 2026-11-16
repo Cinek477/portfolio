@@ -71,24 +71,24 @@
             "id": "text-0",
             "label": "Doświadczenie",
             "value": {
-              "pl": "Doświadczenie",
-              "en": "Experience"
+              "pl": "Hackathony",
+              "en": "Hackathons"
             }
           },
           {
             "id": "text-1",
             "label": "Projekty i kompetencje",
             "value": {
-              "pl": "Projekty i kompetencje",
-              "en": "Projects and skills"
+              "pl": "Osiągnięcia",
+              "en": "Achievements"
             }
           },
           {
             "id": "text-2",
             "label": "Najedź lub dotknij, aby poznać szczegóły",
             "value": {
-              "pl": "Najedź lub dotknij, aby poznać szczegóły",
-              "en": "Hover or tap to explore"
+              "pl": "Najedź lub dotknij, aby przeczytać opis",
+              "en": "Hover or tap to read more"
             }
           }
         ],

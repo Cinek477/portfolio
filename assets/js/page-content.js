@@ -58,7 +58,8 @@ window.portfolioPages['page-content.js'] = () => {
         const element = document.createElement('p');
         element.className = 'about-intro';
         translated(element, paragraph);
-        story.append(element);
+        // Tagi i „Pobierz CV” stoją w tej samej kolumnie pod tekstem, więc akapity trafiają przed nie.
+        story.insertBefore(element, story.querySelector('.about-focus, .about-download'));
       }
       const sections = main.querySelector('.about-sections');
       sections.replaceChildren();
@@ -80,12 +81,44 @@ window.portfolioPages['page-content.js'] = () => {
             const body = document.createElement('ul');
             const lines = Object.fromEntries(['pl', 'en'].map(lang => [lang, (groups[lang][index] || group).split('\n')]));
             translated(title, { pl: lines.pl[0], en: lines.en[0] });
-            lines.pl.slice(1).filter(Boolean).forEach((line, itemIndex) => {
-              const item = document.createElement('li');
-              translated(item, { pl: line, en: lines.en[itemIndex + 1] || line });
-              body.append(item);
-            });
-            item.append(title, body);
+            const entries = lines.pl.slice(1).filter(Boolean).map((line, itemIndex) => ({ pl: line, en: lines.en[itemIndex + 1] || line }));
+            // Języki w formacie „Nazwa — poziom” dostają pasek poziomu (ojczysty = pełny, A1–C2 = 1/6–6/6).
+            const level = text => {
+              const value = text.trim().replace(/\.$/, '');
+              if (/^(ojczysty|native)$/i.test(value)) return 1;
+              const cefr = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'].indexOf(value.toUpperCase());
+              return cefr < 0 ? null : (cefr + 1) / 6;
+            };
+            const split = text => text.match(/^(.+?)\s+[—–-]\s+(.+)$/);
+            const meters = /^(języki|languages)$/i.test(lines.pl[0].trim()) && entries.length && entries.every(entry => split(entry.pl) && level(split(entry.pl)[2]) !== null);
+            if (meters) {
+              item.classList.add('about-skill-languages');
+              const list = document.createElement('div');
+              list.className = 'about-skill-meters';
+              for (const entry of entries) {
+                const [, namePl, levelPl] = split(entry.pl);
+                const [, nameEn = namePl, levelEn = levelPl] = split(entry.en) || [];
+                const meter = document.createElement('div');
+                meter.className = 'about-skill-meter';
+                const name = document.createElement('span');
+                const value = document.createElement('em');
+                translated(name, { pl: namePl, en: nameEn });
+                translated(value, { pl: levelPl.replace(/\.$/, ''), en: levelEn.replace(/\.$/, '') });
+                const bar = document.createElement('i');
+                bar.setAttribute('aria-hidden', 'true');
+                bar.style.setProperty('--level', `${Math.round(level(levelPl) * 100)}%`);
+                meter.append(name, value, bar);
+                list.append(meter);
+              }
+              item.append(title, list);
+            } else {
+              for (const entry of entries) {
+                const li = document.createElement('li');
+                translated(li, entry);
+                body.append(li);
+              }
+              item.append(title, body);
+            }
             grid.append(item);
           });
           element.append(grid);

@@ -36,21 +36,9 @@ window.portfolioPages['contact.js'] = async () => {
   const categorySelect = form.elements.category;
   const picker = document.querySelector('#contact-category-picker');
   const currentTopic = document.querySelector('#contact-category-current');
-  const topicSearch = document.querySelector('#contact-category-search');
-  const emptyTopics = document.querySelector('#contact-category-empty');
   const topicButtons = [...picker.querySelectorAll('.page-section-tab')];
   const query=new URLSearchParams(location.search);
   let category=Object.hasOwn(categories,query.get('category'))?query.get('category'):'';
-  function filterTopics(){
-    if(!topicSearch)return;
-    const q=topicSearch.value.trim().toLocaleLowerCase('pl');
-    let count=0;
-    topicButtons.forEach(btn=>{
-      btn.hidden=!btn.textContent.toLocaleLowerCase('pl').includes(q);
-      if(!btn.hidden)count++;
-    });
-    if(emptyTopics)emptyTopics.hidden=count!==0;
-  }
   function renderTopics(){
     categorySelect.querySelectorAll('option').forEach(opt=>{if(!opt.value){opt.textContent=text('Wybierz temat…','Choose a topic…');return;}opt.textContent=label('topics-'+opt.value,categories[opt.value]);});
     topicButtons.forEach(btn=>{
@@ -59,29 +47,26 @@ window.portfolioPages['contact.js'] = async () => {
       btn.textContent=label('topics-'+val,categories[val]);
       btn.setAttribute('aria-selected',String(val===category));
     });
+    // Jeden punkt zatrzymania Tab dla całej listy: wybrany temat albo pierwszy; strzałki przechodzą między kafelkami.
+    const active=topicButtons.find(btn=>btn.dataset.value===category)||topicButtons[0];
+    topicButtons.forEach(btn=>{btn.tabIndex=btn===active?0:-1;});
     categorySelect.value=category;
     currentTopic.textContent=category?label('topics-'+category,categories[category]):text('Wybierz temat…','Choose a topic…');
-    if(topicSearch)topicSearch.placeholder=text('Znajdź temat…','Find a topic…');
-    filterTopics();
   }
   renderTopics();
-  topicSearch?.addEventListener('input',filterTopics);
-  picker.addEventListener('toggle',()=>{if(picker.open&&topicSearch){topicSearch.value='';filterTopics();topicSearch.focus();}});
   topicButtons.forEach(btn=>btn.addEventListener('click',()=>{
-    category=btn.dataset.value;renderTopics();picker.open=false;updateOffer();status.textContent='';picker.querySelector('summary').focus();
+    category=btn.dataset.value;renderTopics();updateOffer();status.textContent='';
   }));
-  document.addEventListener('click',event=>{if(!picker.contains(event.target))picker.open=false;},{signal:scope.signal});
-  picker.addEventListener('focusout',event=>{if(event.relatedTarget&&!picker.contains(event.relatedTarget))picker.open=false;});
+  // Tematy są stale widoczne jako kafelki, więc lista nie zamyka się po wyborze ani po kliknięciu obok.
   picker.addEventListener('keydown',event=>{
-    const options=topicButtons.filter(btn=>!btn.hidden);
-    const current=options.indexOf(document.activeElement);
-    if(event.key==='Escape'){event.preventDefault();picker.open=false;picker.querySelector('summary').focus();}
-    if(event.key==='ArrowDown'||event.key==='ArrowUp'){
-      event.preventDefault();picker.open=true;
-      const dir=event.key==='ArrowDown'?1:-1;
-      const nextIdx=current<0?(dir>0?0:options.length-1):(current+dir+options.length)%options.length;
-      options[nextIdx]?.focus();
-    }
+    const keys={ArrowDown:1,ArrowRight:1,ArrowUp:-1,ArrowLeft:-1};
+    if(!(event.key in keys)&&event.key!=='Home'&&event.key!=='End')return;
+    event.preventDefault();
+    const current=topicButtons.indexOf(document.activeElement);
+    const next=event.key==='Home'?0:event.key==='End'?topicButtons.length-1
+      :current<0?0:(current+keys[event.key]+topicButtons.length)%topicButtons.length;
+    topicButtons.forEach((btn,index)=>{btn.tabIndex=index===next?0:-1;});
+    topicButtons[next].focus();
   });
   const initialCategory=category;
   const packageId=category==='tutoring'&&Object.hasOwn(packages,query.get('package'))?query.get('package'):'';
@@ -156,7 +141,7 @@ window.portfolioPages['contact.js'] = async () => {
     }
   }
   function next(){
-    if(currentStep===1&&!category){status.textContent=text('Wybierz temat, żeby przejść dalej.','Choose a topic to continue.');picker.open=true;picker.querySelector('summary').focus();return;}
+    if(currentStep===1&&!category){status.textContent=text('Wybierz temat, żeby przejść dalej.','Choose a topic to continue.');picker.open=true;topicButtons.find(btn=>!btn.hidden)?.focus();return;}
     if(currentStep===2&&!answers[category].detail){status.textContent=text('Wybierz rodzaj zapytania.','Choose the type of enquiry.');detailOptions.querySelector('input')?.focus();return;}
     if(currentStep<3)showStep(currentStep+1);
   }

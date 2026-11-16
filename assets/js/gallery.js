@@ -22,11 +22,6 @@ window.portfolioPages['gallery.js'] = async () => {
   photos = (photos || []).filter(photo => photo.visible !== false);
   const track = document.querySelector('.gallery-track');
   const dialog = document.querySelector('.photo-lightbox');
-  const focusButton=document.createElement('button');focusButton.type='button';focusButton.className='lightbox-focus';focusButton.setAttribute('aria-pressed','false');
-  const updateFocusLabel=()=>{focusButton.textContent=document.documentElement.lang==='en'?(dialog.classList.contains('is-focused')?'Show information':'Photo only'):(dialog.classList.contains('is-focused')?'Pokaż informacje':'Samo zdjęcie');};
-  focusButton.addEventListener('click',()=>{dialog.classList.toggle('is-focused');focusButton.setAttribute('aria-pressed',String(dialog.classList.contains('is-focused')));updateFocusLabel();if(dialog.open&&selectedPhoto)renderLightbox();},{signal:pageScope.signal});dialog.append(focusButton);updateFocusLabel();
-  document.addEventListener('portfolio-language-change',updateFocusLabel,{signal:pageScope.signal});
-  dialog.addEventListener('close',()=>{dialog.classList.remove('is-focused');focusButton.setAttribute('aria-pressed','false');updateFocusLabel();},{signal:pageScope.signal});
   const mobileQuery = matchMedia('(max-width: 768px)');
   let filteredPhotos = photos.filter(photo => photo.galleryVisible !== false);
   let selectedPhoto = null;
@@ -133,6 +128,10 @@ window.portfolioPages['gallery.js'] = async () => {
       selectedPhoto = null;
       return;
     }
+    // Nieparzysta liczba zwykłych kadrów zostawia w dwurzędowej siatce puste pole pod ostatnim z nich,
+    // więc ten jeden rośnie na oba rzędy. Na telefonie pasek ma jeden rząd i nic nie trzeba zmieniać.
+    const singleRow = filteredPhotos.filter(photo => photo.shape !== 'tall' && photo.shape !== 'wide');
+    const stretchedId = !mobileQuery.matches && singleRow.length % 2 ? singleRow.at(-1).id : null;
     // Trzy identyczne cykle pozwalają przewijać w obie strony bez końca.
     for (let cycle = 0; cycle < (mobileQuery.matches ? 1 : 3); cycle++) {
       const group = document.createElement('div');
@@ -140,7 +139,7 @@ window.portfolioPages['gallery.js'] = async () => {
       filteredPhotos.forEach((photo) => {
         const button = document.createElement('button');
         button.type = 'button';
-        button.className = `photo-card ${photo.shape}`;
+        button.className = `photo-card ${photo.id === stretchedId ? 'tall' : photo.shape}`;
         button.dataset.photoId = photo.id;
         button.setAttribute('aria-label', text(photo.title));
         button.setAttribute('aria-pressed', 'false');
@@ -285,6 +284,53 @@ window.portfolioPages['gallery.js'] = async () => {
       movePhoto(1);
     }
   });
+  // Przesunięcie palcem w bok zmienia zdjęcie (telefon i ekrany dotykowe; mysz zostaje przy strzałkach).
+  // Zdjęcie jedzie za palcem, a po krótkim ruchu wraca na miejsce. Kliknięcie po przesunięciu jest pomijane,
+  // żeby nie otworzyć przy okazji pełnego ekranu.
+  const swipeArea = dialog.querySelector('.lightbox-carousel');
+  let swipe = null;
+  let swallowClick = false;
+  const swipeFrame = () => swipeArea.querySelector('.lightbox-image');
+  const resetSwipe = (animate) => {
+    const frame = swipeFrame();
+    if (frame) {
+      frame.style.transition = animate ? 'transform 0.22s ease-out' : '';
+      frame.style.transform = '';
+    }
+    swipe = null;
+  };
+  swipeArea.addEventListener('pointerdown', (event) => {
+    if (event.pointerType === 'mouse' || !event.isPrimary) return;
+    swipe = { x: event.clientX, y: event.clientY, dx: 0, horizontal: null };
+  });
+  swipeArea.addEventListener('pointermove', (event) => {
+    if (!swipe || !event.isPrimary) return;
+    const dx = event.clientX - swipe.x;
+    const dy = event.clientY - swipe.y;
+    if (swipe.horizontal === null && Math.hypot(dx, dy) > 10) swipe.horizontal = Math.abs(dx) > Math.abs(dy);
+    if (!swipe.horizontal) return;
+    swipe.dx = dx;
+    const frame = swipeFrame();
+    if (frame) {
+      frame.style.transition = 'none';
+      frame.style.transform = `translateX(${dx * 0.6}px)`;
+    }
+  });
+  swipeArea.addEventListener('pointerup', (event) => {
+    if (!swipe || !event.isPrimary) return;
+    const { dx, horizontal } = swipe;
+    const enough = horizontal && Math.abs(dx) > Math.min(70, swipeArea.clientWidth * 0.18);
+    swallowClick = Boolean(horizontal && Math.abs(dx) > 10);
+    resetSwipe(!enough);
+    if (enough) movePhoto(dx < 0 ? 1 : -1);
+  });
+  swipeArea.addEventListener('pointercancel', () => resetSwipe(true));
+  swipeArea.addEventListener('click', (event) => {
+    if (!swallowClick) return;
+    swallowClick = false;
+    event.preventDefault();
+    event.stopPropagation();
+  }, true);
   dialog.addEventListener('close', () => {
     clearTimeout(closingTimer);
     dialog.classList.remove('is-closing');

@@ -36,3 +36,17 @@ Nie ma płatności online, automatycznego grafiku ani potwierdzenia rezerwacji.
 Kliknięcie pakietu rozpoczyna zapytanie, nie zakup.
 Sprawdź cztery pakiety, aktywny/nieaktywny link kursu, rabaty w obu językach, FAQ, brak opinii,
 oceny połówkowe i kontekst oferty w kontakcie.
+
+## Kolejność sekcji
+
+Kolejność w `pages/knowledge.html`:
+
+1. Wstęp.
+2. „W czym mogę pomóc?” (`.tutoring-section`).
+3. „Podejście dopasowane do Ciebie” (`.tutoring-note`) i od razu pod nim opinie „Jak uczymy się razem?” (`.tutoring-reviews`) — zaufanie budujemy, zanim pojawią się kroki zajęć i oferta.
+4. Kroki „Jak wyglądają zajęcia?” (`.tutoring-process`) z dopowiedzeniem „Zajęcia dopasowane do Twojego planu” o czasie i terminach (`.tutoring-arrangements`).
+5. „Przykładowe pakiety” (`.tutoring-packages`) z notką „Jaka jest cena?” pod kartami.
+6. „Najczęstsze pytania” (`.tutoring-faq`).
+7. Na końcu zapowiedź kursu maturalnego (`.tutoring-course`).
+
+Notka o cenie należy w panelu do grupy „Zajęcia dopasowane do Twojego planu” (pola `group-4-text-5` do `text-10`), choć na stronie stoi pod pakietami.

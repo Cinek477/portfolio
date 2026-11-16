@@ -49,7 +49,7 @@ historia przechowuje do dziesięciu poprzednich wersji danej podstrony.
 `lightbox.js` renderuje fotografię i informacje, a `photo-loader.js` zarządza ładowaniem.
 Loader współdzieli trwające żądania, dekoduje obrazy asynchronicznie i przechowuje do trzech gotowych obrazów.
 Zamknięcie przerywa ładowanie; rozmiar obrazu zależy od ekranu. Następny kadr jest pobierany z wyprzedzeniem,
-chyba że przeglądarka sygnalizuje oszczędzanie danych. Tryb „Samo zdjęcie” ukrywa metadane.
+chyba że przeglądarka sygnalizuje oszczędzanie danych. Kliknięcie w zdjęcie otwiera je na pełnym ekranie.
 
 Na komputerze trzy cykle miniaturek umożliwiają przewijanie w obie strony; to celowe powielenie widoku,
 nie trzy osobne kopie danych. Telefon używa jednego cyklu i przycisków zmiany zdjęcia.

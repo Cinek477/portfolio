@@ -593,8 +593,8 @@
             "id": "text-2",
             "label": "To propozycje współpracy, nie sztywne pakiety godzin. Czas, częstotliw",
             "value": {
-              "pl": "To propozycje współpracy, nie sztywne pakiety godzin. Ceny od 60 zł (podstawa) i od 80 zł (rozszerzenie); długość zajęć (60 lub 90 minut) i częstotliwość ustalamy razem.",
-              "en": "These are suggested ways to work together, not fixed bundles. Prices from PLN 60 (basic) and PLN 80 (advanced); we agree on length (60 or 90 minutes) and frequency together."
+              "pl": "To propozycje współpracy, nie sztywne pakiety godzin. Długość zajęć (60 lub 90 minut) i częstotliwość ustalamy razem.",
+              "en": "These are suggested ways to work together, not fixed bundles. We agree on length (60 or 90 minutes) and frequency together."
             }
           }
         ],
@@ -921,7 +921,7 @@
   "reviews": [
     {
       "id": "95f0e1f5-53b8-47b8-8df2-81b17274584b",
-      "author": "Klaudyna",
+      "author": "Anonimowa opinia (TEST)",
       "text": "W końcu zaczęłam rozumieć matematykę! 🎉 Marcin tłumaczy spokojnie, krok po kroku, a gdy coś nie wchodzi — szuka innego sposobu. Zadania, których wcześniej się bałam, teraz robię sama 💪",
       "context": "Matematyka — liceum",
       "textEn": "I finally started to understand maths! 🎉 Marcin explains calmly, step by step, and when something doesn’t click, he finds another way. Problems I used to dread, I now solve on my own 💪",

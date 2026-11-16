@@ -4,30 +4,30 @@
  <linearGradient id="award" x2="1" y2="1"><stop stop-color="#ffe6a0"/><stop offset=".5" stop-color="#efc45d"/><stop offset="1" stop-color="#d5a23b"/></linearGradient>
  <filter id="shadow" x="-50%" y="-50%" width="200%" height="220%"><feDropShadow dx="0" dy="18" stdDeviation="22" flood-color="#30457c" flood-opacity=".16"/></filter>
 </defs>
-<rect width="1200" height="740" fill="#c6d6f5"/>
+<rect width="1200" height="740" fill="#b6cdfb"/>
 <g data-decor="">
-<defs><radialGradient id="decor-glow-a"><stop data-tone="blob" offset="0" stop-color="#e8effc"/><stop data-tone="blob" offset=".28" stop-color="#e8effc"/><stop data-tone="blob" offset=".46" stop-color="#e8effc" stop-opacity=".84"/><stop data-tone="blob" offset=".64" stop-color="#e8effc" stop-opacity=".5"/><stop data-tone="blob" offset=".82" stop-color="#e8effc" stop-opacity=".16"/><stop data-tone="blob" offset="1" stop-color="#e8effc" stop-opacity="0"/></radialGradient><radialGradient id="decor-glow-b"><stop data-tone="blob" offset="0" stop-color="#d3c4f7"/><stop data-tone="blob" offset=".28" stop-color="#d3c4f7"/><stop data-tone="blob" offset=".46" stop-color="#d3c4f7" stop-opacity=".84"/><stop data-tone="blob" offset=".64" stop-color="#d3c4f7" stop-opacity=".5"/><stop data-tone="blob" offset=".82" stop-color="#d3c4f7" stop-opacity=".16"/><stop data-tone="blob" offset="1" stop-color="#d3c4f7" stop-opacity="0"/></radialGradient></defs>
+<defs><radialGradient id="decor-glow-a"><stop data-tone="blob" offset="0" stop-color="#e5eeff"/><stop data-tone="blob" offset=".28" stop-color="#e5eeff"/><stop data-tone="blob" offset=".46" stop-color="#e5eeff" stop-opacity=".84"/><stop data-tone="blob" offset=".64" stop-color="#e5eeff" stop-opacity=".5"/><stop data-tone="blob" offset=".82" stop-color="#e5eeff" stop-opacity=".16"/><stop data-tone="blob" offset="1" stop-color="#e5eeff" stop-opacity="0"/></radialGradient><radialGradient id="decor-glow-b"><stop data-tone="blob" offset="0" stop-color="#cab4fd"/><stop data-tone="blob" offset=".28" stop-color="#cab4fd"/><stop data-tone="blob" offset=".46" stop-color="#cab4fd" stop-opacity=".84"/><stop data-tone="blob" offset=".64" stop-color="#cab4fd" stop-opacity=".5"/><stop data-tone="blob" offset=".82" stop-color="#cab4fd" stop-opacity=".16"/><stop data-tone="blob" offset="1" stop-color="#cab4fd" stop-opacity="0"/></radialGradient></defs>
 <circle cx="972" cy="228" r="188" fill="url(#decor-glow-a)" opacity=".85"/>
 <circle cx="228" cy="512" r="188" fill="url(#decor-glow-b)" opacity=".7"/>
-<circle data-tone="accent" cx="1108" cy="592" r="44" fill="none" stroke="#356ede" stroke-width="3" opacity=".45"/>
-<circle data-tone="accent" cx="1108" cy="592" r="7" fill="#356ede" opacity=".5"/>
-<circle data-tone="accent" cx="46" cy="266" r="3.2" fill="#356ede" opacity=".55"/>
-<circle data-tone="accent" cx="64" cy="266" r="3.2" fill="#356ede" opacity=".55"/>
-<circle data-tone="accent" cx="82" cy="266" r="3.2" fill="#356ede" opacity=".55"/>
-<circle data-tone="accent" cx="100" cy="266" r="3.2" fill="#356ede" opacity=".55"/>
-<circle data-tone="accent" cx="46" cy="284" r="3.2" fill="#356ede" opacity=".55"/>
-<circle data-tone="accent" cx="64" cy="284" r="3.2" fill="#356ede" opacity=".55"/>
-<circle data-tone="accent" cx="82" cy="284" r="3.2" fill="#356ede" opacity=".55"/>
-<circle data-tone="accent" cx="100" cy="284" r="3.2" fill="#356ede" opacity=".55"/>
-<circle data-tone="accent" cx="46" cy="302" r="3.2" fill="#356ede" opacity=".55"/>
-<circle data-tone="accent" cx="64" cy="302" r="3.2" fill="#356ede" opacity=".55"/>
-<circle data-tone="accent" cx="82" cy="302" r="3.2" fill="#356ede" opacity=".55"/>
-<circle data-tone="accent" cx="100" cy="302" r="3.2" fill="#356ede" opacity=".55"/>
-<circle data-tone="accent" cx="1150" cy="311" r="5" fill="#356ede" opacity=".5"/>
-<circle data-tone="accent" cx="1172" cy="370" r="3" fill="#356ede" opacity=".45"/>
-<circle data-tone="accent" cx="60" cy="518" r="4" fill="#356ede" opacity=".45"/>
-<circle data-tone="accent" cx="560" cy="44" r="4" fill="#356ede" opacity=".4"/>
-<circle data-tone="accent" cx="760" cy="30" r="3" fill="#356ede" opacity=".35"/>
+<circle data-tone="accent" cx="1108" cy="592" r="44" fill="none" stroke="#1c63f1" stroke-width="3" opacity=".45"/>
+<circle data-tone="accent" cx="1108" cy="592" r="7" fill="#1c63f1" opacity=".5"/>
+<circle data-tone="accent" cx="46" cy="266" r="3.2" fill="#1c63f1" opacity=".55"/>
+<circle data-tone="accent" cx="64" cy="266" r="3.2" fill="#1c63f1" opacity=".55"/>
+<circle data-tone="accent" cx="82" cy="266" r="3.2" fill="#1c63f1" opacity=".55"/>
+<circle data-tone="accent" cx="100" cy="266" r="3.2" fill="#1c63f1" opacity=".55"/>
+<circle data-tone="accent" cx="46" cy="284" r="3.2" fill="#1c63f1" opacity=".55"/>
+<circle data-tone="accent" cx="64" cy="284" r="3.2" fill="#1c63f1" opacity=".55"/>
+<circle data-tone="accent" cx="82" cy="284" r="3.2" fill="#1c63f1" opacity=".55"/>
+<circle data-tone="accent" cx="100" cy="284" r="3.2" fill="#1c63f1" opacity=".55"/>
+<circle data-tone="accent" cx="46" cy="302" r="3.2" fill="#1c63f1" opacity=".55"/>
+<circle data-tone="accent" cx="64" cy="302" r="3.2" fill="#1c63f1" opacity=".55"/>
+<circle data-tone="accent" cx="82" cy="302" r="3.2" fill="#1c63f1" opacity=".55"/>
+<circle data-tone="accent" cx="100" cy="302" r="3.2" fill="#1c63f1" opacity=".55"/>
+<circle data-tone="accent" cx="1150" cy="311" r="5" fill="#1c63f1" opacity=".5"/>
+<circle data-tone="accent" cx="1172" cy="370" r="3" fill="#1c63f1" opacity=".45"/>
+<circle data-tone="accent" cx="60" cy="518" r="4" fill="#1c63f1" opacity=".45"/>
+<circle data-tone="accent" cx="560" cy="44" r="4" fill="#1c63f1" opacity=".4"/>
+<circle data-tone="accent" cx="760" cy="30" r="3" fill="#1c63f1" opacity=".35"/>
 </g>
 <g filter="url(#shadow)">
  <rect x="135" y="55" width="930" height="610" rx="38" fill="url(#bg)" stroke="#edf5ff" stroke-width="3"/>

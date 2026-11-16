@@ -36,10 +36,10 @@ const windowParts = {
     ['stroke="#edf5ff"', 0.5], ['fill="#a4b5e3"', 0.62], ['fill="#acbde9"', 0.62],
   ],
   krakhack: [
-    ['fill="#d5edf0"', 0.38], ['stroke="#eefcfc"', 0.5], ['fill="#ecf8fa"', 0.5],
+    ['fill="#d5e4f0"', 0.38], ['stroke="#eef7fc"', 0.5], ['fill="#ecf3fa"', 0.5],
   ],
 };
-const lightText = { krakhack: [['fill="#527b8c"', 'fill="#a9d3dc"']] };
+const lightText = { krakhack: [['fill="#52678c"', 'fill="#a9d3dc"']] };
 function darkenWindow(name, source) {
   for (const [attribute, lightness] of windowParts[name] || []) {
     const color = attribute.match(/#[0-9a-f]{6}/i)[0];

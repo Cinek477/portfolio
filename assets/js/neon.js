@@ -22,12 +22,12 @@
   });
   const darkColors = palette([56, 189, 248], [224, 250, 255]);
   const lightColors = palette([29, 95, 224], [14, 165, 233]);
-  // Wypełnione niebieskie przyciski jasnego motywu (oraz każdy z tej grupy po najechaniu, gdy też
-  // robi się niebieski) dostają białą smugę — niebieska zlewała się z ich tłem.
+  // Przycisk po najechaniu robi się niebieski i dostaje białą smugę — niebieska zlewałaby się z tłem.
   const whiteColors = palette([255, 255, 255], [255, 255, 255]);
-  const filledSelector = '.hero-actions a:not(.secondary), .contact-submit, .instagram-cta';
-  const hoverFilledSelector = ':is(.hero-actions a, .contact-submit, .instagram-cta):is(:hover, :focus-visible)';
-  const isFilled = button => Boolean(button.matches?.(filledSelector) || button.matches?.(hoverFilledSelector));
+  // Przyciski są ze szkła, więc w spoczynku smuga jest niebieska; biała dopiero po najechaniu,
+  // gdy przycisk robi się niebieski (w obu motywach).
+  const hoverFilledSelector = ':is(:hover, :focus-visible)';
+  const isFilled = button => Boolean(button.matches?.(hoverFilledSelector));
   let frame = 0, scheduled = false;
   // Punkty obrysu zaokrąglonego prostokąta liczone wzorem, równo co do długości, zgodnie z ruchem wskazówek
   // zegara od lewego górnego rogu. Wcześniej robiło to SVG getPointAtLength: ok. 200 ms na przycisk,
@@ -97,8 +97,8 @@
     for (const [button, item] of tracked) {
       if (!item.visible || !item.points || button.disabled || button.getAttribute('aria-disabled') === 'true') continue;
       active = true;
-      const filled = !dark && isFilled(button);
-      const colors = dark ? darkColors : filled ? whiteColors : lightColors;
+      const filled = isFilled(button);
+      const colors = filled ? whiteColors : dark ? darkColors : lightColors;
       // Klasa przełącza poświatę canvasu (biała zamiast niebieskiej) — tylko gdy stan się zmienia.
       if (item.filled !== filled) { item.filled = filled; item.canvas.classList?.toggle('is-on-fill', filled); }
       const context = item.context;

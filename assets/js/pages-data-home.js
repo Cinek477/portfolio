@@ -38,8 +38,8 @@
   "buttons": [
     {
       "label": {
-        "pl": "Zobacz projekty",
-        "en": "Explore projects"
+        "pl": "Wybrane realizacje",
+        "en": "Selected work"
       },
       "href": "#featured-projects",
       "visible": true,
@@ -70,8 +70,8 @@
       "en": "All projects"
     },
     "extra-3": {
-      "pl": "Poznaj mnie",
-      "en": "Get to know me"
+      "pl": "Na skróty",
+      "en": "Shortcuts"
     },
     "extra-4": {
       "pl": "Co Cię interesuje?",
@@ -126,19 +126,19 @@
       "en": "Explore the gallery"
     },
     "extra-17": {
-      "pl": "O mnie",
-      "en": "About me"
+      "pl": "Kim jestem",
+      "en": "Who I am"
     },
     "extra-18": {
-      "pl": "Poznaj mnie bliżej.",
-      "en": "Get to know me better."
+      "pl": "O mnie",
+      "en": "About me"
     },
     "extra-19": {
       "pl": "Doświadczenie, edukacja i kompetencje w jednym miejscu.",
       "en": "Experience, education and skills in one place."
     },
     "extra-20": {
-      "pl": "Przejdź do O mnie",
+      "pl": "Poznaj mnie bliżej",
       "en": "More about me"
     }
   },

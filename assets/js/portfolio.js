@@ -34,8 +34,10 @@ function applyLanguage(value) {
   const languageMarkup = `<span class="${language === 'pl' ? '' : 'inactive'}">PL</span> / <span class="${language === 'en' ? '' : 'inactive'}">EN</span>`;
   if (languageButton.innerHTML !== languageMarkup) languageButton.innerHTML = languageMarkup;
   themeButton.setAttribute('aria-label', language === 'pl' ? 'Zmień motyw' : 'Change theme');
+  // Nazwa podstrony z <main data-title-pl/en>; nagłówek z data-page-title jest rezerwą.
+  const mainTitle = document.querySelector('main')?.dataset[language === 'pl' ? 'titlePl' : 'titleEn'];
   const pageTitle = document.querySelector('[data-page-title]');
-  document.title = `${pageTitle ? pageTitle.dataset[language] : 'Portfolio'} — Marcin Podyma`;
+  document.title = `${mainTitle || (pageTitle ? pageTitle.dataset[language] : 'Portfolio')} — Marcin Podyma`;
   if (readPreference('portfolio-language') !== language) savePreference('portfolio-language', language);
   updateLogoLabel();
   document.dispatchEvent(new CustomEvent('portfolio-language-change'));

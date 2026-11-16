@@ -468,3 +468,46 @@
   box-shadow: 0 0 0 1px var(--accent);
 }
 .chat-wizard-container .page-section-picker summary:focus-visible { outline-offset: 0; }
+
+/* „Kontakt” jest nadtytułem, a głównym nagłówkiem zostaje „Porozmawiajmy.”. */
+.contact-page > h1 { margin: 0 0 16px; color: var(--accent); font-family: var(--font-body); font-size: 13px; font-weight: 600; letter-spacing: 0.02em; line-height: 1.5; }
+/* Tematy od razu jako kafelki: bez rozwijanej listy i wyszukiwarki dla czterech pozycji. */
+/* Nagłówek <details> nie jest potrzebny, bo lista jest stale otwarta; display:none wyłącza go też z kolejki Tab. */
+.chat-wizard-container .page-section-picker summary { display: none; }
+:root .chat-wizard-container .page-section-picker .section-picker-popup { position: static; inset: auto; width: auto; margin: 0; padding: 0; border: 0; background: none; box-shadow: none; transform: none; }
+.chat-wizard-container .page-editor-section-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; max-height: none; overflow: visible; padding: 0; }
+:root .chat-wizard-container button.page-section-tab,
+:root .chat-wizard-container button.page-section-tab:is(:hover, :focus-visible, :active) { display: flex; align-items: center; min-height: 64px; margin: 0; padding: 14px 16px; border-color: var(--line); border-radius: 14px; background: color-mix(in srgb, var(--panel) 55%, transparent); color: var(--text); font-size: 15px; }
+:root .chat-wizard-container button.page-section-tab:is(:hover, :focus-visible) { border-color: var(--accent); color: var(--accent); }
+:root .chat-wizard-container button.page-section-tab[aria-selected='true'] { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 14%, transparent); color: var(--accent); }
+@media (max-width: 420px) { .chat-wizard-container .page-editor-section-list { grid-template-columns: minmax(0, 1fr); } }
+
+/* Pola formularza: zamiast ramki dookoła jest kreska pod polem. W spoczynku cienka i stonowana,
+   po najechaniu niebieskawa, przy wpisywaniu gruba niebieska (rysowana cieniem, więc pole nie skacze).
+   Lekkie tło z zaokrągloną górą zostaje, żeby było widać, gdzie kliknąć. */
+:root:not(#field) .contact-field :is(input, textarea, select) {
+  border: 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--muted) 45%, transparent);
+  border-radius: 10px 10px 0 0;
+  background: color-mix(in srgb, var(--accent) 5%, transparent);
+  box-shadow: none;
+  transition: border-color 0.25s, box-shadow 0.25s, background 0.25s;
+}
+:root:not(#field) .contact-field :is(input, textarea, select):hover {
+  border-bottom-color: color-mix(in srgb, #1769e8 60%, transparent);
+  box-shadow: none;
+}
+:root:not(#field) .contact-field :is(input, textarea, select):is(:focus, :focus-visible) {
+  outline: none;
+  border-bottom-color: #1769e8;
+  background: color-mix(in srgb, #1769e8 8%, transparent);
+  box-shadow: inset 0 -2px 0 #1769e8;
+}
+:root[data-theme='dark']:not(#field) .contact-field :is(input, textarea, select):is(:focus, :focus-visible) {
+  border-bottom-color: #38bdf8;
+  box-shadow: inset 0 -2px 0 #38bdf8;
+}
+/* Autouzupełnianie maluje tło cieniem, więc kreskę dokładamy do tego samego cienia. */
+:root:not(#field) .contact-field input:autofill { box-shadow: inset 0 0 0 1000px var(--bg); }
+:root:not(#field) .contact-field input:autofill:focus { box-shadow: inset 0 0 0 1000px var(--bg), inset 0 -2px 0 #1769e8; }
+@media (prefers-reduced-motion: reduce) { :root:not(#field) .contact-field :is(input, textarea, select) { transition: none; } }

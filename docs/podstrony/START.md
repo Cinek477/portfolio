@@ -11,10 +11,10 @@ Strona przedstawia autora i prowadzi do projektów, korepetycji, fotografii oraz
 
 - Powitanie, nagłówek z wyróżnioną częścią i opis autora.
 - Portret z opisem alternatywnym, kapsułki opisujące zainteresowania i przyciski, w tym pobranie CV.
+- Wyróżnik nad opisem: pierwsze osiągnięcie z wyróżnionych realizacji (tytuł i wynik) z linkiem do opisu projektu. Ustawia go `projects.js`; znika, gdy wśród wyróżnionych nie ma osiągnięcia.
 - „Teraz tworzę”: aktualna aktywność, osobny tytuł, opis i przełącznik widoczności.
 - Wyróżnione realizacje: do trzech wybranych projektów lub osiągnięć.
-- Ścieżki „Co Cię interesuje?” prowadzące do kolejnych podstron.
-- Sekcja zachęcająca do otwarcia „O mnie”.
+- Ścieżki „Co Cię interesuje?”: cztery kafelki prowadzące do Projektów, Korepetycji, Po godzinach i O mnie.
 - Wspólne menu, stopka i pływający skrót do kontaktu.
 
 ## Działanie i interakcje

@@ -37,3 +37,5 @@
 @media(prefers-reduced-motion:reduce) { .project-lab *, .project-lab { animation:none!important; } .project-scene { opacity:0; } .project-scene-code { opacity:1; } }
 
 @media(max-width:760px) { .project-lab { width:min(76%,300px); max-width:100%; } }
+/* Niski nagłówek: karty projektów zaczynają się na pierwszym ekranie. */
+@media(min-width:761px) { .projects-intro { padding-top:126px; padding-bottom:36px; gap:48px; } .projects-intro h1 { font-size:clamp(40px,5vw,60px); margin-bottom:14px; } .projects-intro .hero-actions { margin-top:20px; } .project-lab { max-width:250px; } .project-lab-float { padding:10px; font-size:17px; bottom:18px; } }

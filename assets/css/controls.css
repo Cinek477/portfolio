@@ -28,8 +28,8 @@
 :root:not([data-theme='dark']) .control-neon.control-neon {
   filter: drop-shadow(0 0 2px rgba(29, 95, 224, 0.35));
 }
-/* Biała smuga na wypełnionym niebieskim przycisku ma białą poświatę (klasę ustawia neon.js). */
-:root:not([data-theme='dark']) .control-neon.control-neon.is-on-fill {
+/* Biała smuga na niebieskim (najechanym) przycisku ma białą poświatę w obu motywach (klasę ustawia neon.js). */
+:root:is(*) .control-neon.control-neon.is-on-fill {
   filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.7));
 }
 :disabled > .control-neon,
@@ -132,7 +132,8 @@
   ),
 :root .contact-radio:focus-visible + label {
   background: var(--pill-active-bg);
-  color: var(--text);
+  /* Ten sam kolor tekstu co wybrana kapsułka: w jasnym motywie tło jest niebieskie, więc tekst biały. */
+  color: var(--pill-active-text);
   border-color: var(--pill-active-border);
   box-shadow: 0 6px 18px var(--control-glow);
   transform: translateY(-2px);
@@ -247,11 +248,6 @@
   --pill-active-border: #1d5fe0;
   --pill-active-text: #ffffff;
 }
-:root:not([data-theme='dark']) .tags span {
-  background: rgba(255, 255, 255, 0.88);
-  border: 1px solid rgba(29, 95, 224, 0.12);
-  color: var(--muted);
-}
 :root:not([data-theme='dark']) :is(.hero-actions a:not(.secondary), .contact-submit, .instagram-cta) {
   background: linear-gradient(135deg, #3b82f6, #1d5fe0);
   border: 1px solid #1d5fe0;
@@ -312,4 +308,97 @@
   box-shadow: none;
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
+}
+
+
+/* Przyciski akcji: szkło w dwóch rozmiarach. Półprzezroczyste tło rozmywa to, co pod spodem, a po ramce
+   biegnie niebieska smuga (neon.js). Po najechaniu przycisk robi się niebieski, a smuga biała.
+   Główny przycisk wyróżnia strzałka. Prefiks :root:not(#glass) podnosi specyficzność ponad starsze reguły
+   z portfolio.css, hobby.css i jasnego motywu, żeby wszystkie przyciski wyglądały tak samo. */
+:root {
+  --glass-button-bg: rgba(255, 255, 255, 0.5);
+  --glass-button-border: rgba(29, 95, 224, 0.26);
+  --glass-button-shine: rgba(255, 255, 255, 0.9);
+}
+:root[data-theme='dark'] {
+  --glass-button-bg: rgba(20, 40, 80, 0.4);
+  --glass-button-border: rgba(125, 211, 252, 0.3);
+  --glass-button-shine: rgba(255, 255, 255, 0.1);
+}
+:root:not(#glass) :is(main a.primary, main a.secondary:not(.music-link), .instagram-cta, main .course-preview, main .contact-submit) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 50px;
+  padding: 10px 24px;
+  border: 1px solid var(--glass-button-border);
+  border-radius: 12px;
+  background: var(--glass-button-bg);
+  color: var(--text);
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.25;
+  text-decoration: none;
+  backdrop-filter: blur(14px) saturate(1.4);
+  -webkit-backdrop-filter: blur(14px) saturate(1.4);
+  box-shadow: inset 0 1px 0 var(--glass-button-shine), 0 6px 20px rgba(23, 105, 232, 0.12);
+  transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+}
+/* Mniejszy rozmiar w kartach (pakiety korepetycji, oferty sesji). */
+:root:not(#glass) main :is(.tutoring-packages, .photo-offer-card) :is(a.primary, a.secondary:not(.music-link)) {
+  min-height: 42px;
+  padding: 8px 18px;
+  font-size: 14px;
+}
+:root:not(#glass) :is(main a.primary, main a.secondary:not(.music-link), .instagram-cta, main .course-preview, main .contact-submit):not(:disabled):not([aria-disabled='true']):is(:hover, :focus-visible) {
+  background: #1769e8;
+  border-color: #7dd3fc;
+  color: #fff;
+  box-shadow: 0 10px 26px var(--control-glow);
+  transform: translateY(-2px);
+}
+:root:not(#glass) :is(main a.primary:not(:has(.cta-arrow)), main .contact-submit.wizard-next)::after {
+  content: '→';
+  transition: transform 0.25s ease;
+}
+:root:not(#glass) :is(main a.primary:not(:has(.cta-arrow)), main .contact-submit.wizard-next):is(:hover, :focus-visible)::after {
+  transform: translateX(3px);
+}
+@media (prefers-reduced-motion: reduce) {
+  :root:not(#glass) :is(main a.primary, main a.secondary, .instagram-cta, main .course-preview, main .contact-submit),
+  :root:not(#glass) :is(main a.primary:not(:has(.cta-arrow)), main .contact-submit.wizard-next)::after { transition: none; }
+  :root:not(#glass) :is(main a.primary, main a.secondary, .instagram-cta, main .course-preview, main .contact-submit):is(:hover, :focus-visible),
+  :root:not(#glass) :is(main a.primary:not(:has(.cta-arrow)), main .contact-submit.wizard-next):is(:hover, :focus-visible)::after { transform: none; }
+}
+
+/* Kontakt: kafelki tematów mają to samo szkło i ten sam stan po najechaniu co przyciski;
+   wybrany temat ma niebieską ramkę i lekki niebieski odcień. „Wstecz” zostaje zwykłym odnośnikiem tekstowym. */
+:root:not(#glass) .chat-wizard-container button.page-section-tab {
+  border: 1px solid var(--glass-button-border);
+  border-radius: 12px;
+  background: var(--glass-button-bg);
+  color: var(--text);
+  font-weight: 600;
+  backdrop-filter: blur(14px) saturate(1.4);
+  -webkit-backdrop-filter: blur(14px) saturate(1.4);
+  box-shadow: inset 0 1px 0 var(--glass-button-shine), 0 6px 20px rgba(23, 105, 232, 0.1);
+  transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+}
+:root:not(#glass) .chat-wizard-container button.page-section-tab[aria-selected='true'] {
+  border-color: #1769e8;
+  background: color-mix(in srgb, #1769e8 16%, var(--glass-button-bg));
+  color: var(--text);
+  box-shadow: inset 0 0 0 1px #1769e8, 0 6px 20px var(--control-glow);
+}
+:root:not(#glass) .chat-wizard-container button.page-section-tab:is(:hover, :focus-visible) {
+  border-color: #7dd3fc;
+  background: #1769e8;
+  color: #fff;
+  box-shadow: 0 10px 26px var(--control-glow);
+  transform: translateY(-2px);
+}
+@media (prefers-reduced-motion: reduce) {
+  :root:not(#glass) .chat-wizard-container button.page-section-tab { transition: none; }
+  :root:not(#glass) .chat-wizard-container button.page-section-tab:is(:hover, :focus-visible) { transform: none; }
 }

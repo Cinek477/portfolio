@@ -34,11 +34,11 @@ function palette(background) {
 }
 // Układ: [top, bottom] widocznej części viewBox; okno projektu zajmuje środek.
 const layouts = {
-  oop: { background: '#c6a2de', top: 160, bottom: 900 },
-  database: { background: '#acd8d7', top: 160, bottom: 900 },
-  matura: { background: '#b6d7f4', top: 160, bottom: 900 },
-  hackyeah: { background: '#c6d6f5', top: 0, bottom: 740 },
-  krakhack: { background: '#b9e1e6', top: 0, bottom: 740 },
+  oop: { background: '#9fb3f4', top: 160, bottom: 900 },
+  database: { background: '#93c1f0', top: 160, bottom: 900 },
+  matura: { background: '#a8d5fb', top: 160, bottom: 900 },
+  hackyeah: { background: '#b6cdfb', top: 0, bottom: 740 },
+  krakhack: { background: '#a4cdee', top: 0, bottom: 740 },
 };
 function decor({ background, top, bottom }) {
   const { light, neighbour, accent } = palette(background);

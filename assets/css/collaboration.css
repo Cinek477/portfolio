@@ -15,3 +15,13 @@
  .collaboration-steps-list h3 { font-size:16px; margin-bottom:6px; }
  .collaboration-steps-list p { font-size:13px; line-height:1.65; }
 }
+
+/* Kroki współpracy jako lekki wiersz pod ofertą, bez trzech osobnych kart. */
+.collaboration-steps { margin-top:28px; padding-top:28px; }
+.collaboration-steps h2 { font-size:20px; letter-spacing:-.3px; }
+.collaboration-steps .collaboration-steps-list { gap:28px; margin-top:20px; }
+.collaboration-steps-list>li { display:grid; grid-template-columns:38px minmax(0,1fr); column-gap:14px; padding:0; border:0; border-radius:0; background:none; box-shadow:none; }
+.collaboration-step-number { grid-column:1; grid-row:1/3; margin:0; }
+.collaboration-steps-list h3,.collaboration-steps-list p { grid-column:2; }
+.collaboration-steps-list h3 { font-size:16px; margin-bottom:6px; }
+@media (max-width:760px) { .collaboration-steps .collaboration-steps-list { gap:18px; } .collaboration-steps-list>li { padding:0; } }

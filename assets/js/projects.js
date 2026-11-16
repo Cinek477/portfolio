@@ -19,12 +19,25 @@ window.portfolioPages['projects.js'] = () => {
   const local = (value) =>
     typeof value === 'string' ? value : value?.[document.documentElement.lang] || value?.pl || '';
   const translated = (pl, en) => (document.documentElement.lang === 'en' ? en : pl);
+  // Wyróżnik w hero Startu: pierwsze osiągnięcie z wybranych realizacji.
+  function renderHighlight() {
+    const highlight = document.querySelector('.hero-highlight');
+    if (!highlight) return;
+    const win = (window.portfolioHome?.featured || [])
+      .map(id => projects.find(project => project.id === id && project.visible !== false))
+      .find(project => project?.section === 'achievements');
+    highlight.hidden = !win;
+    if (!win) return;
+    highlight.textContent = `${local(win.title)} — ${local(win.summary)}`;
+    highlight.href = win.caseStudy?.enabled ? 'project.html?id=' + encodeURIComponent(win.id) : 'projects.html';
+  }
   function render() {
+    renderHighlight();
     for (const section of ['achievements', 'projects', 'featured-projects']) {
       const grid = document.querySelector(`#${section} .projects-grid`);
       if (!grid) continue;
       const items = section === 'featured-projects'
-        ? (window.portfolioHome?.featured || ['achievements-1', 'projects-0', 'achievements-0']).map(id => projects.find(project => project.id === id && project.visible !== false)).filter(Boolean)
+        ? (window.portfolioHome?.featured || ['achievements-1', 'achievements-0', 'projects-2']).map(id => projects.find(project => project.id === id && project.visible !== false)).filter(Boolean)
         : projects.filter((project) => project.section === section && project.visible !== false);
       const signature = JSON.stringify([document.documentElement.lang, items]);
       if (rendered.get(grid) === signature) continue;
@@ -62,7 +75,7 @@ window.portfolioPages['projects.js'] = () => {
         const savedIllustration = project.src && project.src.replace(/^\//, '') === illustrations[project.id];
         if (illustration || savedIllustration) {
           card.classList.add('project-illustration-card');
-          const colors = { 'projects-0': '#c6a2de', 'projects-1': '#acd8d7', 'projects-2': '#b6d7f4', 'achievements-1': '#c6d6f5', 'achievements-0': '#b9e1e6' };
+          const colors = { 'projects-0': '#9fb3f4', 'projects-1': '#93c1f0', 'projects-2': '#a8d5fb', 'achievements-1': '#b6cdfb', 'achievements-0': '#a4cdee' };
           card.style.setProperty('--project-art-bg', colors[project.id]);
         }
         const imageSrc = project.src || illustration;
@@ -123,7 +136,23 @@ window.portfolioPages['projects.js'] = () => {
           description.textContent = local(project.description);
           inner.append(description);
         }
-        if (project.technologies) {
+        // W katalogu technologie i link do opisu stoją na karcie; w szczegółach zostaje sam opis i pozostałe linki.
+        const quick = section !== 'featured-projects' && (project.technologies || project.caseStudy?.enabled) ? document.createElement('p') : null;
+        if (quick) {
+          quick.className = 'card-quick';
+          if (project.technologies) {
+            const stack = document.createElement('span');
+            stack.textContent = project.technologies;
+            quick.append(stack);
+          }
+          if (project.caseStudy?.enabled) {
+            const quickLink = document.createElement('a');
+            quickLink.href = 'project.html?id=' + encodeURIComponent(project.id);
+            quickLink.textContent = translated('Poznaj projekt', 'Explore the project');
+            quick.append(quickLink);
+          }
+        }
+        if (project.technologies && !quick) {
           const technologies = document.createElement('p');
           technologies.className = 'project-technologies';
           technologies.textContent = project.technologies;
@@ -131,7 +160,7 @@ window.portfolioPages['projects.js'] = () => {
         }
         const actions = document.createElement('div');
         actions.className = 'project-card-actions';
-        if (project.caseStudy?.enabled) {
+        if (project.caseStudy?.enabled && !quick) {
           const pageLink = document.createElement('a');
           pageLink.href = 'project.html?id=' + encodeURIComponent(project.id);
           pageLink.textContent = translated('Poznaj projekt', 'Explore the project');
@@ -179,9 +208,10 @@ window.portfolioPages['projects.js'] = () => {
           const caption = document.createElement('div');
           caption.className = 'project-photo-caption';
           caption.append(title, summary);
+          if (quick) caption.append(quick);
           media.append(top, caption);
           card.append(media, toggle, details);
-        } else card.append(top, title, summary, toggle, details);
+        } else card.append(...[top, title, summary, quick, toggle, details].filter(Boolean));
         grid.append(card);
         if (focusedKey === details.id) toggle.focus({ preventScroll: true });
       });

@@ -11,6 +11,8 @@ Rekordy mają sekcję `achievements` albo `projects`; to nie dwa osobne typy baz
 ## Karta realizacji
 
 Wyświetla rok, symbol, tytuł i krótki opis. Może mieć zdjęcie lub przypisaną ilustrację.
+W katalogu technologie i link „Poznaj projekt” stoją na karcie od razu (`.card-quick`); po najechaniu lub dotknięciu rozwija się sam opis z pozostałymi linkami.
+Osiągnięcia są w dwóch kolumnach, projekty w trakcie w trzech mniejszych (`.projects-row`).
 Po rozwinięciu pokazuje pełny opis, technologie i dostępne odnośniki.
 „Poznaj projekt” pojawia się dla włączonej podstrony realizacji.
 Link repozytorium i link demo są niezależne; nie są udostępniane, jeśli brak poprawnego adresu.

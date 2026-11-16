@@ -6,10 +6,11 @@
 
 `components/navbar.html`, `footer.html` i `contact-fab.html` są składane przez `shared/render-page.cjs`.
 Publiczne menu oznacza bieżący odnośnik. Opis projektu zaznacza dział Projekty, a 404 nie zaznacza żadnej pozycji.
-Na telefonie logo/przycisk menu rozwija nawigację; Escape, kliknięcie poza menu lub wybór odnośnika ją zamyka.
+Na telefonie przycisk menu stoi przy lewej krawędzi, zaraz za nim logo (wordmark „Cinek”), a język i motyw po prawej. Przycisk menu rozwija nawigację; Escape, kliknięcie poza menu lub wybór odnośnika ją zamyka.
 Przy przejściu do szerokiego układu menu jest resetowane.
-Stopka ma odnośniki społecznościowe, znak marki i informację o prawach autorskich.
-Wygląd nieaktywnego odnośnika nie oznacza gotowej integracji z danym serwisem.
+Stopka ma odnośniki społecznościowe, znak marki i informację o prawach autorskich. Na telefonie copyright stoi przy prawej krawędzi, naprzeciw logo (`.footer-signature` z `justify-content: flex-end`).
+Ikona LinkedIn ma atrybut `hidden` w `components/footer.html`, dopóki nie ma adresu profilu; po dodaniu linku usuń atrybut.
+Tytuł karty przeglądarki bierze nazwę z `<main data-title-pl data-title-en>`; nagłówek z `data-page-title` jest rezerwą.
 
 ## 2. Nawigacja bez pełnego przeładowania
 
@@ -57,7 +58,7 @@ Nie należy zakładać automatycznego śledzenia każdej późniejszej zmiany mo
 ## 7. Ruch i neon
 
 `prefers-reduced-motion` ogranicza animacje menu, przejść, ilustracji i zdjęć.
-Neon przycisków korzysta z canvas, do 60 odrysowań/s i 48 segmentów. W jasnym motywie smuga jest niebieska (biała na wypełnionych niebieskich przyciskach i po najechaniu), w ciemnym cyjanowa.
+Neon przycisków korzysta z canvas, do 60 odrysowań/s i 48 segmentów. Przyciski akcji są ze szkła, więc w spoczynku smuga jest niebieska w jasnym motywie i cyjanowa w ciemnym. Po najechaniu (i przy fokusie z klawiatury) przycisk robi się niebieski, a smuga biała z białą poświatą (klasa `is-on-fill`), w obu motywach.
 Obejmuje główne i drugorzędne przyciski CTA, także CV, oferty i Instagram. Link do Spotify (`.music-link`) jest celowo bez smugi.
 Po zmianie języka odtwarza warstwę smugi, zachowując informację o widoczności przycisku.
 Zatrzymuje się przy ukrytej karcie, braku widocznych kontrolek, ograniczeniu ruchu lub otwartym podglądzie fotografii.

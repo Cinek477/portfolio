@@ -22,12 +22,12 @@
     }
   ],
   "photo": {
-    "src": "assets/images/profile/marcin.jpg",
+    "src": "assets/images/profile/marcin-about.webp",
     "thumbUrl": "",
     "visible": true,
     "alt": {
-      "pl": "Marcin Podyma na plaży o zachodzie słońca",
-      "en": "Marcin Podyma on a beach at sunset"
+      "pl": "Marcin Podyma oparty o poręcz schodów przy ceglanej ścianie porośniętej bluszczem",
+      "en": "Marcin Podyma leaning on a stair railing by an ivy-covered brick wall"
     }
   },
   "tags": [
@@ -183,8 +183,8 @@
             "en": "Graphic design and promotional materials"
           },
           "date": {
-            "pl": "",
-            "en": ""
+            "pl": "2022–obecnie",
+            "en": "2022–present"
           },
           "body": {
             "pl": "Tworzę grafiki dla ZHP, samorządu WI AGH oraz organizatorów gier terenowych. Przygotowuję materiały na wydarzenia i projekty logo, a także rozwijam własne pomysły graficzne.",
@@ -227,8 +227,8 @@
         "en": "Skills"
       },
       "body": {
-        "pl": "Programowanie\nPodstawy Pythona, Javy, C++, SQL oraz HTML, CSS i JavaScript.\nRozwijam projekty ze wsparciem AI.\nSamodzielnie poprawiam proste błędy w kodzie.\n\nAI\nKorzystam z różnych modeli podczas pracy nad pomysłami i projektami.\n\nGrafika i fotografia\nCanva i Photoshop.\nFotografia koncertowa.\nEdycja zdjęć.\n\nOrganizacja i współpraca\nKoordynowanie wydarzeń.\nOrganizacja pracy.\nWspółpraca w zespole pod presją czasu.\nJasne tłumaczenie zagadnień.\nDopasowanie sposobu pracy do rozmówcy.\n\nNarzędzia\nVisual Studio Code\nIntelliJ IDEA\nDataGrip\nGit\n\nJęzyki\nPolski — ojczysty.\nAngielski — B2.",
-        "en": "Programming\nFundamentals of Python, Java, C++, SQL, HTML, CSS and JavaScript.\nI develop projects with AI assistance.\nI fix simple coding errors independently.\n\nAI\nI use different models while developing ideas and working on projects.\n\nGraphics and photography\nCanva and Photoshop.\nConcert photography.\nPhoto editing.\n\nOrganisation and collaboration\nEvent coordination.\nOrganising work.\nTeamwork under time pressure.\nExplaining concepts clearly.\nAdapting my approach to the person I work with.\n\nTools\nVisual Studio Code\nIntelliJ IDEA\nDataGrip\nGit\n\nLanguages\nPolish — native.\nEnglish — B2."
+        "pl": "Programowanie\nPodstawy Pythona, Javy, C++, SQL oraz HTML, CSS i JavaScript.\nRozwijam projekty ze wsparciem AI.\nSamodzielnie poprawiam proste błędy w kodzie.\n\nGrafika i fotografia\nCanva i Photoshop.\nFotografia koncertowa.\nEdycja zdjęć.\n\nOrganizacja i współpraca\nKoordynowanie wydarzeń.\nOrganizacja pracy.\nWspółpraca w zespole pod presją czasu.\nJasne tłumaczenie zagadnień.\nDopasowanie sposobu pracy do rozmówcy.\n\nNarzędzia\nVisual Studio Code\nIntelliJ IDEA\nDataGrip\nGit\n\nJęzyki\nPolski — ojczysty.\nAngielski — B2.",
+        "en": "Programming\nFundamentals of Python, Java, C++, SQL, HTML, CSS and JavaScript.\nI develop projects with AI assistance.\nI fix simple coding errors independently.\n\nGraphics and photography\nCanva and Photoshop.\nConcert photography.\nPhoto editing.\n\nOrganisation and collaboration\nEvent coordination.\nOrganising work.\nTeamwork under time pressure.\nExplaining concepts clearly.\nAdapting my approach to the person I work with.\n\nTools\nVisual Studio Code\nIntelliJ IDEA\nDataGrip\nGit\n\nLanguages\nPolish — native.\nEnglish — B2."
       },
       "visible": true,
       "entries": []

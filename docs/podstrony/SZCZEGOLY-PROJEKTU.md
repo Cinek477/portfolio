@@ -19,10 +19,11 @@ Ten stan aplikacji nie jest tożsamy ze stroną HTTP 404; szablon może zostać 
 - Nazwa realizacji i podsumowanie.
 - Wyróżnienie wyniku dla osiągnięć.
 - Dla wybranych istniejących realizacji: schemat wyjaśniający pomysł i przepływ działania.
-- Okładka, gdy rekord ma obraz.
+- Okładka, gdy rekord ma obraz i nie ma osadzonego filmu; film z YouTube zastępuje okładkę na górze strony.
 - Problem i odbiorcy, rozwiązanie, osobisty wkład, rezultat.
-- Technologie rozdzielone przecinkami, renderowane jako osobne kafelki.
-- Repozytorium, demo i — dla rozpoznanego linku YouTube — osadzenie wideo.
+- Technologie rozdzielone przecinkami, renderowane jako jedna linia tekstu.
+- Repozytorium, demo i — dla rozpoznanego linku YouTube — osadzenie wideo (przycisk demo w nagłówku jest wtedy ukryty).
+- Kolejność: nagłówek, film lub okładka, problem/rozwiązanie/efekt, schemat idei, technologie, powiązane realizacje.
 - Do dwóch innych dostępnych realizacji; priorytet mają wpisy z tej samej sekcji.
 
 Puste pola opowieści są ukrywane. Schematy konkretnych realizacji i mapowanie ikon technologii są częściowo zapisane w kodzie,
