@@ -298,47 +298,6 @@ window.portfolioPhotos = [
     "galleryVisible": true,
     "albumCover": false,
     "crop": {
-      "x": 5,
-      "y": 14
-    },
-    "shape": "tall",
-    "title": {
-      "pl": "StreetArt",
-      "en": "Klaudyna — by the mural"
-    },
-    "artist": "",
-    "event": {
-      "pl": "",
-      "en": ""
-    },
-    "venue": "Mural - Ostrowiec Świętokrzyski",
-    "city": {
-      "pl": "",
-      "en": ""
-    },
-    "description": {
-      "pl": "Kolorowy mural, mocne słońce i spojrzenie przez ramię. Klaudyna w miejskim kadrze.",
-      "en": "A colourful mural, bright sunshine and a glance over the shoulder. An urban portrait of Klaudyna."
-    },
-    "instagram": "klaudynaa_p",
-    "date": "",
-    "place": {
-      "pl": "Mural - Ostrowiec Świętokrzyski",
-      "en": "Mural - Ostrowiec Świętokrzyski"
-    },
-    "glowColor": "#5381dc",
-    "id": "photo-klaudyna-mural-01",
-    "src": "assets/images/gallery/2400px/klaudyna-mural-01.jpg",
-    "thumbUrl": "assets/images/gallery/800px/klaudyna-mural-01_thumb.webp",
-    "watermarkText": "KLAUDYNA"
-  },
-  {
-    "category": "people",
-    "visible": true,
-    "album": "Portrety — mural, Ostrowiec Świętokrzyski",
-    "galleryVisible": true,
-    "albumCover": false,
-    "crop": {
       "x": 50,
       "y": 35
     },
@@ -736,47 +695,6 @@ window.portfolioPhotos = [
     "id": "photo-klaudia-jesien-2025",
     "src": "assets/images/gallery/2400px/klaudia-jesien-2025.jpg",
     "thumbUrl": "assets/images/gallery/800px/klaudia-jesien-2025_thumb.webp",
-    "watermarkText": "KLAUDYNA"
-  },
-  {
-    "category": "people",
-    "visible": true,
-    "album": "Portrety — mural, Ostrowiec Świętokrzyski",
-    "galleryVisible": true,
-    "albumCover": false,
-    "crop": {
-      "x": 50,
-      "y": 26
-    },
-    "shape": "tall",
-    "title": {
-      "pl": "Klaudia — portret przy muralu",
-      "en": "Klaudia — portrait by the mural"
-    },
-    "artist": "",
-    "event": {
-      "pl": "",
-      "en": ""
-    },
-    "venue": "Mural - Ostrowiec Świętokrzyski",
-    "city": {
-      "pl": "",
-      "en": ""
-    },
-    "description": {
-      "pl": "Czarne okulary, słońce na twarzy i jaskrawe kolory muralu. Bliższy kadr z miejskiej sesji.",
-      "en": "Black sunglasses, sunshine on her face and a brightly coloured mural. A closer frame from the urban portrait session."
-    },
-    "instagram": "klaudynaa_p",
-    "date": "",
-    "place": {
-      "pl": "Mural - Ostrowiec Świętokrzyski",
-      "en": "Mural - Ostrowiec Świętokrzyski"
-    },
-    "glowColor": "#c9dc0d",
-    "id": "photo-klaudia-mural-portret",
-    "src": "assets/images/gallery/2400px/klaudia-mural-portret.jpg",
-    "thumbUrl": "assets/images/gallery/800px/klaudia-mural-portret_thumb.webp",
     "watermarkText": "KLAUDYNA"
   }
 ];
