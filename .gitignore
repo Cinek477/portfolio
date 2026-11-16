@@ -1,5 +1,6 @@
 # Lokalny runtime Node.js, logi i pliki kontrolne
 /.local/
+/.claude/
 
 # Lokalna baza: galeria, projekty, wiadomości i hasło administratora
 /data/
